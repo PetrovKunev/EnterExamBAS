@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 1: Информация. Информационни процеси. Информатика. Информационно общество</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --navy: #0f2744;
+            --navy2: #1a3a5c;
+            --blue: #2563a8;
+            --lblue: #dbeafe;
+            --green: #166534;
+            --lgreen: #dcfce7;
+            --purple: #5b21b6;
+            --lpurple: #ede9fe;
+            --orange: #9a3412;
+            --lorange: #ffedd5;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+            --text: #1a1a2e;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.75;
+            color: var(--text);
+            background: var(--cream);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 270px;
+            background: var(--navy);
+            color: white;
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--lblue);
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            display: block;
+            padding: 0.5rem 0;
+        }
+
+        .sidebar a:hover {
+            color: var(--lblue);
+        }
+
+        .sidebar .sub {
+            padding-left: 1.5rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Main content */
+        .main {
+            margin-left: 270px;
+            flex: 1;
+            background: white;
+            padding: 3rem;
+            max-width: 1200px;
+            margin-right: auto;
+        }
+
+        /* Portal button */
+        .portal-btn {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--navy);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+            z-index: 100;
+        }
+
+        .portal-btn:hover {
+            background: var(--navy2);
+        }
+
+        /* Title */
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--navy);
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        /* Overview box */
+        .overview-box {
+            background: var(--lblue);
+            border-left: 4px solid var(--blue);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0.5rem;
+            line-height: 1.8;
+        }
+
+        .overview-box h3 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Section headings */
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--blue);
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--navy2);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Definition box */
+        .def-box {
+            background: var(--lblue);
+            border-left: 4px solid var(--blue);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .def-box h4 {
+            color: var(--blue);
+            margin-top: 0;
+        }
+
+        /* Theorem box */
+        .theorem-box {
+            background: var(--lpurple);
+            border-left: 4px solid var(--purple);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .theorem-box h4 {
+            color: var(--purple);
+            margin-top: 0;
+        }
+
+        /* Example box (green) */
+        .example-box {
+            background: var(--lgreen);
+            border-left: 4px solid var(--green);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .example-box h4 {
+            color: var(--green);
+            margin-top: 0;
+        }
+
+        /* Note box */
+        .note-box {
+            background: var(--lorange);
+            border-left: 4px solid var(--orange);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .note-box h4 {
+            color: var(--orange);
+            margin-top: 0;
+        }
+
+        /* Formula block */
+        .formula-block {
+            background: #0f172a;
+            color: #e0e7ff;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .formula-block code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* General table */
+        .gen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .gen-table thead {
+            background: var(--navy);
+            color: white;
+        }
+
+        .gen-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .gen-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .gen-table tbody tr:hover {
+            background: var(--cream);
+        }
+
+        /* Proof steps */
+        .proof-steps {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .proof-steps li {
+            counter-increment: step-counter;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            background: #f8fafc;
+            border-left: 4px solid var(--blue);
+            border-radius: 0.25rem;
+            padding-left: 1.75rem;
+            position: relative;
+        }
+
+        .proof-steps {
+            counter-reset: step-counter;
+        }
+
+        .proof-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--blue);
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Flashcard section */
+        .flashcard-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--cream);
+            border-radius: 0.5rem;
+        }
+
+        .flashcard-section h3 {
+            color: var(--navy);
+            margin-top: 0;
+        }
+
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .fc {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .fc:hover {
+            border-color: var(--blue);
+            box-shadow: 0 4px 12px rgba(37, 99, 168, 0.1);
+        }
+
+        .fc-q {
+            color: var(--navy);
+            font-weight: 500;
+        }
+
+        .fc-a {
+            color: var(--green);
+            font-weight: 500;
+            display: none;
+        }
+
+        .fc.open .fc-q {
+            display: none;
+        }
+
+        .fc.open .fc-a {
+            display: block;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Inline code */
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--red);
+        }
+
+        /* Links */
+        a {
+            color: var(--blue);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Quick reference */
+        .quick-ref {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .ref-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .ref-card:hover {
+            border-color: var(--navy);
+            box-shadow: 0 4px 12px rgba(15, 39, 68, 0.1);
+        }
+
+        .ref-card h4 {
+            color: var(--navy);
+            margin-top: 0;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ref-card p {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin: 0.5rem 0;
+        }
+
+        /* Mermaid diagram */
+        .diagram {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            background: var(--cream);
+            padding: 2rem;
+            border-radius: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+                padding: 2rem;
+            }
+
+            html {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding: 1.5rem;
+                border-right: none;
+                border-bottom: 2px solid var(--border);
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .portal-btn {
+                position: static;
+                display: inline-block;
+                margin-bottom: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+            }
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--navy);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="portal-btn">← Портал</a>
+
+    <div class="container">
+        <!-- Sidebar TOC -->
+        <aside class="sidebar">
+            <h2>Съдържание</h2>
+            <ul>
+                <li><a href="#overview">Преглед</a></li>
+                <li><a href="#section1">Раздел 1: Информация</a>
+                    <ul class="sub">
+                        <li><a href="#s1-1">1.1 Определения</a></li>
+                        <li><a href="#s1-2">1.2 Свойства</a></li>
+                        <li><a href="#s1-3">1.3 Количествени мерки</a></li>
+                        <li><a href="#s1-4">1.4 DIKW йерархия</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section2">Раздел 2: Информационни процеси</a>
+                    <ul class="sub">
+                        <li><a href="#s2-1">2.1 Жизнен цикъл</a></li>
+                        <li><a href="#s2-2">2.2 Модел Шанън-Уивър</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section3">Раздел 3: Информатика</a></li>
+                <li><a href="#section4">Раздел 4: Кибернетика</a></li>
+                <li><a href="#section5">Раздел 5: Информационно общество</a>
+                    <ul class="sub">
+                        <li><a href="#s5-1">5.1 Определение</a></li>
+                        <li><a href="#s5-2">5.2 Теоретици</a></li>
+                        <li><a href="#s5-3">5.3 Характеристики</a></li>
+                        <li><a href="#s5-4">5.4 Цифрово разделение</a></li>
+                        <li><a href="#s5-5">5.5 Политики</a></li>
+                        <li><a href="#s5-6">5.6 Индустрия 4.0</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section6">Раздел 6: Стратегия за изпит</a></li>
+                <li><a href="#flashcards">Флашкарти</a></li>
+                <li><a href="#quickref">Бърза справка</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main">
+            <h1>Тема 1: Информация. Информационни процеси. Информатика. Информационно общество</h1>
+            <p class="subtitle">Литература: [28] Бърнев П., [29] Денчев Ст., [31] Ешби У.Р.</p>
+
+            <!-- Overview Section -->
+            <section id="overview">
+                <div class="overview-box">
+                    <h3>Преглед на темата</h3>
+                    <p>Информационната теория е фундаментално основание на информатиката. Концепциите, представени в тази тема — ентропия, кодиране, информационни канали — са основополагащи за разбиране на логиката (Тема 2), алгоритмите и изчислимостта (Тема 3) и базите данни (Тема 8). Контекстът на информационното общество свързва тази тема с Темите 13-15 (цифрови библиотеки, LMS системи, облачни технологии).</p>
+                </div>
+            </section>
+
+            <!-- Section 1 -->
+            <section id="section1">
+                <h2>Раздел 1: ИНФОРМАЦИЯ — Определения и същност</h2>
+
+                <h3 id="s1-1">1.1 Множественост на определенията за информация</h3>
+
+                <div class="def-box">
+                    <h4>Синтактична (математическа) дефиниция — Клод Шанън (1948)</h4>
+                    <p><em>Източник:</em> "A Mathematical Theory of Communication"</p>
+                    <p>Информацията е количество, което разрешава неопределеност. Основната единица е <strong>бит</strong> (binary digit). Ентропията по Шанън измерва средната информация в един символ:</p>
+                    <div class="formula-block">H(X) = −Σ P(xᵢ) · log₂(P(xᵢ))</div>
+                    <p>Където P(xᵢ) е вероятността на символа xᵢ. Единица: бит/символ.</p>
+                </div>
+
+                <div class="def-box">
+                    <h4>Кибернетична дефиниция — Норберт Уинър (1948)</h4>
+                    <p><em>Източник:</em> "Cybernetics: Or Control and Communication in the Animal and the Machine"</p>
+                    <p>Информацията е съдържание на съобщения, които контролират поведението. Ключови концепции: обратна връзка (feedback), хомеостаза (запазване на равновесието), автоматично управление.</p>
+                </div>
+
+                <div class="def-box">
+                    <h4>Семантична информация</h4>
+                    <p><em>Автори:</em> Bar-Hillel & Carnap (1953), Luciano Floridi (2010 и по-нови)</p>
+                    <p>Информацията е добре-формирана, смислена и истинна данна. Фокусът е на значението (meaning) и семантичния съдържание, не на синтаксиса.</p>
+                </div>
+
+                <div class="def-box">
+                    <h4>Прагматична информация</h4>
+                    <p>Информацията се измерва чрез нейната полезност за вземане на решения и действие. Связана с контекста и целите на получателя.</p>
+                </div>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Аспект</th>
+                            <th>Фокус</th>
+                            <th>Ключов автор</th>
+                            <th>Година</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Синтактичен</strong></td>
+                            <td>Символи, битове, кодиране</td>
+                            <td>Клод Шанън</td>
+                            <td>1948</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Семантичен</strong></td>
+                            <td>Значение, истинност, смисъл</td>
+                            <td>Floridi</td>
+                            <td>1953+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Прагматичен</strong></td>
+                            <td>Полезност, действие, решение</td>
+                            <td>Различни автори</td>
+                            <td>1960+</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 id="s1-2">1.2 Свойства на информацията</h3>
+
+                <ul>
+                    <li><strong>Относителност:</strong> Информацията зависи от получателя и контекста на получаване.</li>
+                    <li><strong>Трансформируемост:</strong> Информацията може да бъде преобразувана от един формат в друг без загуба на същност.</li>
+                    <li><strong>Възпроизводимост:</strong> Информацията може да бъде копирана многократно без деградация (за разлика от физическите обекти).</li>
+                    <li><strong>Неизчерпаемост:</strong> Употребата на информация не я "изтощава" — може да се ползва многократно.</li>
+                    <li><strong>Контекстна зависимост:</strong> Значението на информацията зависи от контекста.</li>
+                    <li><strong>Корелация с неопределеност:</strong> Информацията е мярка за намаляване на неопределеност (ентропия).</li>
+                </ul>
+
+                <h3 id="s1-3">1.3 Количествени мерки за информация</h3>
+
+                <h4>Бит (Bit)</h4>
+                <p>Количество информация за един конкретен резултат:</p>
+                <div class="formula-block">I(x) = −log₂(P(x))</div>
+                <p>Ако вероятност е 1/2, информация е 1 бит. Ако вероятност е 1/4, информация е 2 бита.</p>
+
+                <h4>Ентропия (Shannon Entropy)</h4>
+                <p>Средна количество информация в един символ:</p>
+                <div class="formula-block">H(X) = −Σ P(xᵢ) log₂ P(xᵢ)</div>
+                <p>Максимална ентропия = log₂(N), където N е брой на възможните символи.</p>
+
+                <h4>Капацитет на канала (Shannon-Hartley Theorem)</h4>
+                <p>Максимална скорост на надеждна предача на информация през канал с шум:</p>
+                <div class="formula-block">C = B · log₂(1 + S/N)</div>
+                <p>Където B е честотна полоса (Hz), S е сигнал, N е шум.</p>
+
+                <h4>Излишък (Redundancy)</h4>
+                <p>Мерка за неефективност на кодиране:</p>
+                <div class="formula-block">R = 1 − H(Source) / log₂(N)</div>
+
+                <h3>Работен пример: Изчисляване на ентропия</h3>
+                <div class="example-box">
+                    <h4>Задача</h4>
+                    <p>Имаме източник със 4 символа:</p>
+                    <ul>
+                        <li>P(A) = 1/2</li>
+                        <li>P(B) = 1/4</li>
+                        <li>P(C) = 1/8</li>
+                        <li>P(D) = 1/8</li>
+                    </ul>
+                    <p>Изчислете ентропията.</p>
+
+                    <h4 style="margin-top: 1.5rem;">Решение</h4>
+                    <ol class="proof-steps">
+                        <li>Изчислете всеки член I(xᵢ) = −log₂(P(xᵢ))
+                            <ul>
+                                <li>I(A) = −log₂(1/2) = 1 бит</li>
+                                <li>I(B) = −log₂(1/4) = 2 бита</li>
+                                <li>I(C) = −log₂(1/8) = 3 бита</li>
+                                <li>I(D) = −log₂(1/8) = 3 бита</li>
+                            </ul>
+                        </li>
+                        <li>Умножете по съответните вероятности:
+                            <div class="formula-block">H = −(1/2·1 + 1/4·2 + 1/8·3 + 1/8·3)</div>
+                        </li>
+                        <li>Съберете:
+                            <div class="formula-block">H = −(0.5 + 0.5 + 0.375 + 0.375) = −1.75 = 1.75 бита/символ</div>
+                        </li>
+                    </ol>
+
+                    <p><strong>Отговор:</strong> H = 1.75 бита/символ</p>
+                </div>
+
+                <h3 id="s1-4">1.4 Йерархия DIKW (Data → Information → Knowledge → Wisdom)</h3>
+
+                <p><em>Автори:</em> Russell Ackoff (1989), Milan Zeleny</p>
+
+                <p>Модел описания иерархия от данни към мъдрост:</p>
+
+                <div class="diagram">
+                    <svg width="300" height="400" viewBox="0 0 300 400">
+                        <!-- Wisdom -->
+                        <polygon points="150,20 250,100 200,180 100,180 50,100" fill="#166534" stroke="#0f2744" stroke-width="2" opacity="0.8"/>
+                        <text x="150" y="110" text-anchor="middle" fill="white" font-weight="bold">WISDOM</text>
+                        <text x="150" y="130" text-anchor="middle" fill="white" font-size="12">Разбор, цел</text>
+
+                        <!-- Knowledge -->
+                        <rect x="60" y="180" width="180" height="60" fill="#5b21b6" stroke="#0f2744" stroke-width="2" opacity="0.8"/>
+                        <text x="150" y="210" text-anchor="middle" fill="white" font-weight="bold">KNOWLEDGE</text>
+                        <text x="150" y="230" text-anchor="middle" fill="white" font-size="12">Организирана информация</text>
+
+                        <!-- Information -->
+                        <rect x="40" y="260" width="220" height="60" fill="#2563a8" stroke="#0f2744" stroke-width="2" opacity="0.8"/>
+                        <text x="150" y="290" text-anchor="middle" fill="white" font-weight="bold">INFORMATION</text>
+                        <text x="150" y="310" text-anchor="middle" fill="white" font-size="12">Обработена данна</text>
+
+                        <!-- Data -->
+                        <rect x="20" y="340" width="260" height="50" fill="#dbeafe" stroke="#0f2744" stroke-width="2" opacity="0.8"/>
+                        <text x="150" y="360" text-anchor="middle" fill="#0f2744" font-weight="bold">DATA</text>
+                        <text x="150" y="378" text-anchor="middle" fill="#0f2744" font-size="12">Сирови факти, цифри</text>
+                    </svg>
+                </div>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Ниво</th>
+                            <th>Характеристики</th>
+                            <th>Пример</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Data (Данни)</strong></td>
+                            <td>Сирови факти, цифри, символи без контекст</td>
+                            <td>37, температура, 2026-03-18</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Information (Информация)</strong></td>
+                            <td>Обработена данна с контекст и значение</td>
+                            <td>Температура е 37°C (повишена)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Knowledge (Знание)</strong></td>
+                            <td>Организирана информация, разбирание на връзките</td>
+                            <td>Грип предизвиква повишена температура</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Wisdom (Мъдрост)</strong></td>
+                            <td>Применение на знанието за управление и цели</td>
+                            <td>Когда да потърсим лекар, как да лечим</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 2 -->
+            <section id="section2">
+                <h2>Раздел 2: ИНФОРМАЦИОННИ ПРОЦЕСИ И ДЕЙНОСТИ</h2>
+
+                <h3 id="s2-1">2.1 Жизнен цикъл на информацията (8 етапа)</h3>
+
+                <p>Информацията преминава през цикъл от генериране до използване:</p>
+
+                <div class="diagram">
+                    <svg width="100%" height="350" viewBox="0 0 600 350">
+                        <!-- Circle with 8 stages -->
+                        <circle cx="300" cy="175" r="130" fill="none" stroke="#2563a8" stroke-width="2" stroke-dasharray="5,5"/>
+
+                        <!-- Stage 1: Генериране -->
+                        <circle cx="430" cy="175" r="25" fill="#2563a8"/>
+                        <text x="430" y="180" text-anchor="middle" fill="white" font-weight="bold" font-size="12">1</text>
+                        <text x="480" y="175" text-anchor="start" fill="#0f2744" font-size="13" font-weight="600">Генериране</text>
+
+                        <!-- Stage 2: Събиране -->
+                        <circle cx="382" cy="253" r="25" fill="#2563a8"/>
+                        <text x="382" y="258" text-anchor="middle" fill="white" font-weight="bold" font-size="12">2</text>
+                        <text x="410" y="268" text-anchor="start" fill="#0f2744" font-size="13" font-weight="600">Събиране</text>
+
+                        <!-- Stage 3: Обработка -->
+                        <circle cx="300" cy="305" r="25" fill="#2563a8"/>
+                        <text x="300" y="310" text-anchor="middle" fill="white" font-weight="bold" font-size="12">3</text>
+                        <text x="330" y="315" text-anchor="start" fill="#0f2744" font-size="13" font-weight="600">Обработка</text>
+
+                        <!-- Stage 4: Съхранение -->
+                        <circle cx="218" cy="253" r="25" fill="#2563a8"/>
+                        <text x="218" y="258" text-anchor="middle" fill="white" font-weight="bold" font-size="12">4</text>
+                        <text x="190" y="268" text-anchor="end" fill="#0f2744" font-size="13" font-weight="600">Съхранение</text>
+
+                        <!-- Stage 5: Извличане -->
+                        <circle cx="170" cy="175" r="25" fill="#2563a8"/>
+                        <text x="170" y="180" text-anchor="middle" fill="white" font-weight="bold" font-size="12">5</text>
+                        <text x="120" y="175" text-anchor="end" fill="#0f2744" font-size="13" font-weight="600">Извличане</text>
+
+                        <!-- Stage 6: Предаване -->
+                        <circle cx="218" cy="97" r="25" fill="#2563a8"/>
+                        <text x="218" y="102" text-anchor="middle" fill="white" font-weight="bold" font-size="12">6</text>
+                        <text x="190" y="75" text-anchor="end" fill="#0f2744" font-size="13" font-weight="600">Предаване</text>
+
+                        <!-- Stage 7: Разпространение -->
+                        <circle cx="300" cy="45" r="25" fill="#2563a8"/>
+                        <text x="300" y="50" text-anchor="middle" fill="white" font-weight="bold" font-size="12">7</text>
+                        <text x="330" y="35" text-anchor="start" fill="#0f2744" font-size="13" font-weight="600">Разпрост.</text>
+
+                        <!-- Stage 8: Използване -->
+                        <circle cx="382" cy="97" r="25" fill="#2563a8"/>
+                        <text x="382" y="102" text-anchor="middle" fill="white" font-weight="bold" font-size="12">8</text>
+                        <text x="410" y="75" text-anchor="start" fill="#0f2744" font-size="13" font-weight="600">Използване</text>
+                    </svg>
+                </div>
+
+                <ol>
+                    <li><strong>Генериране:</strong> Създаване на първоначална информация</li>
+                    <li><strong>Събиране:</strong> Събиране от различни източници</li>
+                    <li><strong>Обработка:</strong> Трансформирано, анализ, преработване</li>
+                    <li><strong>Съхранение:</strong> Архивиране в базите данни и хранилища</li>
+                    <li><strong>Извличане:</strong> Достъпване от хранилищата</li>
+                    <li><strong>Предаване:</strong> Трансфер през каналите</li>
+                    <li><strong>Разпространение:</strong> Разпространяване до получатели</li>
+                    <li><strong>Използване:</strong> Практическо приложение от потребителя</li>
+                </ol>
+
+                <h3 id="s2-2">2.2 Модел на Шанън-Уивър (1949)</h3>
+
+                <p>Класическия модел на предаване на информация през канал с шум:</p>
+
+                <div class="diagram">
+                    <svg width="100%" height="200" viewBox="0 0 700 200">
+                        <!-- Source -->
+                        <rect x="20" y="60" width="80" height="80" fill="#2563a8" stroke="#0f2744" stroke-width="2"/>
+                        <text x="60" y="105" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Източник</text>
+
+                        <!-- Transmitter -->
+                        <rect x="130" y="60" width="80" height="80" fill="#2563a8" stroke="#0f2744" stroke-width="2"/>
+                        <text x="170" y="105" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Предавател</text>
+
+                        <!-- Channel -->
+                        <rect x="240" y="60" width="80" height="80" fill="#2563a8" stroke="#0f2744" stroke-width="2"/>
+                        <text x="280" y="105" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Канал</text>
+
+                        <!-- Noise source -->
+                        <circle cx="280" cy="20" r="15" fill="#991b1b" stroke="#0f2744" stroke-width="2"/>
+                        <text x="280" y="25" text-anchor="middle" fill="white" font-weight="bold" font-size="11">Шум</text>
+
+                        <!-- Receiver -->
+                        <rect x="350" y="60" width="80" height="80" fill="#2563a8" stroke="#0f2744" stroke-width="2"/>
+                        <text x="390" y="105" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Приемник</text>
+
+                        <!-- Destination -->
+                        <rect x="460" y="60" width="80" height="80" fill="#2563a8" stroke="#0f2744" stroke-width="2"/>
+                        <text x="500" y="105" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Получател</text>
+
+                        <!-- Arrows -->
+                        <path d="M 100 100 L 130 100" stroke="#0f2744" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <path d="M 210 100 L 240 100" stroke="#0f2744" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <path d="M 320 100 L 350 100" stroke="#0f2744" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <path d="M 430 100 L 460 100" stroke="#0f2744" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <path d="M 280 35 L 280 60" stroke="#991b1b" stroke-width="2" marker-end="url(#arrowhead-red)"/>
+
+                        <!-- Legend -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#0f2744"/>
+                            </marker>
+                            <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#991b1b"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+
+                <div class="theorem-box">
+                    <h4>Компоненти на модела</h4>
+                    <table class="gen-table">
+                        <thead>
+                            <tr>
+                                <th>Компонент</th>
+                                <th>Описание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Източник</strong></td>
+                                <td>Генерира съобщение (текст, звук, видео)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Предавател</strong></td>
+                                <td>Кодира съобщение в сигнали (модулация)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Канал</strong></td>
+                                <td>Физическия носител (телефонен кабел, радио)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Шум</strong></td>
+                                <td>Намеса (електромагнитна, термична)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Приемник</strong></td>
+                                <td>Декодира сигналите назад в съобщение</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Получател</strong></td>
+                                <td>Крайния потребител на съобщението</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="note-box">
+                    <h4>Три нива на предаване</h4>
+                    <ul>
+                        <li><strong>Техническо ниво:</strong> Точност на предаване (битова честота на грешка)</li>
+                        <li><strong>Семантично ниво:</strong> Смисълното съответствие на съобщението</li>
+                        <li><strong>Прагматично ниво:</strong> Ефективност при достигане целта</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 3 -->
+            <section id="section3">
+                <h2>Раздел 3: ИНФОРМАТИКА И ИНФОРМАЦИОННО ОБСЛУЖВАНЕ</h2>
+
+                <h3>3.1 Определение и обхват на информатиката</h3>
+
+                <p>Терминът <strong>"Informatik"</strong> бил въведен от <strong>Карл Щайнбух</strong> през <strong>1956</strong> в Германия. През <strong>1962</strong> <strong>Филип Дройфус</strong> във Франция въведе французкия еквивалент <strong>"informatique"</strong>.</p>
+
+                <div class="def-box">
+                    <h4>Информатика</h4>
+                    <p>Информатиката е наука, която изучава теоретичните основи и практическите приложения на обработката на информация с помощта на компютри.</p>
+                </div>
+
+                <p>Информатиката има три основни измерения:</p>
+
+                <ol>
+                    <li><strong>Изчислително измерение:</strong> Теория на изчисленията, алгоритми, сложност</li>
+                    <li><strong>Когнитивно измерение:</strong> Представяне на знание, изкуствен интелект</li>
+                    <li><strong>Социално измерение:</strong> Взаимодействие човек-компютър, информационни системи</li>
+                </ol>
+
+                <h3>3.2 Основни клонове на информатиката</h3>
+
+                <ul>
+                    <li><strong>Теоретична информатика:</strong> Формални езици, теория на автоматите, сложност</li>
+                    <li><strong>Приложна информатика:</strong> Софтуер, базите данни, системи</li>
+                    <li><strong>Здравна информатика:</strong> Медицински системи, електронни здравни карти</li>
+                    <li><strong>Бизнес информатика:</strong> ERP системи, e-commerce, management системи</li>
+                    <li><strong>Биоинформатика:</strong> Генетични последователности, proteomics</li>
+                </ul>
+
+                <h3>3.3 Информационно обслужване</h3>
+
+                <p>Информационното обслужване съчетава традиционни услуги с дигитални възможности:</p>
+
+                <ul>
+                    <li><strong>Традиционни услуги:</strong> Справки, консултация, обучение</li>
+                    <li><strong>Дигитални услуги:</strong> Онлайн доставка на съдържание, облачни решения</li>
+                    <li><strong>Дигитална трансформация:</strong> Преход на услуги от физични към дигитални формати</li>
+                    <li><strong>Data-as-a-Service (DaaS):</strong> Предоставяне на данни като услуга</li>
+                </ul>
+            </section>
+
+            <!-- Section 4 -->
+            <section id="section4">
+                <h2>Раздел 4: КИБЕРНЕТИКА И ИНФОРМАЦИЯ</h2>
+
+                <h3>4.1 Норберт Уинър и кибернетиката (1948)</h3>
+
+                <p><strong>Норберт Уинър</strong> (1894-1964) основал кибернетиката като наука. Книгата му "Cybernetics: Or Control and Communication in the Animal and the Machine" публикувана през 1948.</p>
+
+                <div class="def-box">
+                    <h4>Кибернетика</h4>
+                    <p>Наука за управление и комуникация в животни и машини. Фокусира се на информацията, управлението, обратната връзка и хомеостазата.</p>
+                </div>
+
+                <div class="theorem-box">
+                    <h4>Ключови концепции</h4>
+                    <ul>
+                        <li><strong>Съобщение:</strong> Информация, която контролира поведението</li>
+                        <li><strong>Обратна връзка (Feedback):</strong> Връщане на информация към контролера</li>
+                        <li><strong>Хомеостаза:</strong> Способност на система да запазва своята равновесност</li>
+                        <li><strong>Кръгова причинност:</strong> Причинност не е линейна, а циклична</li>
+                    </ul>
+                </div>
+
+                <h3>4.2 У. Рос Ешби — Въведение в кибернетиката (1956/1967)</h3>
+
+                <p><strong>Уилям Рос Ешби</strong> (1911-1972) разработил един от най-важните принципи в кибернетиката.</p>
+
+                <div class="theorem-box">
+                    <h4>Закон на необходимото разнообразие (Law of Requisite Variety)</h4>
+                    <p>Сложността на управляващата система трябва да съответства на сложността на управлявана система. Само разнообразието може да унищожи разнообразието.</p>
+                    <p style="margin-top: 1rem;">Математически: За управляване на система със сложност V, контролерът трябва да има поне толкова diferentes възможни състояния, колкото са възможни състояния на системата.</p>
+                </div>
+
+                <div class="note-box">
+                    <h4>Връзка със Шанън</h4>
+                    <p>Законът на Ешби за необходимото разнообразие е специален случай на Шанъновата 10-та теорема. Разнообразието се измерва като информация — мярка на броя на различни възможни състояния.</p>
+                </div>
+
+                <div class="diagram">
+                    <svg width="100%" height="250" viewBox="0 0 600 250">
+                        <!-- System -->
+                        <rect x="50" y="50" width="120" height="100" fill="#2563a8" stroke="#0f2744" stroke-width="2"/>
+                        <text x="110" y="100" text-anchor="middle" fill="white" font-weight="bold">Система</text>
+                        <text x="110" y="125" text-anchor="middle" fill="white" font-size="12">(Сложност V)</text>
+
+                        <!-- Controller -->
+                        <rect x="430" y="50" width="120" height="100" fill="#5b21b6" stroke="#0f2744" stroke-width="2"/>
+                        <text x="490" y="100" text-anchor="middle" fill="white" font-weight="bold">Контролер</text>
+                        <text x="490" y="125" text-anchor="middle" fill="white" font-size="12">(Разнообразие ≥ V)</text>
+
+                        <!-- Feedback arrow -->
+                        <path d="M 170 80 Q 300 30 430 80" stroke="#166534" stroke-width="2" fill="none" marker-end="url(#arrowhead-green)"/>
+                        <text x="300" y="50" text-anchor="middle" fill="#166534" font-weight="bold" font-size="12">Информация</text>
+
+                        <!-- Control arrow -->
+                        <path d="M 430 120 Q 300 170 170 120" stroke="#991b1b" stroke-width="2" fill="none" marker-end="url(#arrowhead-red2)"/>
+                        <text x="300" y="190" text-anchor="middle" fill="#991b1b" font-weight="bold" font-size="12">Управление</text>
+
+                        <defs>
+                            <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#166534"/>
+                            </marker>
+                            <marker id="arrowhead-red2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#991b1b"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+            </section>
+
+            <!-- Section 5 -->
+            <section id="section5">
+                <h2>Раздел 5: ИНФОРМАЦИОННО ОБЩЕСТВО</h2>
+
+                <h3 id="s5-1">5.1 Определение на информационното общество</h3>
+
+                <div class="def-box">
+                    <h4>Информационно общество</h4>
+                    <p>Общество с високо технологично развитие, където информационните технологии са доминиращата технология. Экономиката е базирана главно на услуги, знание и информация.</p>
+                </div>
+
+                <p>Характеристики:</p>
+                <ul>
+                    <li>Доминираща роля на информационните технологии</li>
+                    <li>Икономика, базирана на знание и услуги</li>
+                    <li>Глобална мрежа на комуникация</li>
+                    <li>Автоматизирани производствени процеси</li>
+                    <li>Нови социални и культурни форми</li>
+                </ul>
+
+                <h3 id="s5-2">5.2 Ключови теоретици на информационното общество</h3>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Теоретик</th>
+                            <th>Година</th>
+                            <th>Ключова концепция</th>
+                            <th>Основен труд</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Даниел Бел</strong></td>
+                            <td>1973</td>
+                            <td>Post-industrial society</td>
+                            <td>"The Coming of Post-Industrial Society"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Алвин Тофлър</strong></td>
+                            <td>1970/1980</td>
+                            <td>Три вълни на развитие</td>
+                            <td>"Future Shock" / "The Third Wave"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Йонеджи Масуда</strong></td>
+                            <td>1980</td>
+                            <td>Information technology impact</td>
+                            <td>"The Information Society as Post-Industrial Society"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Мануел Кастелс</strong></td>
+                            <td>1996</td>
+                            <td>Network society</td>
+                            <td>"The Information Age" (трилогия)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Кратко резюме на теориите</h3>
+
+                <div class="def-box">
+                    <h4>Даниел Бел — Post-industrial Society (1973)</h4>
+                    <p>След индустриалното общество идва post-industrial, където знанието и услугите са по-важни от производството. Централна роля имат инженерите и учени.</p>
+                </div>
+
+                <div class="def-box">
+                    <h4>Алвин Тофлър — Три вълни (1970/1980)</h4>
+                    <p>Човечеството преживява три технологични вълни: (1) селскостопанска, (2) индустриална, (3) информационна. Всяка вълна пренася революционни социални промени.</p>
+                </div>
+
+                <div class="def-box">
+                    <h4>Йонеджи Масуда (1980)</h4>
+                    <p>Фокусира се на влиянието на информационните технологии върху икономиката и обществото. Разглежда IT като основна производствена сила.</p>
+                </div>
+
+                <div class="def-box">
+                    <h4>Мануел Кастелс — Network Society (1996)</h4>
+                    <p>Информационното общество е "мрежово общество" (network society). Икономиката, политиката и культурата са организирани около глобални информационни мрежи.</p>
+                </div>
+
+                <h3 id="s5-3">5.3 Характеристики на информационното общество</h3>
+
+                <h4>Технологични характеристики:</h4>
+                <ul>
+                    <li>Компютризирани системи за управление</li>
+                    <li>Мрежева свързаност (Internet, облако)</li>
+                    <li>Автоматизация на производството</li>
+                    <li>Роботизация</li>
+                </ul>
+
+                <h4>Икономически характеристики:</h4>
+                <ul>
+                    <li>Икономика, базирана на услуги и знание</li>
+                    <li>E-commerce и дигитални пазари</li>
+                    <li>Дистанционна работа</li>
+                    <li>Глобализирани финансови системи</li>
+                </ul>
+
+                <h4>Социални характеристики:</h4>
+                <ul>
+                    <li>Онлайн комуникация и социални мрежи</li>
+                    <li>Дигитално разделение (digital divide)</li>
+                    <li>Промени в образованието и обучението</li>
+                    <li>Промени в работната сила и заетостта</li>
+                </ul>
+
+                <h4>Културни характеристики:</h4>
+                <ul>
+                    <li>Дигитална култура и медия</li>
+                    <li>Культурна глобализация</li>
+                    <li>Нови форми на творчество и изразяване</li>
+                    <li>Промени в личния идентитет</li>
+                </ul>
+
+                <h3 id="s5-4">5.4 Цифрово разделение (Digital Divide)</h3>
+
+                <p>Цифровото разделение е разликата в достъпа до информационни технологии между различни групи от население. Според <strong>Jakob Nielsen</strong>, разделението има три етапа:</p>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Етап</th>
+                            <th>Описание</th>
+                            <th>Процент население</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. Икономическо разделение</strong></td>
+                            <td>Липса на финансови средства за закупуване на технология</td>
+                            <td>90%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Разделение на юзабилност</strong></td>
+                            <td>Недостатъчни умения за използване на технология</td>
+                            <td>9%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Разделение на оправомощаване</strong></td>
+                            <td>Неспособност да се създаде стойност от технология</td>
+                            <td>1%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top: 1rem;"><em>Правилото 90/9/1:</em> 90% имат проблеми на икономическо ниво, 9% на ниво умения, 1% на ниво способност.</p>
+
+                <h3 id="s5-5">5.5 Политики на информационното общество</h3>
+
+                <h4>Европейския союз — Digital Compass 2030</h4>
+                <p>Стратегическия план на ЕС за цифрална трансформация до 2030 включва:</p>
+                <ul>
+                    <li>Дигитална инфраструктура (broadband, 5G)</li>
+                    <li>Цифрови умения и компетентност</li>
+                    <li>Дигитализация на бизнеса</li>
+                    <li>Дигитални публични услуги</li>
+                    <li>Цифрова сигурност и приватност</li>
+                </ul>
+
+                <h4>България — Участие в программи</h4>
+                <p>България участва в:</p>
+                <ul>
+                    <li>EU Digital Compass 2030</li>
+                    <li>Национална стратегия за цифрална трансформация</li>
+                    <li>Програми за цифрови умения</li>
+                    <li>E-government инициативи</li>
+                </ul>
+
+                <h3 id="s5-6">5.6 Индустрия 4.0 (Четвъртата индустриална революция)</h3>
+
+                <div class="def-box">
+                    <h4>Индустрия 4.0</h4>
+                    <p>Съчетание на физически, дигитални и биологични технологии. Характеризира се с интеграция на киберфизични системи, интернет на вещите (IoT), облачни технологии и изкуствен интелект.</p>
+                </div>
+
+                <p>Ключови технологии на Индустрия 4.0:</p>
+                <ul>
+                    <li><strong>Киберфизични системи (CPS):</strong> Интеграция на изчисления и физични процеси</li>
+                    <li><strong>Интернет на вещите (IoT):</strong> Свързана мрежа на устройства и сензори</li>
+                    <li><strong>Cloud Computing:</strong> Облачни услуги и обработка на данни</li>
+                    <li><strong>Big Data:</strong> Събиране и анализ на огромни количества данни</li>
+                    <li><strong>Artificial Intelligence (AI):</strong> Машинно обучение и автоматизирано вземане на решения</li>
+                    <li><strong>Интелигентни фабрики:</strong> Автоматизирани производствени системи</li>
+                </ul>
+
+                <div class="note-box">
+                    <h4>Значение за информационното общество</h4>
+                    <p>Индустрия 4.0 представлява кулминацията на информационното общество, където данните, комуникацията и интеграцията на системи са в основата на производството и услугите.</p>
+                </div>
+            </section>
+
+            <!-- Section 6 -->
+            <section id="section6">
+                <h2>Раздел 6: СТРАТЕГИЯ ЗА ПИСМЕНИЯ ИЗПИТ</h2>
+
+                <h3>Структура на отговора на излязъл въпрос</h3>
+
+                <p>Препоръчвана структура за отговор от 120 минути:</p>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Част</th>
+                            <th>Време</th>
+                            <th>Съдържание</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Въведение</strong></td>
+                            <td>10-15 мин</td>
+                            <td>Контекст, определение на темата, структура на отговора</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Основна част</strong></td>
+                            <td>70-80 мин</td>
+                            <td>Детайлни обяснения, определения, теории, примери</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Визуализации</strong></td>
+                            <td>10 мин</td>
+                            <td>Диаграми, таблици, графики</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Обобщение</strong></td>
+                            <td>10-15 мин</td>
+                            <td>Синтез, забележки, връзки към други теми</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Ключови формули за запомняне</h3>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Концепция</th>
+                            <th>Формула</th>
+                            <th>Единици</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Информация (Бит)</strong></td>
+                            <td>I(x) = −log₂(P(x))</td>
+                            <td>бит</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ентропия на Шанън</strong></td>
+                            <td>H(X) = −Σ P(xᵢ) log₂ P(xᵢ)</td>
+                            <td>бит/символ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Капацитет на канала</strong></td>
+                            <td>C = B · log₂(1 + S/N)</td>
+                            <td>бит/сек</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Максимална ентропия</strong></td>
+                            <td>H_max = log₂(N)</td>
+                            <td>бит/символ</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Ключови имена и дати</h3>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Név</th>
+                            <th>Година</th>
+                            <th>Принос</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Клод Шанън</strong></td>
+                            <td>1948</td>
+                            <td>Теория на информацията, ентропия</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Норберт Уинър</strong></td>
+                            <td>1948</td>
+                            <td>Кибернетика, управление и комуникация</td>
+                        </tr>
+                        <tr>
+                            <td><strong>У. Рос Ешби</strong></td>
+                            <td>1956</td>
+                            <td>Закон на необходимото разнообразие</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Даниел Бел</strong></td>
+                            <td>1973</td>
+                            <td>Post-industrial society</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Алвин Тофлър</strong></td>
+                            <td>1980</td>
+                            <td>Три вълни на развитие</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Мануел Кастелс</strong></td>
+                            <td>1996</td>
+                            <td>Network society</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Йонеджи Масуда</strong></td>
+                            <td>1980</td>
+                            <td>Information society impact</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Flashcards Section -->
+            <section id="flashcards" class="flashcard-section">
+                <h3>Флашкарти — Проверка на знания</h3>
+                <p style="color: var(--muted); margin-bottom: 1.5rem;">Кликнете на картата за да видите отговора</p>
+
+                <div class="flashcard-grid">
+                    <div class="fc">
+                        <div class="fc-q">Какво е ентропия на Шанън?</div>
+                        <div class="fc-a">Мярка на средната количество информация (неопределеност) в един символ. H(X) = −Σ P(xᵢ) log₂ P(xᵢ), измерена в бит/символ.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Кои са трите аспекта на информацията?</div>
+                        <div class="fc-a">1) Синтактичен — символи и кодиране; 2) Семантичен — значение и смисъл; 3) Прагматичен — полезност и действие</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Какво е DIKW пирамидата?</div>
+                        <div class="fc-a">Data → Information → Knowledge → Wisdom. Йерархия от сирови факти към организирана информация, знание и прилагане на знание.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Кои са компонентите на модела на Шанън-Уивър?</div>
+                        <div class="fc-a">Източник, Предавател, Канал, Приемник, Получател, + Източник на шум. Моделира предаване на информация през канал.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Какъв е Законът за необходимото разнообразие на Ешби?</div>
+                        <div class="fc-a">Сложността на управляващата система трябва да съответства на сложността на управлявана система. Само разнообразието може да унищожи разнообразието.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Кой въвежда концепцията за мрежовото общество?</div>
+                        <div class="fc-a">Мануел Кастелс (1996). В "The Information Age" той описва информационното общество като "network society" — организирано около глобални информационни мрежи.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Какви са трите етапа на цифровото разделение?</div>
+                        <div class="fc-a">1) Икономическо (90%) — липса на средства; 2) Юзабилност (9%) — недостатъчни умения; 3) Оправомощаване (1%) — неспособност да се създаде стойност.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Какво е бит?</div>
+                        <div class="fc-a">Binary digit. Основната единица информация в теорията на Шанън. Количество информация за един резултат: I(x) = −log₂(P(x)).</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Каква е формулата за капацитет на канала?</div>
+                        <div class="fc-a">Shannon-Hartley: C = B · log₂(1 + S/N), където B е полоса на честота (Hz), S е сигнал, N е шум. Единица: бит/сек.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Какво е Индустрия 4.0?</div>
+                        <div class="fc-a">Четвъртата индустриална революция. Съчетава киберфизични системи, IoT, облачни технологии и AI в интегрирани системи за производство и услуги.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Кои са главните етапи на жизнения цикъл на информацията?</div>
+                        <div class="fc-a">1) Генериране, 2) Събиране, 3) Обработка, 4) Съхранение, 5) Извличане, 6) Предаване, 7) Разпространение, 8) Използване.</div>
+                    </div>
+
+                    <div class="fc">
+                        <div class="fc-q">Какво е кибернетика според Норберт Уинър?</div>
+                        <div class="fc-a">Наука за управление и комуникация в животни и машини. Фокусира се на информацията, обратната връзка и хомеостазата (запазване на равновесието).</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Reference Section -->
+            <section id="quickref">
+                <h2>Бърза справка</h2>
+
+                <div class="quick-ref">
+                    <div class="ref-card">
+                        <h4>Синтактична информация</h4>
+                        <p><strong>Дефиниция:</strong> Количество, което разрешава неопределеност</p>
+                        <p><strong>Автор:</strong> Клод Шанън (1948)</p>
+                        <p><strong>Единица:</strong> Бит</p>
+                        <p><strong>Формула:</strong> H = −Σ P(xᵢ) log₂ P(xᵢ)</p>
+                    </div>
+
+                    <div class="ref-card">
+                        <h4>Кибернетика</h4>
+                        <p><strong>Дефиниция:</strong> Наука за управление и комуникация</p>
+                        <p><strong>Автор:</strong> Норберт Уинър (1948)</p>
+                        <p><strong>Ключови концепции:</strong> Обратна връзка, хомеостаза</p>
+                        <p><strong>Приложения:</strong> Автоматични системи, роботика</p>
+                    </div>
+
+                    <div class="ref-card">
+                        <h4>Закон на Ешби</h4>
+                        <p><strong>Принцип:</strong> Разнообразието на контролер = разнообразието на система</p>
+                        <p><strong>Тълкуване:</strong> Само разнообразието унищожава разнообразието</p>
+                        <p><strong>Приложение:</strong> Управление, кибернетика</p>
+                    </div>
+
+                    <div class="ref-card">
+                        <h4>DIKW Пирамида</h4>
+                        <p><strong>Нива:</strong> Data → Information → Knowledge → Wisdom</p>
+                        <p><strong>Автор:</strong> Ackoff (1989)</p>
+                        <p><strong>Фокус:</strong> От факти към разбор и прилагане</p>
+                    </div>
+
+                    <div class="ref-card">
+                        <h4>Модел Шанън-Уивър</h4>
+                        <p><strong>Компоненти:</strong> Източник, Предавател, Канал, Приемник, Получател, Шум</p>
+                        <p><strong>Нива:</strong> Техническо, семантично, прагматично</p>
+                        <p><strong>Приложение:</strong> Телекомуникации, IT мрежи</p>
+                    </div>
+
+                    <div class="ref-card">
+                        <h4>Информационно Общество</h4>
+                        <p><strong>Теоретици:</strong> Бел (1973), Тофлър (1980), Кастелс (1996)</p>
+                        <p><strong>Характеристика:</strong> IT е доминираща технология</p>
+                        <p><strong>Вълни:</strong> Селскостопанска → индустриална → информационна</p>
+                    </div>
+
+                    <div class="ref-card">
+                        <h4>Цифрово Разделение</h4>
+                        <p><strong>Три етапа:</strong> 90% икономическо, 9% юзабилност, 1% оправомощаване</p>
+                        <p><strong>Проблем:</strong> Неравномерен достъп до технология</p>
+                        <p><strong>Решение:</strong> Дигитални политики и образование</p>
+                    </div>
+
+                    <div class="ref-card">
+                        <h4>Индустрия 4.0</h4>
+                        <p><strong>Технологии:</strong> CPS, IoT, Cloud, Big Data, AI</p>
+                        <p><strong>Характеристика:</strong> Интеграция на физически и дигитални системи</p>
+                        <p><strong>Значение:</strong> Revolucия в производството и услугите</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer note -->
+            <div style="margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--border); color: var(--muted); font-size: 0.95rem;">
+                <p><strong>За подготовка:</strong> Прочетете основната литература [28] Бърнев П., [29] Денчев Ст., [31] Ешби У.Р. Повторете ключовите формули и имена. Направете схеми за всеки раздел.</p>
+                <p style="margin-top: 0.5rem;"><strong>Време на подготовка:</strong> Препоръчва се минимум 8-10 часа интензивна подготовка за този раздел.</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize mermaid
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+
+        // Flashcard toggle functionality
+        document.querySelectorAll('.fc').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('open');
+            });
+        });
+
+        // Smooth scroll for sidebar links
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

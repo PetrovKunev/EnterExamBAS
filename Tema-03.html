@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 3: Алгоритми, Изчислимост, Сложност, Машини на Тюринг</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0f2744;
+            --blue: #2563a8;
+            --green: #166534;
+            --purple: #5b21b6;
+            --orange: #9a3412;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--navy);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        aside {
+            width: 280px;
+            background-color: var(--navy);
+            color: white;
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+        }
+
+        aside h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        aside nav ul {
+            list-style: none;
+        }
+
+        aside nav ul li {
+            margin-bottom: 1rem;
+        }
+
+        aside nav a {
+            color: #e0e7ff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            padding: 0.5rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        aside nav a:hover {
+            color: white;
+            border-left-color: var(--blue);
+            padding-left: 1rem;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 3rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 100px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--navy);
+            border-bottom: 3px solid var(--blue);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            color: var(--blue);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            color: var(--purple);
+            margin-top: 1.2rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .def-box {
+            background: linear-gradient(135deg, rgba(37, 99, 168, 0.08) 0%, rgba(37, 99, 168, 0.04) 100%);
+            border-left: 4px solid var(--blue);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .def-box strong {
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(22, 101, 52, 0.08) 0%, rgba(22, 101, 52, 0.04) 100%);
+            border-left: 4px solid var(--green);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .theorem-box strong {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(91, 33, 182, 0.08) 0%, rgba(91, 33, 182, 0.04) 100%);
+            border-left: 4px solid var(--purple);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .note-box strong {
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .formula-block {
+            background-color: #f5f3ff;
+            border: 1px solid #e0d7ff;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        .proof-steps {
+            background: linear-gradient(135deg, rgba(155, 52, 18, 0.08) 0%, rgba(155, 52, 18, 0.04) 100%);
+            border-left: 4px solid var(--orange);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .proof-steps ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        .proof-steps li {
+            margin-bottom: 0.8rem;
+            line-height: 1.7;
+        }
+
+        .gen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .gen-table th {
+            background-color: var(--navy);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .gen-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .gen-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .example-box {
+            background-color: #fef3c7;
+            border-left: 4px solid var(--orange);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .example-box strong {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #f5f5f5;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            background-color: var(--navy);
+            color: #e0e7ff;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .flashcard {
+            perspective: 1000px;
+            cursor: pointer;
+            height: 250px;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .complexity-diagram {
+            background: white;
+            border: 2px solid var(--navy);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .tm-state {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--blue);
+            border-radius: 50%;
+            line-height: 60px;
+            text-align: center;
+            margin: 0 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, rgba(37, 99, 168, 0.1) 0%, rgba(37, 99, 168, 0.05) 100%);
+        }
+
+        .tm-accept {
+            border: 3px double var(--green);
+            color: var(--green);
+        }
+
+        .tm-reject {
+            border: 3px double var(--red);
+            color: var(--red);
+        }
+
+        .tm-initial {
+            background: linear-gradient(135deg, var(--blue) 0%, rgba(37, 99, 168, 0.2) 100%);
+            color: var(--blue);
+        }
+
+        .diagram-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .quick-ref-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .quick-ref-card {
+            background: white;
+            border: 2px solid var(--blue);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .quick-ref-card h4 {
+            color: var(--blue);
+            margin-top: 0;
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 0.5rem;
+        }
+
+        .quick-ref-card p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background-color: var(--navy);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 1.5rem;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+
+            main {
+                padding: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            .flashcard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--blue);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--navy);
+        }
+    </style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:10px;right:16px;z-index:9999;background:#0f2744;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-family:Inter,sans-serif;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">← Портал</a>
+    <header>
+        <h1>Тема 3: Алгоритми, Изчислимост, Сложност, Машини на Тюринг</h1>
+        <p>Материали за подготовка на докторски кандидатски изпит — Българска академия на науките (ИМИ-БАН)</p>
+    </header>
+
+    <div class="container">
+        <aside>
+            <h2>Съдържание</h2>
+            <nav>
+                <ul>
+                    <li><a href="#overview">Обзор</a></li>
+                    <li><a href="#algorithms">Раздел 1: Алгоритми</a></li>
+                    <li><a href="#computability">Раздел 2: Изчислимост</a></li>
+                    <li><a href="#turing-machines">Раздел 3: Машини на Тюринг</a></li>
+                    <li><a href="#church-turing">Раздел 4: Тезис на Чърч-Тюринг</a></li>
+                    <li><a href="#complexity">Раздел 5: Сложност</a></li>
+                    <li><a href="#flashcards">Flashcards</a></li>
+                    <li><a href="#quick-ref">Бърза справка</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+            <!-- ОБЗОР -->
+            <section id="overview">
+                <h2>Обзор</h2>
+                <p>
+                    Тема 3 представя фундаментални концепции в теоретичната информатика, които свързват предходния материал от Тема 2 (логика и доказателства) със следващата Тема 4 (формални езици и граматики). Материалът обхваща четири взаимосвързани области:
+                </p>
+
+                <div class="note-box">
+                    <strong>Логическа прогресия на курса:</strong>
+                    <ul>
+                        <li><strong>Тема 2 (Логика):</strong> Ни учи как да аргументираме формално и да доказваме твърдения</li>
+                        <li><strong>Тема 3 (Алгоритми, Изчислимост, Машини на Тюринг):</strong> Дефинира какво можем да изчисляваме и с какви ресурси — това е ядрото на теоретичната информатика</li>
+                        <li><strong>Тема 4 (Формални езици):</strong> Характеризира езиците, които машините могат да разпознаят</li>
+                    </ul>
+                </div>
+
+                <h3>Защо е важна тази тема?</h3>
+                <p>
+                    Концепциите в Тема 3 отговарят на най-дълбоките въпроси в информатиката:
+                </p>
+                <ul>
+                    <li><strong>Какво е алгоритъм?</strong> — Формална дефиниция на процедура</li>
+                    <li><strong>Какво можем да изчисляваме?</strong> — Граница между разрешими и неразрешими проблеми</li>
+                    <li><strong>Как измерваме изчисленията?</strong> — Асимптотична анализа и класове сложност</li>
+                    <li><strong>Какъв е моделът на универсалното изчисление?</strong> — Машините на Тюринг и тезисът на Чърч-Тюринг</li>
+                </ul>
+            </section>
+
+            <!-- РАЗДЕЛ 1: АЛГОРИТМИ -->
+            <section id="algorithms">
+                <h2>Раздел 1: Алгоритми</h2>
+
+                <h3>Определение на алгоритъм</h3>
+
+                <div class="def-box">
+                    <strong>Неформално определение:</strong> Алгоритъмът е крайна последователност от прецизни, недвусмислени инструкции, предназначени да решат определен клас проблеми или да се извршат определени изчисления.
+                </div>
+
+                <h4>Основни свойства на алгоритмите</h4>
+                <p>Всеки валиден алгоритъм трябва да притежава следните свойства:</p>
+
+                <div class="gen-table">
+                    <tr>
+                        <th>Свойство</th>
+                        <th>Описание</th>
+                        <th>Пример</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Крайност</strong></td>
+                        <td>Алгоритъмът трябва да завършва след крайно много стъпки за всеки вход</td>
+                        <td>Цикъл с брой итерации = n, където n е размерът на входа</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Определеност</strong></td>
+                        <td>Всяка стъпка е прецизна и недвусмислена; няма място за интерпретация</td>
+                        <td>Точни инструкции тип "присвои 0 на x" вместо "задай x на някакво число"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Вход</strong></td>
+                        <td>Алгоритъмът приема zero или повече входни стойности</td>
+                        <td>Масив от числа, строка от символи</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Изход</strong></td>
+                        <td>Алгоритъмът произвежда поне един резултат</td>
+                        <td>Отсортиран масив, булева стойност (истина/лъжа)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ефективност</strong></td>
+                        <td>Всяка операция трябва да е механически изпълнима в крайно време</td>
+                        <td>Прости аритметични операции, не безкрайни суми</td>
+                    </tr>
+                </div>
+
+                <h3>Асимптотична анализа: O, Ω, Θ нотация</h3>
+
+                <p>Асимптотичната анализа позволява да описаваме растежа на функциите, независимо от точните константи и малките членове.</p>
+
+                <div class="def-box">
+                    <strong>Big-O нотация (горна граница):</strong> O(g(n)) = { f(n) : съществуват положителни константи c и n₀ такива, че 0 ≤ f(n) ≤ c·g(n) за всички n ≥ n₀ }
+                    <p style="margin-top: 0.8rem;">Интерпретация: f(n) растет не по-бързо от g(n) асимптотично.</p>
+                </div>
+
+                <div class="def-box">
+                    <strong>Big-Omega нотация (долна граница):</strong> Ω(g(n)) = { f(n) : съществуват положителни константи c и n₀ такива, че 0 ≤ c·g(n) ≤ f(n) за всички n ≥ n₀ }
+                    <p style="margin-top: 0.8rem;">Интерпретация: f(n) растет поне толкова бързо като g(n) асимптотично.</p>
+                </div>
+
+                <div class="def-box">
+                    <strong>Big-Theta нотация (точна граница):</strong> Θ(g(n)) = { f(n) : съществуват положителни константи c₁, c₂ и n₀ такива, че 0 ≤ c₁·g(n) ≤ f(n) ≤ c₂·g(n) за всички n ≥ n₀ }
+                    <p style="margin-top: 0.8rem;">Интерпретация: f(n) растет точно както g(n) асимптотично.</p>
+                </div>
+
+                <h4>Примери за асимптотична нотация</h4>
+                <ul>
+                    <li>3n + 2 = O(n) — растежът е линеен</li>
+                    <li>n² + 5n + 10 = O(n²) — доминира n²</li>
+                    <li>log n + n = O(n) — линейният член доминира</li>
+                    <li>2ⁿ + n⁵ = Θ(2ⁿ) — експоненциалният член доминира</li>
+                </ul>
+
+                <h3>Работен пример 1: Анализ на tiempo сложност на вложени цикли</h3>
+
+                <div class="example-box">
+                    <strong>Задача:</strong> Анализирайте временната сложност на следния алгоритъм:
+                </div>
+
+                <pre>
+алгоритъм(n):
+  брой = 0
+  за i = 1 до n:
+    за j = 1 до n:
+      брой = брой + 1
+  върни брой
+                </pre>
+
+                <div class="proof-steps">
+                    <strong>Решение:</strong>
+                    <ol>
+                        <li><strong>Анализ на външни цикъл:</strong> Цикълът "за i" изпълнява n итерации</li>
+                        <li><strong>Анализ на вътрешния цикъл:</strong> За всяка итерация на i, цикълът "за j" изпълнява n итерации</li>
+                        <li><strong>Брой операции:</strong> Тялото на вътрешния цикъл (брой = брой + 1) се изпълнява n × n = n² пъти</li>
+                        <li><strong>Заключение:</strong> T(n) = n², следователно алгоритъмът работи в O(n²) време</li>
+                        <li><strong>Пространствена сложност:</strong> O(1) — използва се само константно допълнително пространство</li>
+                    </ol>
+                </div>
+
+                <h3>Основни парадигми на алгоритми</h3>
+
+                <div class="gen-table">
+                    <tr>
+                        <th>Парадигма</th>
+                        <th>Описание</th>
+                        <th>Примери</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Грубо търсене</strong> (Brute Force)</td>
+                        <td>Изчерпателно проверяване на всички възможни решения</td>
+                        <td>Линейно търсене, проверка на всички пермутации</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Раздели и владей</strong> (Divide & Conquer)</td>
+                        <td>Разделяне на проблема на по-малки подпроблеми, решаване им и комбиниране на резултатите</td>
+                        <td>Merge Sort, Quick Sort, Binary Search</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Алчен алгоритъм</strong> (Greedy)</td>
+                        <td>На всяка стъпка прави локално оптимален избор, надявайки се това да води до глобално оптимално решение</td>
+                        <td>Huffman Coding, Dijkstra's Algorithm, Activity Selection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Динамично програмиране</strong></td>
+                        <td>Решава проблеми чрез разлагане на подпроблеми, памети на резултатите и избягване на преизчисляване</td>
+                        <td>Fibonacci, Longest Common Subsequence, Knapsack</td>
+                    </tr>
+                </div>
+
+                <h3>Работен пример 2: Merge Sort и анализ на рекуренция</h3>
+
+                <div class="example-box">
+                    <strong>Задача:</strong> Анализирайте временната сложност на Merge Sort.
+                </div>
+
+                <h4>Описание на алгоритъма</h4>
+                <p>Merge Sort е алгоритъм разделяй-и-владей, който работи следния начин:</p>
+                <pre>
+mergeSort(A, p, r):
+  ако p < r:
+    q = ⌊(p + r) / 2⌋
+    mergeSort(A, p, q)
+    mergeSort(A, q+1, r)
+    merge(A, p, q, r)
+                </pre>
+
+                <h4>Анализ на рекуренция</h4>
+
+                <div class="proof-steps">
+                    <strong>Решение:</strong>
+                    <ol>
+                        <li><strong>Рекурентно съотношение:</strong> T(n) = 2T(n/2) + O(n), където T(1) = O(1)</li>
+                        <li><strong>Обяснение:</strong>
+                            <ul style="margin: 0.5rem 0;">
+                                <li>Разделяме масива на две половини: 2T(n/2)</li>
+                                <li>Сливаме двете половини: O(n)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Решение чрез мастър теорема:</strong> За T(n) = aT(n/b) + f(n), имаме a=2, b=2, f(n)=n.
+                            <ul style="margin: 0.5rem 0;">
+                                <li>log_b(a) = log₂(2) = 1</li>
+                                <li>f(n) = n = Θ(n¹)</li>
+                                <li>Следователно T(n) = Θ(n log n)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Временна сложност:</strong> O(n log n) в най-лошия, среден и най-добрия случай</li>
+                        <li><strong>Пространствена сложност:</strong> O(n) за допълнителното пространство, необходимо за сливане</li>
+                    </ol>
+                </div>
+
+                <div class="note-box">
+                    <strong>Мастър теорема (опростена форма):</strong> За рекуренция T(n) = aT(n/b) + cn^k:
+                    <ul>
+                        <li>Ако a > b^k, то T(n) = Θ(n^(log_b a))</li>
+                        <li>Ако a = b^k, то T(n) = Θ(n^k log n)</li>
+                        <li>Ако a < b^k, то T(n) = Θ(n^k)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 2: ИЗЧИСЛИМОСТ -->
+            <section id="computability">
+                <h2>Раздел 2: Изчислимост</h2>
+
+                <p>
+                    Изчислимостта изучава граница между проблемите, които могат да бъдат решени алгоритмично, и тези, които не могат. Това е един от най-важните резултати в теоретичната информатика.
+                </p>
+
+                <h3>Класификация на проблемите</h3>
+
+                <div class="def-box">
+                    <strong>Разрешим проблем (Decidable Problem):</strong> Проблем, за който съществува алгоритъм (машина на Тюринг), която за всеки вход завършва и дава правилния отговор (ДА или НЕ).
+                    <p style="margin-top: 0.8rem;">Пример: Проверка дали дадено число е просто число</p>
+                </div>
+
+                <div class="def-box">
+                    <strong>Полуразрешим проблем (Semi-decidable / Recognizable):</strong> Проблем, за който съществува алгоритъм, който завършва и дава ДА ако отговорът е ДА, но може да не завършва (или да даде НЕ) ако отговорът е НЕ.
+                    <p style="margin-top: 0.8rem;">Пример: Проверка дали дадена машина на Тюринг приема дадена дума</p>
+                </div>
+
+                <div class="def-box">
+                    <strong>Неразрешим проблем (Undecidable Problem):</strong> Проблем, за който няма алгоритъм, който да решава проблема — т.е., няма машина на Тюринг, която завършва за всеки вход и дава правилния отговор.
+                    <p style="margin-top: 0.8rem;">Пример: Проблемът на Халтинга</p>
+                </div>
+
+                <h3>Проблемът на Халтинга (The Halting Problem)</h3>
+
+                <div class="theorem-box">
+                    <strong>Твърдение (The Halting Problem):</strong> Неразрешимо е да се определи за произволна машина на Тюринг M и произволна дума w, дали M завършва (халтира) при вход w или работи безкрайно.
+                    <p style="margin-top: 0.8rem;">Формално: Езикът HALT = {⟨M, w⟩ : машина M завершава при вход w} е неразрешим.</p>
+                </div>
+
+                <h4>Доказателство на проблемът на Халтинга</h4>
+
+                <div class="proof-steps">
+                    <strong>Доказателство чрез противоречие и диагонализация:</strong>
+                    <ol>
+                        <li><strong>Допускане:</strong> Предположим, че съществува машина H на Тюринг, която решава проблемът на халтинга. H приема ⟨M, w⟩ и завршава с ДА, ако M завршава при w, или с НЕ, ако M не завршава при w.</li>
+
+                        <li><strong>Конструкция на противоречива машина:</strong> Конструираме нова машина D, която:
+                            <ul style="margin: 0.5rem 0;">
+                                <li>Приема вход ⟨M⟩ (кодиран опис на машина M)</li>
+                                <li>Извиква H на входа ⟨M, ⟨M⟩⟩</li>
+                                <li>Ако H отговори ДА (M завршава при ⟨M⟩), D влиза в безкраен цикъл</li>
+                                <li>Ако H отговори НЕ (M не завршава при ⟨M⟩), D завршава</li>
+                            </ul>
+                        </li>
+
+                        <li><strong>Противоречие:</strong> Което се случва, когато D получи ⟨D⟩ като вход?
+                            <ul style="margin: 0.5rem 0;">
+                                <li>Ако D завршава при ⟨D⟩, то H отговаря НЕ на ⟨D, ⟨D⟩⟩, което означава D не завршава — противоречие!</li>
+                                <li>Ако D не завршава при ⟨D⟩, то H отговаря ДА на ⟨D, ⟨D⟩⟩, което означава D завршава — противоречие!</li>
+                            </ul>
+                        </li>
+
+                        <li><strong>Заключение:</strong> Тъй като допускането, че H съществува, води до противоречие, H не може да съществува. Следователно проблемът на халтинга е неразрешим.</li>
+                    </ol>
+                </div>
+
+                <h3>Работен пример 3: Неразрешимост на проблемът на Халтинга</h3>
+
+                <div class="example-box">
+                    <strong>Задача:</strong> Покажете, че проблемът на халтинга е неразрешим, с явна конструкция на противоречива машина.
+                </div>
+
+                <div class="proof-steps">
+                    <strong>Решение:</strong>
+                    <ol>
+                        <li><strong>Предположение:</strong> Допускаме, че съществува машина HALT(M, w), която:
+                            <div class="formula-block">
+HALT(M, w) = ДА, ако M завршава при w
+HALT(M, w) = НЕ, ако M работи безкрайно при w
+                            </div>
+                        </li>
+
+                        <li><strong>Конструкция на D:</strong> Дефинираме машина D:
+                            <div class="formula-block">
+D(M):
+  ако HALT(M, M) = "ДА":
+    безкраен_цикъл()
+  иначе:
+    завршава()
+                            </div>
+                        </li>
+
+                        <li><strong>Прилагане на D към себе си:</strong> Какво е D(D)?
+                            <ul style="margin: 0.5rem 0;">
+                                <li>Ако D(D) завршава, то HALT(D, D) = ДА, което по дефиниция на D означава, че D влиза в безкраен цикъл — противоречие!</li>
+                                <li>Ако D(D) не завршава, то HALT(D, D) = НЕ, което по дефиниция на D означава, че D завршава — противоречие!</li>
+                            </ul>
+                        </li>
+
+                        <li><strong>Заключение:</strong> Поради противоречието, машина HALT не може да съществува, следователно проблемът на халтинга е неразрешим.</li>
+                    </ol>
+                </div>
+
+                <h3>Редуцируемост (Reducibility)</h3>
+
+                <div class="def-box">
+                    <strong>Многоеденична редукция:</strong> Езикът A е редуцируем до езикът B (обозначава се A ≤_m B), ако съществува изчислима функция f такава, че за всяка дума w: w ∈ A ако и само ако f(w) ∈ B.
+                    <p style="margin-top: 0.8rem;">Интерпретация: Ако можем да решим B, можем да решим A чрез редукция.</p>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Свойство на редуцируемост:</strong> Ако A ≤_m B и B е разрешим, то A е разрешим. Контрапозитивно: Ако A е неразрешим и A ≤_m B, то B е неразрешим.
+                </div>
+
+                <h3>Теорема на Райс (Rice's Theorem)</h3>
+
+                <div class="theorem-box">
+                    <strong>Теорема на Райс:</strong> Нека P е нетривиално свойство на langue (език), разпознаван от машини на Тюринг. Тогава проблемът за определяне дали дадена машина на Тюринг разпознава език със свойство P е неразрешим.
+                    <p style="margin-top: 0.8rem;"><strong>Нетривиално:</strong> Свойството важи за някои езици, но не за всички.</p>
+                </div>
+
+                <div class="note-box">
+                    <strong>Примери за приложение на Райс:</strong>
+                    <ul>
+                        <li>Дали дадена машина разпознава празния език? — Неразрешимо (свойство: "е празен")</li>
+                        <li>Дали дадена машина разпознава крайния език? — Неразрешимо (свойство: "е краен")</li>
+                        <li>Дали дадена машина разпознава регулярен език? — Неразрешимо (свойство: "е регулярен")</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 3: МАШИНИ НА ТЮРИНГ -->
+            <section id="turing-machines">
+                <h2>Раздел 3: Машини на Тюринг</h2>
+
+                <p>
+                    Машината на Тюринг е абстрактен математически модел на компютър, предложен от Алан Тюринг през 1936 год. Въпреки своята простота, TM е еквивалентна по мощност на всеки известен модел на компютри.
+                </p>
+
+                <h3>Формална дефиниция на машина на Тюринг</h3>
+
+                <div class="def-box">
+                    <strong>Детерминирана машина на Тюринг:</strong> Машина M е дефинирана като седмица (Q, Σ, Γ, δ, q₀, q_accept, q_reject), където:
+                    <ul style="margin-top: 0.8rem; margin-bottom: 0;">
+                        <li><strong>Q</strong> е краен набор от състояния</li>
+                        <li><strong>Σ</strong> е входната азбука (не съдържа символ за бланко □)</li>
+                        <li><strong>Γ</strong> е азбуката на лентата, където Σ ⊂ Γ и □ ∈ Γ</li>
+                        <li><strong>δ: Q × Γ → Q × Γ × {L, R}</strong> е функция на преходите</li>
+                        <li><strong>q₀ ∈ Q</strong> е начално състояние</li>
+                        <li><strong>q_accept ∈ Q</strong> е приемащо състояние</li>
+                        <li><strong>q_reject ∈ Q</strong> е отхвърляемо състояние, където q_reject ≠ q_accept</li>
+                    </ul>
+                </div>
+
+                <h3>Как работи машина на Тюринг</h3>
+
+                <div class="diagram-title">Компоненти на машина на Тюринг:</div>
+                <div class="complexity-diagram">
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Лента:</strong> ... | □ | a | b | a | □ | ...
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <strong>Глава (Head):</strong> Чете и пише символи, движи се наляво (L) или надясно (R)
+                    </div>
+                    <div>
+                        <span class="tm-state tm-initial">q₀</span>
+                        <span class="tm-state">q₁</span>
+                        <span class="tm-state tm-accept">accept</span>
+                        <span class="tm-state tm-reject">reject</span>
+                    </div>
+                </div>
+
+                <h4>Преход и вычисление</h4>
+                <p>
+                    Машина M върши следното:
+                </p>
+                <ol>
+                    <li>Начало: Лентата съдържа входна дума w, главата е на първия символ, машина е в състояние q₀</li>
+                    <li>На всяка стъпка: Прочитай текущия символ, изпълни δ(q, символ) → (q', символ', посока)</li>
+                    <li>Преход: Напиши символ', движи глава (L или R), влез в състояние q'</li>
+                    <li>Спиране: Завърши, когато влезеш в q_accept (приеми входа) или q_reject (отхвърли входа)</li>
+                </ol>
+
+                <h3>Работен пример 4: Машина на Тюринг за {0ⁿ1ⁿ | n ≥ 1}</h3>
+
+                <div class="example-box">
+                    <strong>Задача:</strong> Дизайнирайте машина на Тюринг, която приема езикът L = {0ⁿ1ⁿ | n ≥ 1}, и проверете поведението при вход "0011".
+                </div>
+
+                <h4>Дизайн на машина</h4>
+
+                <div class="proof-steps">
+                    <strong>Решение:</strong>
+                    <ol>
+                        <li><strong>Идея:</strong> За всяка нула, която виждаме в началото, маркираме я с X, преминаваме през всички нули и единици (до другата страна), маркираме един от единиците с Y, и се връщаме да повторим. Ако остане точно една нула и една единица, приемаме.</li>
+
+                        <li><strong>Формална дефиниция:</strong>
+                            <div class="formula-block">
+M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject)
+Q = {q₀, q₁, q₂, q₃, q₄, q_accept, q_reject}
+Σ = {0, 1}
+Γ = {0, 1, X, Y, □}
+                            </div>
+                        </li>
+
+                        <li><strong>Функция на преходите δ:</strong>
+                            <div class="formula-block">
+δ(q₀, 0) = (q₁, X, R)  — маркирай 0, движи надясно
+δ(q₁, 0) = (q₁, 0, R)  — прескочи нули
+δ(q₁, Y) = (q₁, Y, R)  — прескочи маркирани единици
+δ(q₁, 1) = (q₂, Y, L)  — маркирай 1, движи наляво
+δ(q₂, Y) = (q₂, Y, L)  — прескочи маркирани единици
+δ(q₂, X) = (q₃, X, R)  — намери маркирана нула, движи надясно
+δ(q₃, X) = (q₃, X, R)  — прескочи маркирани нули
+δ(q₃, Y) = (q_accept, Y, R)  — всички маркирани, приеми
+δ(q₀, □) = (q_reject, □, R) — празен вход, отхвърли
+                            </div>
+                        </li>
+
+                        <li><strong>Трасиране на вход "0011":</strong>
+                            <table style="margin: 1rem 0; background: white; border-collapse: collapse; width: 100%;">
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Стъпка</th>
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Състояние</th>
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Лента</th>
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Позиция</th>
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Действие</th>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">0</td>
+                                    <td style="padding: 0.5rem;">q₀</td>
+                                    <td style="padding: 0.5rem;">0011</td>
+                                    <td style="padding: 0.5rem;">0</td>
+                                    <td style="padding: 0.5rem;">Прочети 0, напиши X, R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">1</td>
+                                    <td style="padding: 0.5rem;">q₁</td>
+                                    <td style="padding: 0.5rem;">X011</td>
+                                    <td style="padding: 0.5rem;">1</td>
+                                    <td style="padding: 0.5rem;">Прочети 0, остани, R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">2</td>
+                                    <td style="padding: 0.5rem;">q₁</td>
+                                    <td style="padding: 0.5rem;">X011</td>
+                                    <td style="padding: 0.5rem;">2</td>
+                                    <td style="padding: 0.5rem;">Прочети 1, напиши Y, L</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">3</td>
+                                    <td style="padding: 0.5rem;">q₂</td>
+                                    <td style="padding: 0.5rem;">X0Y1</td>
+                                    <td style="padding: 0.5rem;">1</td>
+                                    <td style="padding: 0.5rem;">Прочети 0, остани, L</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">4</td>
+                                    <td style="padding: 0.5rem;">q₂</td>
+                                    <td style="padding: 0.5rem;">X0Y1</td>
+                                    <td style="padding: 0.5rem;">0</td>
+                                    <td style="padding: 0.5rem;">Прочети X, остани, R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">5</td>
+                                    <td style="padding: 0.5rem;">q₃</td>
+                                    <td style="padding: 0.5rem;">X0Y1</td>
+                                    <td style="padding: 0.5rem;">1</td>
+                                    <td style="padding: 0.5rem;">Прочети 0, остани, R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">6</td>
+                                    <td style="padding: 0.5rem;">q₃</td>
+                                    <td style="padding: 0.5rem;">X0Y1</td>
+                                    <td style="padding: 0.5rem;">2</td>
+                                    <td style="padding: 0.5rem;">Прочети Y, приеми</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.5rem;">7</td>
+                                    <td style="padding: 0.5rem;">q_accept</td>
+                                    <td style="padding: 0.5rem;">X0Y1</td>
+                                    <td style="padding: 0.5rem;">2</td>
+                                    <td style="padding: 0.5rem;">Приемане</td>
+                                </tr>
+                            </table>
+                        </li>
+
+                        <li><strong>Заключение:</strong> Машина приема входа "0011" защото има равен брой нули и единици.</li>
+                    </ol>
+                </div>
+
+                <h3>Варианти на машини на Тюринг</h3>
+
+                <div class="gen-table">
+                    <tr>
+                        <th>Вариант</th>
+                        <th>Описание</th>
+                        <th>Мощност</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Детерминирана TM</strong></td>
+                        <td>За всяко състояние и символ има точно един преход</td>
+                        <td>Базовата мощност</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Недетерминирана TM</strong></td>
+                        <td>За всяко състояние и символ могат да има няколко преходи</td>
+                        <td>Еквивалентна на детерминирана TM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Многолентова TM</strong></td>
+                        <td>Машина с k ленти и k глави, работещи независимо</td>
+                        <td>Еквивалентна на детерминирана TM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Двусторонна безкрайна лента</strong></td>
+                        <td>Лентата се простира безкрайно наляво и надясно</td>
+                        <td>Еквивалентна на детерминирана TM</td>
+                    </tr>
+                </div>
+
+                <div class="note-box">
+                    <strong>Еквивалентност на варианти:</strong> Въпреки че различните варианти имат различни дефиниции, всички те могат да симулират един друг със полиномиално увеличение на времето (с изключение на някои специални случаи). Това показва, че концепцията за "изчислимост" е независима от конкретния модел.
+                </div>
+
+                <h3>Универсална машина на Тюринг</h3>
+
+                <div class="def-box">
+                    <strong>Универсална машина на Тюринг (UTM):</strong> Машина на Тюринг U, която приема като вход кодирано описание ⟨M⟩ на произволна машина M и дума w, и симулира поведението на M на w.
+                    <p style="margin-top: 0.8rem;">Формално: U приема ⟨M, w⟩ и:
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Приемает w, ако M приемает w</li>
+                        <li>Отхвърля w, ако M отхвърля w</li>
+                        <li>Работи безкрайно, ако M работи безкрайно</li>
+                    </ul>
+                    </p>
+                </div>
+
+                <div class="note-box">
+                    <strong>Значимост на UTM:</strong> Съществуването на универсална машина означава, че един фиксиран компютър (който работи според программата на UTM) може да симулира всеки други компютър. Това е математическото основание на програмируемите компютри!
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 4: ТЕЗИС НА ЧЪРЧ-ТЮРИНГ -->
+            <section id="church-turing">
+                <h2>Раздел 4: Тезис на Чърч-Тюринг</h2>
+
+                <p>
+                    Тезисът на Чърч-Тюринг е един от най-важните постулати в теоретичната информатика. Той свързва неформалната идея за "алгоритъм" с формални математически модели.
+                </p>
+
+                <h3>Твърдение на тезиса</h3>
+
+                <div class="theorem-box">
+                    <strong>Тезис на Чърч-Тюринг:</strong> Функция е изчислима по алгоритмично (т.е., може да бъде пресметната чрез механична процедура) ако и само ако е изчислима чрез машина на Тюринг (или еквивалентен модел като λ-смятане, система Post, или частично рекурсивни функции).
+                </div>
+
+                <div class="note-box">
+                    <strong>Защо е тезис, а не теорема?</strong> Това е постулат, а не формално доказуемо твърдение, защото "изчислимо по алгоритмично" е неформална концепция. Не може да се докаже математически, но е широко приемано като верно въз основа на емпирични свидетелства и еквивалентност на много независимо разработени модели.
+                </div>
+
+                <h3>Исторически контекст</h3>
+
+                <div class="gen-table">
+                    <tr>
+                        <th>Година</th>
+                        <th>Автор</th>
+                        <th>Модел/Развитие</th>
+                        <th>Значимост</th>
+                    </tr>
+                    <tr>
+                        <td>1936</td>
+                        <td>Алан Тюринг</td>
+                        <td>Машини на Тюринг (TM)</td>
+                        <td>Абстрактен модел на механално изчисление</td>
+                    </tr>
+                    <tr>
+                        <td>1936</td>
+                        <td>Алонзо Чърч</td>
+                        <td>λ-смятане</td>
+                        <td>Функционален модел на изчисление</td>
+                    </tr>
+                    <tr>
+                        <td>1937</td>
+                        <td>Стивън Клини</td>
+                        <td>Частично рекурсивни функции</td>
+                        <td>Алгебрични функции, изчислими чрез рекурсия</td>
+                    </tr>
+                    <tr>
+                        <td>1943</td>
+                        <td>Емил Пост</td>
+                        <td>Post Canonical System</td>
+                        <td>Система за манипулация на струни</td>
+                    </tr>
+                    <tr>
+                        <td>1954</td>
+                        <td>Андрей Марков</td>
+                        <td>Марковски алгоритми</td>
+                        <td>Система за пренаписване на струни</td>
+                    </tr>
+                </div>
+
+                <h3>Еквивалентност на моделите</h3>
+
+                <p>
+                    Един от най-убедителните аргументи в подкрепа на тезиса на Чърч-Тюринг е фактът, че всички тези независимо разработени модели се оказаха еквивалентни по отношение на това какво могат и не могат да изчислят.
+                </p>
+
+                <div class="formula-block">
+λ-смятане ≡ Машини на Тюринг ≡ Частично рекурсивни функции ≡
+Post System ≡ Марковски алгоритми ≡ ...
+
+Всички модели разпознават точно един и същ клас функции!
+                </div>
+
+                <h3>Последици за компютърната наука</h3>
+
+                <ul>
+                    <li><strong>Универсалност на изчисленията:</strong> Всеки достатъчно мощен компютърен модел (TM, λ-смятане, реални компютри) може да изчисля една и съща клас функции</li>
+                    <li><strong>Независимост от деталите:</strong> Дали използваме TM, Java, Python или което и да е други средство, когато говорим за "изчислимост", имаме предвид една и съща математическа концепция</li>
+                    <li><strong>Съществуват неразрешими проблеми:</strong> Благодарение на TM, можем формално да докажем, че някои проблеми (като халтинга) са абсолютно неразрешими</li>
+                    <li><strong>Граници на изчисленията:</strong> Тезисът установява, че има математически функции, които не могат да бъдат изчислени механически</li>
+                </ul>
+
+                <h3>Критики и обсъждания</h3>
+
+                <div class="note-box">
+                    <strong>Съвременни разисквания:</strong>
+                    <ul>
+                        <li>Някои теоретици твърдят, че квантовите компютри могат да надминат TM (но все още няма доказателство)</li>
+                        <li>Хиперкомпютрите (теоретични машини, които работят "отвъд" TM) са интересна философска концепция, но не съществуват физически</li>
+                        <li>Въпреки това, тезисът остава центральната идея в теоретичната информатика</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 5: СЛОЖНОСТ -->
+            <section id="complexity">
+                <h2>Раздел 5: Сложност (P, NP, NP-Completeness)</h2>
+
+                <p>
+                    Класовете на сложност классифицират проблемите според ресурсите (време, пространство), необходими за их решение. Докато изчислимостта отговаря на въпроса "Може ли проблемът да бъде решен?", сложността отговаря на "Колко ресурси са необходими?"
+                </p>
+
+                <h3>P — Полиномиално време (Polynomial Time)</h3>
+
+                <div class="def-box">
+                    <strong>Клас P:</strong> Набор от всички разрешими проблеми, които могат да бъдат решени чрез детерминирана машина на Тюринг в полиномиално време от размера на входа.
+                    <p style="margin-top: 0.8rem;">Формално: P = {L : съществува DTM M, която решава L в O(n^k) време за някакво постоянно k}</p>
+                    <p style="margin-top: 0.8rem;"><strong>Интуиция:</strong> Проблемите, които имат "лесно" решение</p>
+                </div>
+
+                <h4>Примери за проблеми в P</h4>
+                <ul>
+                    <li><strong>Сортиране:</strong> Сортирай масив — O(n log n) време</li>
+                    <li><strong>Търсене:</strong> Намери елемент в масив — O(n) време</li>
+                    <li><strong>Гафови пътища:</strong> Намери най-краткия път между два върха — O(n² log n) време (Dijkstra)</li>
+                    <li><strong>Просто число:</strong> Проверка дали число е просто — O(n³) време (AKS тест)</li>
+                </ul>
+
+                <h3>NP — Недетерминирано полиномиално време (Nondeterministic Polynomial Time)</h3>
+
+                <div class="def-box">
+                    <strong>Клас NP:</strong> Набор от всички проблеми за решение, чиито положителни инстанции имат свидетелства (сертификати), които могат да бъдат проверени в полиномиално време.
+                    <p style="margin-top: 0.8rem;">Формално: NP = {L : съществува полиномиалнозвещо свидетел R и машина V, която проверява R за всяка дума w ∈ L в полиномиално време}</p>
+                    <p style="margin-top: 0.8rem;"><strong>Интуиция:</strong> Проблемите, чиито решения могат да бъдат "лесно" проверени</p>
+                </div>
+
+                <h4>Примери за проблеми в NP</h4>
+                <ul>
+                    <li><strong>SAT (Boolean Satisfiability):</strong> Съществува ли присвояване на променливи, което прави формулата истинска? Свидетелство: присвояването</li>
+                    <li><strong>Hamiltonian Path:</strong> Съществува ли път, който посещава всеки върх точно веднъж? Свидетелство: пътят</li>
+                    <li><strong>Traveling Salesman Problem (TSP):</strong> Съществува ли пътуване с дължина < k? Свидетелство: пътуването</li>
+                    <li><strong>Clique:</strong> Съществува ли полнограф с k върхове? Свидетелство: върховете</li>
+                </ul>
+
+                <div class="note-box">
+                    <strong>Очевидност: P ⊆ NP</strong> Защото ако можем да решим проблемът в полиномиално време, можем естествено да проверим решението (просто решаваме проблема отново).
+                    <p style="margin-top: 0.8rem;">Но дали P = NP? Това е един от най-великите отворени въпроси в компютърната наука!</p>
+                </div>
+
+                <h3>NP-Completeness</h3>
+
+                <div class="def-box">
+                    <strong>NP-трудност (NP-hardness):</strong> Проблем L е NP-труден ако всеки проблем в NP е редуцируем до L в полиномиално време.
+                    <p style="margin-top: 0.8rem;">Формално: L е NP-труден ⟺ за всяко A ∈ NP, A ≤_p L</p>
+                </div>
+
+                <div class="def-box">
+                    <strong>NP-пълнота (NP-completeness):</strong> Проблем L е NP-пълен ако L ∈ NP и L е NP-труден.
+                    <p style="margin-top: 0.8rem;">Формално: L е NP-пълен ⟺ L ∈ NP и (∀A ∈ NP: A ≤_p L)</p>
+                </div>
+
+                <h3>Cook-Levin теорема</h3>
+
+                <div class="theorem-box">
+                    <strong>Cook-Levin теорема:</strong> Проблемът SAT (Boolean Satisfiability) е NP-пълен.
+                    <p style="margin-top: 0.8rem;">Това беше първото доказано NP-пълно твърдение през 1971 година. След това, хиляди други проблеми бяха показани като NP-пълни чрез редукция от SAT.</p>
+                </div>
+
+                <h4>Защо е важно?</h4>
+                <p>
+                    Ако някога някой покаже, че SAT ∈ P, то това означава P = NP, което би имало огромни последици. Обратно, ако някой покаже, че SAT ∉ P (т.е., P ≠ NP), то това означава, че съществуват проблеми, чиито решения могат да бъдат проверени бързо, но не могат да бъдат решени бързо.
+                </p>
+
+                <h3>Известни NP-пълни проблеми</h3>
+
+                <div class="gen-table">
+                    <tr>
+                        <th>Проблем</th>
+                        <th>Описание</th>
+                        <th>Решение (Свидетелство)</th>
+                    </tr>
+                    <tr>
+                        <td><strong>SAT</strong></td>
+                        <td>Съответства ли булева формула в CNF е удовлетворима?</td>
+                        <td>Присвояване на променливи</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3-SAT</strong></td>
+                        <td>SAT, но всяко твърдение има точно 3 литерала</td>
+                        <td>Присвояване на променливи</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Clique</strong></td>
+                        <td>Съществува ли подграф на размер k, където всеки връх е свързан със всеки друг?</td>
+                        <td>Списък на k върхове</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vertex Cover</strong></td>
+                        <td>Съществува ли набор от k върхове, който покрива всички ребра?</td>
+                        <td>Списък на k върхове</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hamiltonian Path/Cycle</strong></td>
+                        <td>Съществува ли път/цикъл, който посещава всеки връх точно веднъж?</td>
+                        <td>Редът на върховете</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TSP (Decision)</strong></td>
+                        <td>Съществува ли пътуване със дължина < k?</td>
+                        <td>Редът на градовете</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Subset Sum</strong></td>
+                        <td>Съществува ли подмножество на целите числа, което суми към цел S?</td>
+                        <td>Подмножеството</td>
+                    </tr>
+                </div>
+
+                <h3>Работен пример 5: NP-проблем — Hamiltonian Path</h3>
+
+                <div class="example-box">
+                    <strong>Задача:</strong> Покажете, че проблемът "Hamiltonian Path" е в клас NP, чрез явно описание на верификатор.
+                </div>
+
+                <div class="proof-steps">
+                    <strong>Решение:</strong>
+                    <ol>
+                        <li><strong>Определение на проблема:</strong> Hamiltonian Path = {⟨G⟩ : график G има път, който посещава всеки върх точно веднъък}</li>
+
+                        <li><strong>Сертификат (свидетелство):</strong> За положителна инстанция ⟨G⟩, сертификатът е списък на върховете в редът: v₁, v₂, ..., v_n</li>
+
+                        <li><strong>Верификаторна машина V:</strong>
+                            <div class="formula-block">
+V(⟨G⟩, сертификат):
+1. Проверка дали сертификатът съдържа всеки връх точно веднъч → O(n log n)
+2. За всеки съседен чифт (v_i, v_{i+1}), проверка дали е край в G → O(n)
+3. Ако всички проверки преминат, приеми; иначе отхвърли
+                            </div>
+                        </li>
+
+                        <li><strong>Анализ на време:</strong>
+                            <ul style="margin: 0.5rem 0;">
+                                <li>Проверка дали сертификатът е валидна пермутация: O(n log n)</li>
+                                <li>Проверка на n-1 ребра (O(log n) на ребро с бинарно търсене в списък на ребра): O(n log n)</li>
+                                <li>Обща времева сложност: O(n log n) — полиномиална!
+                            </ul>
+                        </li>
+
+                        <li><strong>Заключение:</strong> Hamiltonian Path ∈ NP защото съществува полиномиална верификаторна машина</li>
+                    </ol>
+                </div>
+
+                <h3>Диаграма на класове на сложност</h3>
+
+                <div class="complexity-diagram">
+                    <div class="diagram-title">Предполагаемото съотношение между P, NP, и NP-Complete</div>
+                    <div style="margin: 2rem 0; font-size: 0.9rem; line-height: 1.8;">
+                        <strong>Ако P = NP:</strong> Единственост на класовете
+                        <pre style="background: var(--navy); color: #e0e7ff); padding: 1rem; border-radius: 4px; margin: 0.5rem 0;">
+P = NP = NP-Complete
+                        </pre>
+                        <strong>Ако P ≠ NP:</strong> Трибуна от класове (широко вярвано)
+                        <pre style="background: var(--navy); color: #e0e7ff); padding: 1rem; border-radius: 4px; margin: 0.5rem 0;">
+┌─ NP ─────────────────────────────┐
+│ ┌─ NP-Complete ─────────────────┐ │
+│ │ (SAT, 3-SAT, Clique, TSP ...) │ │
+│ └──────────────────────────────┘ │
+│  ┌─ P ─────────────────────────┐  │
+│  │ (Sorting, Searching, ...) │  │  │
+│  └──────────────────────────┘  │
+└────────────────────────────────┘
+                        </pre>
+                    </div>
+                </div>
+
+                <h3>Други класове сложност</h3>
+
+                <div class="gen-table">
+                    <tr>
+                        <th>Клас</th>
+                        <th>Определение</th>
+                        <th>Примери</th>
+                    </tr>
+                    <tr>
+                        <td><strong>PSPACE</strong></td>
+                        <td>Проблеми, решаваеми в полиномиално пространство</td>
+                        <td>QBF (Quantified Boolean Formula)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>EXPTIME</strong></td>
+                        <td>Проблеми, решаваеми в експоненциално време</td>
+                        <td>Някои игровия проблеми</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NEXP</strong></td>
+                        <td>Недетерминирано експоненциално време</td>
+                        <td>Някои криптографични проблеми</td>
+                    </tr>
+                </div>
+
+                <h3>Практически последици на NP-completeness</h3>
+
+                <div class="note-box">
+                    <strong>Ако проблемът е NP-пълен:</strong>
+                    <ul>
+                        <li>Няма известен полиномиален алгоритъм за него</li>
+                        <li>Ако намеришь полиномиален алгоритъм, ти решил P vs NP проблема!</li>
+                        <li>На практика, използваме апроксимационни алгоритми или хевристики (например, genetic algorithms, simulated annealing)</li>
+                        <li>За малки инстанции, експоненциални алгоритми могат да работят</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- FLASHCARDS -->
+            <section id="flashcards">
+                <h2>Flashcards — Ключови концепции</h2>
+
+                <p>Щракнете на картата, за да видите отговора. Използвайте за самотестване.</p>
+
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Определение на алгоритъм</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Крайна последователност от прецизни, недвусмислени инструкции, които решават проблем или извършват изчисления. Необходи: крайност, определеност, вход, изход, ефективност.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Big-O нотация</div>
+                            </div>
+                            <div class="flashcard-back">
+                                O(g(n)) = горна граница на растежа. Функция f(n) = O(g(n)) ако съществуват c > 0 и n₀, такива че 0 ≤ f(n) ≤ c·g(n) за всички n ≥ n₀.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Разрешим проблем</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Проблем, за който съществува машина на Тюринг, която завършва за всеки вход и дава правилния отговор (ДА или НЕ).
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Проблем на Халтинга</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Неразрешимо е да се определи за произволна машина M и дума w, дали M завършва при w. Доказано чрез диагонализация.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Машина на Тюринг</div>
+                            </div>
+                            <div class="flashcard-back">
+                                M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject). Състояния, входна азбука, азбука на лентата, преходи, начално състояние, приемащо и отхвърляемо състояния.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Тезис на Чърч-Тюринг</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Функция е алгоритмично изчислима ако и само ако е изчислима чрез машина на Тюринг (или еквивалентен модел).
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>P (Polynomial Time)</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Класс на проблемите, решаваеми в полиномиално време чрез детерминирана машина на Тюринг. "Лесни за решаване".
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>NP (Nondeterministic Polynomial)</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Класс на проблемите, чиито решения могат да бъдат проверени в полиномиално време. Свидетелствата ("сертификатите") са полиномиално дълги.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>NP-пълнота</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Проблем е NP-пълен ако е в NP и всеки проблем в NP е полиномиално редуцируем до него. Примери: SAT, 3-SAT, Clique, TSP.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Cook-Levin теорема</div>
+                            </div>
+                            <div class="flashcard-back">
+                                SAT е NP-пълен. Първото доказано NP-пълно твърдение. Любая други NP-пълни проблеми редуцират се от SAT.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>P vs NP</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Един от най-важните отворени въпроси в CS. Може ли всеки проблем, който се проверява в полиномиално време, да бъде и решен в полиномиално време? P⊆NP е известно; P=NP е отворено.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Редуцируемост (Reducibility)</div>
+                            </div>
+                            <div class="flashcard-back">
+                                A ≤_m B ако съществува изчислима функция f, такава че w ∈ A ⟺ f(w) ∈ B. Позволява доказване на неразрешимост и NP-пълнота.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- БЪРЗА СПРАВКА -->
+            <section id="quick-ref">
+                <h2>Бърза справка (Quick Reference)</h2>
+
+                <div class="quick-ref-grid">
+                    <div class="quick-ref-card">
+                        <h4>Асимптотични нотации</h4>
+                        <p><strong>O(n):</strong> Горна граница</p>
+                        <p><strong>Ω(n):</strong> Долна граница</p>
+                        <p><strong>Θ(n):</strong> Точна граница</p>
+                        <p><strong>o(n):</strong> Строго по-малко</p>
+                        <p><strong>ω(n):</strong> Строго по-голямо</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>Парадигми на алгоритми</h4>
+                        <p><strong>Brute Force:</strong> Проверка всички</p>
+                        <p><strong>Divide & Conquer:</strong> Разделяй, решавай, комбинирай</p>
+                        <p><strong>Greedy:</strong> Локално оптимален избор</p>
+                        <p><strong>Dynamic Programming:</strong> Мемоизация на подпроблеми</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>Класификация на проблеми</h4>
+                        <p><strong>Разрешим:</strong> TM завршава със верен отговор</p>
+                        <p><strong>Полуразрешим:</strong> TM приема верно, но не отхвърля</p>
+                        <p><strong>Неразрешим:</strong> Няма TM, която решава</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>Машина на Тюринг (TM)</h4>
+                        <p>M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject)</p>
+                        <p><strong>Входна азбука:</strong> Σ</p>
+                        <p><strong>Азбука на лентата:</strong> Γ (Σ ⊂ Γ)</p>
+                        <p><strong>Преходи:</strong> δ(q, a) = (q', a', посока)</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>Варианти на TM</h4>
+                        <p><strong>NTM:</strong> Недетерминирана (еквивалентна на DTM)</p>
+                        <p><strong>Многолентова:</strong> k ленти (еквивалентна)</p>
+                        <p><strong>Двусторонна лента:</strong> Безкрайна наляво и надясно (еквивалентна)</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>Тезис на Чърч-Тюринг</h4>
+                        <p>Алгоритмично изчислима ≡ TM-изчислима</p>
+                        <p>Еквивалентни модели: λ-смятане, TM, частично рекурсивни функции, Post система</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>P vs NP vs NP-Complete</h4>
+                        <p><strong>P:</strong> Решавам в O(n^k)</p>
+                        <p><strong>NP:</strong> Проверявам в O(n^k)</p>
+                        <p><strong>NP-C:</strong> NP и всички NP ≤_p това</p>
+                        <p><strong>Известен:</strong> P ⊆ NP</p>
+                        <p><strong>Отворено:</strong> P = NP?</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>Известни NP-пълни проблеми</h4>
+                        <p><strong>SAT:</strong> Булева задоволимост</p>
+                        <p><strong>3-SAT:</strong> SAT с 3 литерала</p>
+                        <p><strong>Clique:</strong> Максимален подграф</p>
+                        <p><strong>Vertex Cover:</strong> Покрийте всички ребра</p>
+                        <p><strong>TSP/Hamiltonian:</strong> Пътища в графове</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>Мастър теорема</h4>
+                        <p>За T(n) = aT(n/b) + cn^k:</p>
+                        <p><strong>a > b^k:</strong> T(n) = Θ(n^(log_b a))</p>
+                        <p><strong>a = b^k:</strong> T(n) = Θ(n^k log n)</p>
+                        <p><strong>a < b^k:</strong> T(n) = Θ(n^k)</p>
+                    </div>
+
+                    <div class="quick-ref-card">
+                        <h4>Сложност на известни алгоритми</h4>
+                        <p><strong>Merge Sort:</strong> O(n log n)</p>
+                        <p><strong>Quick Sort:</strong> O(n²) худ., O(n log n) сред.</p>
+                        <p><strong>Heap Sort:</strong> O(n log n)</p>
+                        <p><strong>Insertion Sort:</strong> O(n²)</p>
+                        <p><strong>Dijkstra:</strong> O((n+m) log n)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ЛИТЕРАТУРА -->
+            <section>
+                <h2>Литература и препоръчани източники</h2>
+
+                <div class="gen-table">
+                    <tr>
+                        <th>№</th>
+                        <th>Автор</th>
+                        <th>Заглавие</th>
+                        <th>Забележка</th>
+                    </tr>
+                    <tr>
+                        <td>[4]</td>
+                        <td>Biggs, Norman L.</td>
+                        <td><em>Discrete Mathematics</em></td>
+                        <td>Съдържа основни концепции за дискретна математика и граници</td>
+                    </tr>
+                    <tr>
+                        <td>[32]</td>
+                        <td>Манев, Костадин</td>
+                        <td><em>Въведение в теоретичната информатика</em></td>
+                        <td>Българско издание; покрива TM, сложност, NP-пълнота</td>
+                    </tr>
+                    <tr>
+                        <td>—</td>
+                        <td>Sipser, Michael</td>
+                        <td><em>Introduction to the Theory of Computation</em></td>
+                        <td>Класически учебник; препоръчано за детайлни доказателства</td>
+                    </tr>
+                    <tr>
+                        <td>—</td>
+                        <td>Arora, Sanjeev & Barak, Boaz</td>
+                        <td><em>Computational Complexity: A Modern Approach</em></td>
+                        <td>Продълбочено за P, NP, NP-completeness</td>
+                    </tr>
+                    <tr>
+                        <td>—</td>
+                        <td>Cormen, Leiserson, Rivest, Stein</td>
+                        <td><em>Introduction to Algorithms</em></td>
+                        <td>Класически справочник за анализ на алгоритми</td>
+                    </tr>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer>
+        <p>Материали за докторски кандидатски изпит — Български академия на науките (ИМИ-БАН)</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;">Събрано: Март 2026 | Лиценз: Образователна употреба</p>
+    </footer>
+
+    <div class="back-to-top" id="backToTop" onclick="window.scrollTo(0, 0)">
+        ↑
+    </div>
+
+    <script>
+        // Show/hide back-to-top button
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('aside nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Simple search functionality (optional enhancement)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === '/') {
+                console.log('Search activated');
+            }
+        });
+    </script>
+</body>
+</html>

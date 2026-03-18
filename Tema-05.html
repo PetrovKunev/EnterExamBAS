@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 5: Типове данни. Структури от данни | ИМИ-БАН</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f2744;
+            --blue: #2563a8;
+            --green: #166534;
+            --purple: #5b21b6;
+            --orange: #9a3412;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+            --light-gray: #f3f4f6;
+            --border-color: #e5e7eb;
+            --text-dark: #1f2937;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.65;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px;
+            background: var(--navy);
+            color: white;
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 2px solid var(--blue);
+        }
+
+        .sidebar h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: var(--cream);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar nav ul li a {
+            color: #e0e7ff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            word-wrap: break-word;
+        }
+
+        .sidebar nav ul li a:hover {
+            color: var(--cream);
+            background-color: rgba(37, 99, 168, 0.3);
+            border-left-color: var(--orange);
+            padding-left: 1rem;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 280px;
+            padding: 3rem;
+            flex: 1;
+            max-width: 1000px;
+        }
+
+        header {
+            border-bottom: 3px solid var(--blue);
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* SECTIONS */
+        section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 80px;
+        }
+
+        section h2 {
+            font-size: 1.8rem;
+            color: var(--blue);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--green);
+        }
+
+        section h3 {
+            font-size: 1.3rem;
+            color: var(--purple);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        section h4 {
+            font-size: 1.05rem;
+            color: var(--orange);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* COMPONENT BOXES */
+        .def-box {
+            background: linear-gradient(135deg, rgba(37, 99, 168, 0.08) 0%, rgba(22, 101, 52, 0.08) 100%);
+            border-left: 4px solid var(--blue);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .def-box strong {
+            color: var(--blue);
+        }
+
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(91, 33, 182, 0.08) 0%, rgba(157, 23, 77, 0.08) 100%);
+            border-left: 4px solid var(--purple);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .theorem-box strong {
+            color: var(--purple);
+        }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(154, 52, 18, 0.08) 0%, rgba(153, 27, 27, 0.08) 100%);
+            border-left: 4px solid var(--orange);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .note-box strong {
+            color: var(--orange);
+        }
+
+        .formula-block {
+            background-color: var(--light-gray);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            color: var(--navy);
+        }
+
+        /* TABLES */
+        gen-table, .gen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        table thead {
+            background-color: var(--navy);
+            color: white;
+        }
+
+        table thead th {
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid var(--navy);
+        }
+
+        table tbody td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+
+        table tbody tr:hover {
+            background-color: rgba(37, 99, 168, 0.05);
+        }
+
+        /* CODE BLOCKS */
+        pre {
+            background-color: var(--navy);
+            color: #e0e7ff;
+            padding: 1.25rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border-left: 4px solid var(--blue);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--light-gray);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            color: var(--purple);
+            font-size: 0.9rem;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        /* WORKED EXAMPLES */
+        .worked-example {
+            background: linear-gradient(135deg, rgba(22, 101, 52, 0.1) 0%, rgba(37, 99, 168, 0.1) 100%);
+            border: 2px solid var(--green);
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .worked-example h4 {
+            color: var(--green);
+            margin-top: 0;
+        }
+
+        .step {
+            background-color: rgba(255, 255, 255, 0.6);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 3px solid var(--green);
+            border-radius: 2px;
+        }
+
+        .step strong {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* PROOF STEPS */
+        .proof-steps {
+            counter-reset: step-counter;
+            margin: 1.5rem 0;
+        }
+
+        .proof-step {
+            counter-increment: step-counter;
+            margin: 1.25rem 0;
+            padding-left: 2.5rem;
+            position: relative;
+        }
+
+        .proof-step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--blue);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* FLASHCARDS */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .flashcard {
+            background: white;
+            border: 2px solid var(--blue);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(15, 39, 68, 0.1);
+        }
+
+        .flashcard:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(15, 39, 68, 0.2);
+        }
+
+        .flashcard.flipped .flashcard-front {
+            display: none;
+        }
+
+        .flashcard.flipped .flashcard-back {
+            display: block;
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            text-align: center;
+        }
+
+        .flashcard-back {
+            display: none;
+            color: var(--green);
+        }
+
+        .flashcard-front strong {
+            color: var(--blue);
+            font-size: 1.1rem;
+        }
+
+        .flashcard-back strong {
+            color: var(--green);
+            font-size: 1rem;
+        }
+
+        /* QUICK REFERENCE */
+        .quick-ref {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .quick-ref h3 {
+            color: var(--cream);
+            border-bottom: 2px solid var(--cream);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-ref table thead {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .quick-ref table th,
+        .quick-ref table td {
+            color: white;
+        }
+
+        /* DIAGRAMS */
+        .diagram-container {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--blue);
+            color: #6b7280;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 2px solid var(--blue);
+                padding: 1.5rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            section h2 {
+                font-size: 1.4rem;
+            }
+
+            .flashcard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* PRINT */
+        @media print {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+
+            section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:10px;right:16px;z-index:9999;background:#0f2744;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-family:Inter,sans-serif;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">← Портал</a>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <h2>Съдържание</h2>
+            <nav>
+                <ul>
+                    <li><a href="#overview">Обзор</a></li>
+                    <li><a href="#section1">Раздел 1: Типове данни</a></li>
+                    <li><a href="#section2">Раздел 2: Линейни структури</a></li>
+                    <li><a href="#section3">Раздел 3: Дървета</a></li>
+                    <li><a href="#section4">Раздел 4: Хеш таблици</a></li>
+                    <li><a href="#section5">Раздел 5: Сравнение</a></li>
+                    <li><a href="#flashcards">Флашкарти</a></li>
+                    <li><a href="#quick-ref">Бърза справка</a></li>
+                    <li><a href="#literature">Литература</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <header>
+                <h1>Тема 5: Типове данни. Структури от данни</h1>
+                <p>PhD кандидатски изпит | ИМИ-БАН | 4 часа | ~2 часа на тема</p>
+            </header>
+
+            <!-- OVERVIEW SECTION -->
+            <section id="overview">
+                <h2>Обзор</h2>
+                <p>Типовете данни и структурите от данни са фундаментални концепции на информатиката, свързващи се пряко с других теми на изпита.</p>
+
+                <div class="theorem-box">
+                    <strong>Връзки с други теми:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li><strong>Тема 3 (Алгоритми):</strong> Избора на структура от данни директно влияе на сложността на алгоритъма. Например, двоично търсене работи бързо над масив, докато BFS/DFS върху граф използва специални структури (queue, stack).</li>
+                        <li><strong>Тема 6 (Графи и дървета):</strong> Графите и дърветата са структури от данни със специфични свойства. Обхождането и търсенето върху тях зависят от правилния избор на ADT.</li>
+                        <li><strong>Тема 8 (Бази данни):</strong> Индексирането и организацията на данни в БД напряко използват хеш таблици, B-дървета и други специализирани структури.</li>
+                    </ul>
+                </div>
+
+                <div class="def-box">
+                    <strong>Ключова идея:</strong> Всяка структура от данни има своя профил на операции (достъп, търсене, вставяне, изтриване) с различни времеви сложности. Знанието кога да използваш каква структура е критично за написване на ефективни алгоритми.
+                </div>
+            </section>
+
+            <!-- SECTION 1: DATA TYPES -->
+            <section id="section1">
+                <h2>Раздел 1: Типове данни</h2>
+
+                <h3>1.1 Примитивни типове</h3>
+                <p>Примитивните типове са основните строителни блокове за всички данни в програмирането:</p>
+
+                <div class="formula-block">
+<strong>Стандартни примитивни типове:</strong>
+• <strong>Integer (цяло число):</strong> Представя цели числа; обхват зависи от размера (32-bit: -2³¹ до 2³¹-1)
+• <strong>Float/Double (реално число):</strong> Представя десетични числа по IEEE 754 стандарт; precision зависи от размера
+• <strong>Char (символ):</strong> Един символ или малко число; представя се с ASCII или Unicode
+• <strong>Boolean (логична стойност):</strong> Две възможни стойности: true (1) или false (0)
+                </div>
+
+                <h3>1.2 Абстрактни типове данни (ADT)</h3>
+                <p>ADT дефинира логическото поведение на данна структура, без да се интересуваме от имплементацията. Примери:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ADT</th>
+                            <th>Операции</th>
+                            <th>Примери</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>List (Списък)</td>
+                            <td>insert, delete, search, access</td>
+                            <td>Array, LinkedList</td>
+                        </tr>
+                        <tr>
+                            <td>Stack (Стек)</td>
+                            <td>push, pop, peek</td>
+                            <td>LinkedList-based, Array-based</td>
+                        </tr>
+                        <tr>
+                            <td>Queue (Опашка)</td>
+                            <td>enqueue, dequeue, peek</td>
+                            <td>Circular Buffer, LinkedList</td>
+                        </tr>
+                        <tr>
+                            <td>Tree (Дърво)</td>
+                            <td>insert, delete, search, traverse</td>
+                            <td>BST, AVL, B-tree</td>
+                        </tr>
+                        <tr>
+                            <td>Graph (Граф)</td>
+                            <td>addEdge, removeEdge, traversal</td>
+                            <td>Adjacency List, Matrix</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="note-box">
+                    <strong>Значение на ADT:</strong> Чрез использование на ADT, алгоритмите могат да бъдат написани независимо от конкретната имплементация. Това дава гъвкавост и позволява лесна замяна на имплементациите без промяна на кода.
+                </div>
+
+                <h3>1.3 Системи от типове</h3>
+
+                <h4>Статични vs Динамични типови системи</h4>
+                <div class="formula-block">
+<strong>Статична система (Static Typing):</strong>
+• Типът на променливата се определя в compile-time
+• Примери: Java, C++, Pascal
+• Предимства: ранна обнаружение на грешки, оптимизация
+• Недостатъци: по-малко гъвкаво, повече код
+
+<strong>Динамична система (Dynamic Typing):</strong>
+• Типът на променливата се определя в runtime
+• Примери: Python, Ruby, JavaScript
+• Предимства: по-гъвкаво, по-кратко
+• Недостатъци: могат да се появят runtime грешки
+                </div>
+
+                <h4>Силни vs Слаби типови системи</h4>
+                <p><strong>Силна типова система (Strong Typing):</strong> Не позволява неявна конверсия между несъвместими типове. Пример: Java няма да позволи събиране на int и string без явна конверсия.</p>
+                <p><strong>Слаба типова система (Weak Typing):</strong> Позволява имплицитна конверсия. Пример: JavaScript автоматично преобразува типове при операции.</p>
+            </section>
+
+            <!-- SECTION 2: LINEAR STRUCTURES -->
+            <section id="section2">
+                <h2>Раздел 2: Линейни структури</h2>
+
+                <h3>2.1 Масив (Array)</h3>
+                <p><strong>Определение:</strong> Съвкупност от елементи от един тип, разположени последователно в памет, всеки с индекс.</p>
+
+                <div class="formula-block">
+<strong>Основни операции на масив:</strong>
+• Access: arr[i] → O(1) - директен достъп чрез индекс
+• Search: линейно търсене → O(n), двоично търсене (сортиран) → O(log n)
+• Insert в позиция i: преместване на елементи → O(n)
+• Delete от позиция i: преместване на елементи → O(n)
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Операция</th>
+                            <th>Средна сложност</th>
+                            <th>Най-лоша сложност</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Access</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Search</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Insert</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Delete</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Space</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2.2 Свързан список (Linked List)</h3>
+                <p><strong>Определение:</strong> Линейна структура от възли, всяка съдържаща данни и указател към следващия елемент.</p>
+
+                <h4>Типове свързани списъци:</h4>
+                <ul style="margin-left: 1.5rem;">
+                    <li><strong>Сингулярно свързан (Singly Linked List):</strong> Всяка възел сочи към следващата</li>
+                    <li><strong>Двойно свързан (Doubly Linked List):</strong> Всяка възел сочи към предишната и следващата</li>
+                    <li><strong>Циркулярно свързан (Circular Linked List):</strong> Последната възел сочи на първата</li>
+                </ul>
+
+                <div class="formula-block">
+<strong>Операции на Singly Linked List:</strong>
+• Access (по позиция): преминаване от начало → O(n)
+• Search: O(n)
+• Insert на начало: O(1), в позиция: O(n)
+• Delete: O(n) за намиране + O(1) за премахване
+• Space: O(n)
+                </div>
+
+                <h3>2.3 Стек (Stack)</h3>
+                <p><strong>Определение:</strong> LIFO (Last-In-First-Out) структура - последният добавен елемент е първи за отстраняване.</p>
+
+                <div class="formula-block">
+<strong>Операции на стек:</strong>
+• push(x): добавяне на елемент на върха → O(1)
+• pop(): отстраняване на елемент от върха → O(1)
+• peek(): преглед на върховия елемент без отстраняване → O(1)
+• isEmpty(): проверка дали е празен → O(1)
+• Space: O(n)
+                </div>
+
+                <h4>Приложения на стек:</h4>
+                <ul style="margin-left: 1.5rem;">
+                    <li>Оценяване на изрази (infix → postfix, postfix evaluation)</li>
+                    <li>Функционални обаждания и управление на call stack</li>
+                    <li>Операции Undo/Redo</li>
+                    <li>Проверка на балансирани скобки</li>
+                    <li>DFS (Depth-First Search) обхождане</li>
+                </ul>
+
+                <h3>2.4 Опашка (Queue)</h3>
+                <p><strong>Определение:</strong> FIFO (First-In-First-Out) структура - първи входящ елемент е първи на изход.</p>
+
+                <div class="formula-block">
+<strong>Операции на опашка:</strong>
+• enqueue(x): добавяне на елемент в края → O(1)
+• dequeue(): отстраняване от начало → O(1)
+• peek(): преглед на първия елемент → O(1)
+• isEmpty(): проверка дали е празна → O(1)
+• Space: O(n)
+                </div>
+
+                <h4>Варианти на опашка:</h4>
+                <ul style="margin-left: 1.5rem;">
+                    <li><strong>Циркулярна опашка (Circular Queue):</strong> Последната позиция се връзва на първата; избягва мариране на памет</li>
+                    <li><strong>Двойна опашка (Deque):</strong> Позволява вставяне и изтриване от двата края</li>
+                    <li><strong>Приоритетна опашка (Priority Queue):</strong> Елементи се вземат по приоритет, а не по ред</li>
+                </ul>
+
+                <h3>2.5 Работени примери</h3>
+
+                <div class="worked-example">
+                    <h4>Пример 1: Оценяване на постфиксна експресия "3 4 + 2 × 7 /" със стек</h4>
+                    <p><strong>Задача:</strong> Оценете expresia: 3 4 + 2 × 7 / (което е (3+4)×2÷7 = 14÷7 = 2)</p>
+
+                    <div class="step">
+                        <strong>Шаг 1:</strong> Чете "3" → Push 3. Стек: [3]
+                    </div>
+                    <div class="step">
+                        <strong>Шаг 2:</strong> Чете "4" → Push 4. Стек: [3, 4]
+                    </div>
+                    <div class="step">
+                        <strong>Шаг 3:</strong> Чете "+" → Pop 4 и 3, изчисли 3+4=7, Push 7. Стек: [7]
+                    </div>
+                    <div class="step">
+                        <strong>Шаг 4:</strong> Чете "2" → Push 2. Стек: [7, 2]
+                    </div>
+                    <div class="step">
+                        <strong>Шаг 5:</strong> Чете "×" → Pop 2 и 7, изчисли 7×2=14, Push 14. Стек: [14]
+                    </div>
+                    <div class="step">
+                        <strong>Шаг 6:</strong> Чете "7" → Push 7. Стек: [14, 7]
+                    </div>
+                    <div class="step">
+                        <strong>Шаг 7:</strong> Чете "/" → Pop 7 и 14, изчисли 14÷7=2, Push 2. Стек: [2]
+                    </div>
+                    <div class="step">
+                        <strong>Резултат:</strong> 2
+                    </div>
+                </div>
+
+                <div class="worked-example">
+                    <h4>Пример 2: Имплементиране на опашка с два стека</h4>
+                    <p><strong>Идея:</strong> Използваме два стека - един за входящите елементи (input stack) и един за изходящите (output stack).</p>
+
+                    <div class="step">
+                        <strong>Логика на операции:</strong>
+                        <ul style="margin-left: 1.5rem;">
+                            <li><code>enqueue(x)</code>: Push x на input stack → O(1)</li>
+                            <li><code>dequeue()</code>: Ако output stack е празен, прехвърли всички елементи от input на output (esto обърща реда). После pop от output → O(n) амортизирано O(1)</li>
+                        </ul>
+                    </div>
+
+                    <div class="step">
+                        <strong>Пример с елементи 1, 2, 3:</strong>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>enqueue(1): input = [1], output = []</li>
+                            <li>enqueue(2): input = [1, 2], output = []</li>
+                            <li>enqueue(3): input = [1, 2, 3], output = []</li>
+                            <li>dequeue(): прехвърляме input на output → output = [3, 2, 1], pop 1 → връща 1. output = [3, 2]</li>
+                            <li>dequeue(): output не е празен, pop 2 → връща 2. output = [3]</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>2.6 Сравнителна таблица на линейни структури</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Структура</th>
+                            <th>Access</th>
+                            <th>Search</th>
+                            <th>Insert</th>
+                            <th>Delete</th>
+                            <th>Space</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Array</td>
+                            <td>O(1)</td>
+                            <td>O(n)*</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>LinkedList</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                            <td>O(1)**</td>
+                            <td>O(1)**</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Stack</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Queue</td>
+                            <td>-</td>
+                            <td>O(n)</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 0.85rem; color: #6b7280;">* O(log n) ако е сортиран с двоично търсене. ** O(1) ако имаме указател на позицията.</p>
+            </section>
+
+            <!-- SECTION 3: TREES -->
+            <section id="section3">
+                <h2>Раздел 3: Дървета</h2>
+
+                <h3>3.1 Двоично дърво (Binary Tree)</h3>
+                <p><strong>Определение:</strong> Дърво, в което всяка възел има най-много два потомци (ляво дете и дясно дете).</p>
+
+                <div class="formula-block">
+<strong>Ключови свойства на двоично дърво:</strong>
+• Брой възли: може да содържа максимално 2^h - 1 възли (където h е височина)
+• Височина (height): дължина на най-дългия път от корен към лист
+• Дълбочина (depth): дължина на пътя от корен към специфична възел
+• Пълно двоично дърво: всяка възел (освен листата) има точно 2 деца
+• Балансирано дърво: височини на левия и десния поддърво се различават с максимум 1
+                </div>
+
+                <h3>3.2 Двоично дърво за търсене (Binary Search Tree, BST)</h3>
+                <p><strong>BST свойство:</strong> За всяка възел: всички стойности в левия поддърво < възлова стойност &lt; всички стойности в десния поддърво.</p>
+
+                <div class="formula-block">
+<strong>Операции на BST:</strong>
+• Search(k): сравнение и рекурсивно търсене → O(log n) средно, O(n) най-лошо
+• Insert(k): търсене на място + вставяне като лист → O(log n) средно, O(n) най-лошо
+• Delete(k): три случая:
+  - Нема деца: просто премахни
+  - Едно дете: замени възлата си с детето
+  - Две деца: намери in-order successor/predecessor и замени
+  - Всички случаи: O(log n) средно, O(n) най-лошо
+                </div>
+
+                <h3>3.3 Обхождане на дърво (Tree Traversals)</h3>
+                <p><strong>Четири главни обхождания:</strong></p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Тип</th>
+                            <th>Ред</th>
+                            <th>Приложение</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Inorder (LNR)</td>
+                            <td>Ляво → Възел → Дясно</td>
+                            <td>BST дава сортиран ред; префиксна нотация</td>
+                        </tr>
+                        <tr>
+                            <td>Preorder (NLR)</td>
+                            <td>Възел → Ляво → Дясно</td>
+                            <td>Копиране на дърво; префиксна нотация</td>
+                        </tr>
+                        <tr>
+                            <td>Postorder (LRN)</td>
+                            <td>Ляво → Дясно → Възел</td>
+                            <td>Изтриване на дърво; постфиксна нотация</td>
+                        </tr>
+                        <tr>
+                            <td>Level-order (BFS)</td>
+                            <td>От ляво на дясно, слой по слой</td>
+                            <td>Печат по нива; най-близкия сосед</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>3.4 Работен пример: Вставяне и изтриване в BST</h3>
+
+                <div class="worked-example">
+                    <h4>Пример: Вставете [5, 3, 7, 1, 4, 6, 8] в BST, след това изтрийте 3</h4>
+
+                    <div class="step">
+                        <strong>Вставяне 5:</strong> 5 е корен.
+                        <pre>    5</pre>
+                    </div>
+                    <div class="step">
+                        <strong>Вставяне 3:</strong> 3 &lt; 5 → ляво дете на 5.
+                        <pre>    5
+   /
+  3</pre>
+                    </div>
+                    <div class="step">
+                        <strong>Вставяне 7:</strong> 7 > 5 → дясно дете на 5.
+                        <pre>    5
+   / \
+  3   7</pre>
+                    </div>
+                    <div class="step">
+                        <strong>Вставяне 1:</strong> 1 &lt; 5, 1 &lt; 3 → ляво дете на 3.
+                        <pre>      5
+     / \
+    3   7
+   /
+  1</pre>
+                    </div>
+                    <div class="step">
+                        <strong>Вставяне 4:</strong> 4 &lt; 5, 4 > 3 → дясно дете на 3.
+                        <pre>      5
+     / \
+    3   7
+   / \
+  1   4</pre>
+                    </div>
+                    <div class="step">
+                        <strong>Вставяне 6:</strong> 6 > 5, 6 &lt; 7 → ляво дете на 7.
+                        <pre>      5
+     / \
+    3   7
+   / \ /
+  1  4 6</pre>
+                    </div>
+                    <div class="step">
+                        <strong>Вставяне 8:</strong> 8 > 5, 8 > 7 → дясно дете на 7.
+                        <pre>      5
+     / \
+    3   7
+   / \ / \
+  1  4 6  8</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Изтриване на 3:</strong> 3 има два деца (1 и 4). Намерете in-order successor (първи елемент > 3 в inorder) = 4. Замените 3 с 4.
+                        <pre>      5
+     / \
+    4   7
+   /   / \
+  1   6  8</pre>
+                    </div>
+                </div>
+
+                <h3>3.5 AVL дървета</h3>
+                <p><strong>Определение:</strong> Самобалансиращо се BST, където за всяка възел разликата между височини на левия и десния поддърво е максимум 1 (balance factor).</p>
+
+                <div class="formula-block">
+<strong>Balance Factor (BF) = height(left) - height(right)</strong>
+Валидни BF стойности: -1, 0, +1
+
+Ако BF став 2 или -2, дърво трябва да бъде ротирано:
+• Left-Left случай: дясна ротация
+• Right-Right случай: лява ротация
+• Left-Right случай: лява-дясна ротация
+• Right-Left случай: дясна-лява ротация
+
+Операции в AVL: insert, delete, search → O(log n) гарантирано
+                </div>
+
+                <h3>3.6 B-дървета</h3>
+                <p><strong>Кратко въведение:</strong> B-дървета са особено полезни за системи с диск-базиран достъп (бази данни). Всяка възел може да съдържа множество ключове и деца, минимизирайки броя на дисковите операции.</p>
+
+                <h3>3.7 Хипа (Heaps)</h3>
+                <p><strong>Определение:</strong> Почти напълно двоично дърво със следното свойство:</p>
+
+                <div class="formula-block">
+<strong>Max-Heap:</strong> Всяка възел ≥ своите деца
+<strong>Min-Heap:</strong> Всяка възел ≤ своите деца
+
+Операции на heap:
+• Insert: добавяне на нов елемент и bubble-up → O(log n)
+• DeleteMax/Min: премахване на корен, замяна с последния елемент, bubble-down → O(log n)
+• Heapify: преобразуване на произволен масив в heap → O(n)
+                </div>
+
+                <h3>3.8 Работен пример: Построяване на max-heap</h3>
+
+                <div class="worked-example">
+                    <h4>Пример: Построете max-heap от [4, 10, 3, 5, 1]</h4>
+
+                    <div class="step">
+                        <strong>Начално състояние:</strong> [4, 10, 3, 5, 1]
+                        <div class="diagram-container">
+                            <pre>        4
+       / \
+      10  3
+     / \
+    5   1</pre>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <strong>Heapify (от дъно нагоре):</strong> Започете с първия non-leaf възел.
+                        Индекс 1 (10): вече 10 > 4, така че не нужна rotire.
+                    </div>
+
+                    <div class="step">
+                        <strong>Индекс 0 (4):</strong> Сравнете с деца (10 и 3). 10 е най-голямо.
+                        Разменете 4 и 10.
+                        <pre>       10
+       / \
+      4   3
+     / \
+    5   1</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Проверете 4 отново:</strong> Деца на 4 са 5 и 1. 5 > 4, разменете.
+                        <pre>       10
+       / \
+      5   3
+     / \
+    4   1</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Финален max-heap:</strong> [10, 5, 3, 4, 1]
+                        Всяка възел е ≥ своите деца.
+                    </div>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="mermaid">
+                        graph TD
+                        A["5"] -->|left| B["3"]
+                        A -->|right| C["7"]
+                        B -->|left| D["1"]
+                        B -->|right| E["4"]
+                        C -->|left| F["6"]
+                        C -->|right| G["8"]
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: HASH TABLES -->
+            <section id="section4">
+                <h2>Раздел 4: Хеш таблици</h2>
+
+                <h3>4.1 Основни концепции</h3>
+                <p><strong>Определение:</strong> Структура от данни, която прилага асоциативен масив (key → value) с помощта на хеш функция за преобразуване на ключове в индекси.</p>
+
+                <h3>4.2 Хеш функция</h3>
+                <div class="formula-block">
+<strong>Хеш функция h(k) преобразува ключ k в индекс [0, m-1], където m е размер на таблицата.</strong>
+
+Свойства на добра хеш функция:
+• Детерминирана: h(k) винаги връща една и съща стойност за един ключ
+• Равномерно разпределение: ключовете разпределят се еднакво на всички индекси
+• Ефективна: бързо да се изчисли, O(1) или O(k) за дължина на ключ
+• Минимум колизии: редко две ключове да хешират на един индекс
+
+Примери на хеш функции:
+• Division method: h(k) = k mod m
+• Multiplication method: h(k) = floor(m × (k × φ mod 1)), където φ = (√5 - 1) / 2
+• Polynomial rolling hash: h(s) = (s[0] × b^n + s[1] × b^(n-1) + ... + s[n-1]) mod m
+                </div>
+
+                <h3>4.3 Разрешаване на колизии</h3>
+
+                <h4>Chaining (Вериги)</h4>
+                <p>Всяка индекс в хеш таблицата сочи на списък (или друга структура) от всички ключове, което хешират към този индекс.</p>
+
+                <div class="formula-block">
+<strong>Chaining характеристики:</strong>
+• Insert: добавяне на начало на списък → O(1)
+• Search: обхождане на списък → O(1 + α) средно, където α = n/m (load factor)
+• Delete: отстраняване от списък → O(1 + α) средно
+• Space: O(n + m)
+• Най-лошо: O(n) ако всички ключове хешират на един индекс
+                </div>
+
+                <h4>Open Addressing (Отворено адресиране)</h4>
+                <p>Ако позиция е окупирана, намерете друга позиция според проба функция.</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Метод</th>
+                            <th>Функция</th>
+                            <th>Характеристика</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Linear Probing</td>
+                            <td>h(k, i) = (h(k) + i) mod m</td>
+                            <td>Проверете следната позиция; проблем: clustering</td>
+                        </tr>
+                        <tr>
+                            <td>Quadratic Probing</td>
+                            <td>h(k, i) = (h(k) + c₁×i + c₂×i²) mod m</td>
+                            <td>Скачай по квадратична прогресия; по-малко clustering</td>
+                        </tr>
+                        <tr>
+                            <td>Double Hashing</td>
+                            <td>h(k, i) = (h₁(k) + i×h₂(k)) mod m</td>
+                            <td>Използвайте две хеш функции; минимум clustering</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>4.4 Работен пример: Хеш таблица със chaining</h3>
+
+                <div class="worked-example">
+                    <h4>Пример: Вставете ключове [23, 45, 12, 56, 33] в хеш таблица с размер 7, h(k) = k mod 7</h4>
+
+                    <div class="step">
+                        <strong>Таблица (индекс → списък на ключове):</strong>
+                        <pre>Index 0: []
+Index 1: []
+Index 2: []
+Index 3: []
+Index 4: []
+Index 5: []
+Index 6: []</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Вставяне 23:</strong> h(23) = 23 mod 7 = 2
+                        <pre>Index 2: [23]</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Вставяне 45:</strong> h(45) = 45 mod 7 = 3
+                        <pre>Index 3: [45]</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Вставяне 12:</strong> h(12) = 12 mod 7 = 5
+                        <pre>Index 5: [12]</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Вставяне 56:</strong> h(56) = 56 mod 7 = 0
+                        <pre>Index 0: [56]</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Вставяне 33:</strong> h(33) = 33 mod 7 = 5 (колизия с 12!)
+                        <pre>Index 5: [33 → 12]  (списък)</pre>
+                    </div>
+
+                    <div class="step">
+                        <strong>Финална таблица:</strong>
+                        <pre>Index 0: [56]
+Index 1: []
+Index 2: [23]
+Index 3: [45]
+Index 4: []
+Index 5: [33 → 12]
+Index 6: []
+
+Load factor α = 5/7 ≈ 0.714</pre>
+                    </div>
+                </div>
+
+                <h3>4.5 Сложност на хеш таблици</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Операция</th>
+                            <th>Средна</th>
+                            <th>Най-лошо</th>
+                            <th>Условие</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Search</td>
+                            <td>O(1 + α)</td>
+                            <td>O(n)</td>
+                            <td>α = n/m, добра хеш функция</td>
+                        </tr>
+                        <tr>
+                            <td>Insert</td>
+                            <td>O(1 + α)</td>
+                            <td>O(n)</td>
+                            <td>Както за search</td>
+                        </tr>
+                        <tr>
+                            <td>Delete</td>
+                            <td>O(1 + α)</td>
+                            <td>O(n)</td>
+                            <td>Както за search</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="note-box">
+                    <strong>Динамично оразмеряване:</strong> Когато load factor α превиши порог (обикновено 0.75), таблицата се разширява: нов размер е обикновено 2×m или next_prime(2×m). Това осигурява O(1) средна сложност при изпълнение на операции.
+                </div>
+            </section>
+
+            <!-- SECTION 5: COMPARISON -->
+            <section id="section5">
+                <h2>Раздел 5: Сравнение на структури</h2>
+
+                <h3>5.1 Комплексна сравнителна таблица</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Структура</th>
+                            <th>Access</th>
+                            <th>Search</th>
+                            <th>Insert</th>
+                            <th>Delete</th>
+                            <th>Space</th>
+                            <th>Характеристика</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Array</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                            <td>Бързо четене, тежко промяна</td>
+                        </tr>
+                        <tr>
+                            <td>LinkedList</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                            <td>O(1)*</td>
+                            <td>O(1)*</td>
+                            <td>O(n)</td>
+                            <td>Гъвкаво по размер, бавно търсене</td>
+                        </tr>
+                        <tr>
+                            <td>Stack</td>
+                            <td>-</td>
+                            <td>O(n)</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                            <td>LIFO, за изрази и DFS</td>
+                        </tr>
+                        <tr>
+                            <td>Queue</td>
+                            <td>-</td>
+                            <td>O(n)</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                            <td>FIFO, за BFS и симулации</td>
+                        </tr>
+                        <tr>
+                            <td>BST</td>
+                            <td>O(log n)**</td>
+                            <td>O(log n)**</td>
+                            <td>O(log n)**</td>
+                            <td>O(log n)**</td>
+                            <td>O(n)</td>
+                            <td>Балансирано дърво, сортиран ред</td>
+                        </tr>
+                        <tr>
+                            <td>AVL Tree</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(n)</td>
+                            <td>Гарантирано балансирано</td>
+                        </tr>
+                        <tr>
+                            <td>Heap</td>
+                            <td>-</td>
+                            <td>O(n)</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(n)</td>
+                            <td>За приоритетни опашки, сортиране</td>
+                        </tr>
+                        <tr>
+                            <td>Hash Table</td>
+                            <td>-</td>
+                            <td>O(1)***</td>
+                            <td>O(1)***</td>
+                            <td>O(1)***</td>
+                            <td>O(n)</td>
+                            <td>Най-бързо търсене, без ред</td>
+                        </tr>
+                        <tr>
+                            <td>B-Tree</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(n)</td>
+                            <td>За бази данни, оптимизирано за диск</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 0.85rem; color: #6b7280;">* При наличие на указател на позицията. ** O(n) в най-лошия случай (дегенериран BST). *** Средна сложност; O(n) в най-лошия случай при много колизии.</p>
+
+                <h3>5.2 Насоки за избор на структура</h3>
+
+                <div class="theorem-box">
+                    <strong>Кога да използвате Array:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li>固定размер или редко промяне на размер</li>
+                        <li>Честа случайна достъп (индексиране)</li>
+                        <li>Памет е критична (нямаме място за указатели)</li>
+                    </ul>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Кога да използвате LinkedList:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li>Често вставяне/изтриване в началото или средата</li>
+                        <li>Размер варира значително</li>
+                        <li>Не нужен директен достъп по индекс</li>
+                    </ul>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Кога да използвате Stack:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li>LIFO логика (call stack, undo, expression evaluation)</li>
+                        <li>DFS обхождане</li>
+                        <li>Проверка на баланс на скобки, парентези</li>
+                    </ul>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Кога да използвате Queue:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li>FIFO логика (процес планиране, печат опашка)</li>
+                        <li>BFS обхождане</li>
+                        <li>Симулация на реални системи</li>
+                    </ul>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Кога да използвате BST:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li>Нужен е сортиран ред (inorder дава сортирана последователност)</li>
+                        <li>Динамични вставяния и изтривания</li>
+                        <li>Range запитания</li>
+                    </ul>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Кога да използвате AVL Tree:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li>Нужна е гарантирана O(log n) сложност</li>
+                        <li>Балансирано дърво е задължително</li>
+                        <li>Много операции (читане и писане)</li>
+                    </ul>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Кога да използвате Heap:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li>Приоритетна опашка</li>
+                        <li>Heap sort алгоритъм</li>
+                        <li>Finding k smallest/largest элементов</li>
+                    </ul>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Кога да използвате Hash Table:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li>Максимална скорост при търсене (O(1) средно)</li>
+                        <li>Липсва нужда от сортиран ред</li>
+                        <li>Словари, кеш, symbol tables</li>
+                    </ul>
+                </div>
+
+                <h3>5.3 Компромиси: время vs място</h3>
+
+                <div class="note-box">
+                    <strong>Tijd-Space Trade-off:</strong>
+                    <ul style="margin-top: 0.75rem; margin-left: 1.5rem;">
+                        <li><strong>Array vs LinkedList:</strong> Array е по-бързо но по-неприспособимо. LinkedList изразходва повече памет за указатели но е гъвкаво.</li>
+                        <li><strong>BST vs Hash Table:</strong> Hash Table е по-бързо за търсене но губи сортировка. BST запазва ред с малко по-слаба произодителност.</li>
+                        <li><strong>Dynamic Hashing:</strong> За да запазим O(1) в hash table, трябва да разширяваме таблицата, което разходва повече памет.</li>
+                        <li><strong>Caching:</strong> Много често ползвани елементи могат да бъдат кеширани (съхранени във по-бързу памет) но това трябва допълнителна памет.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- FLASHCARDS -->
+            <section id="flashcards">
+                <h2>Флашкарти</h2>
+                <p>Кликнете на карта за да видите отговора.</p>
+
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Какво е Abstract Data Type (ADT)?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>Логическо описание на структура от данни, определяща операции и поведението им, без детайли за имплементацията.</strong>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Разликата между LIFO и FIFO?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>LIFO (Last-In-First-Out) = Stack. FIFO (First-In-First-Out) = Queue.</strong>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Какви са трите случая при изтриване в BST?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>1. Нема деца: премахни. 2. Едно дете: замени със детето. 3. Две деца: замени с in-order successor/predecessor.</strong>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Какво е Balance Factor в AVL дърво?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>BF = height(left) - height(right). Валидни стойности: -1, 0, 1. Вън от този диапазон → нужна ротация.</strong>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Какво е хеш функция и каква е нейната роля?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>Функция h(k) която преобразува ключ k в индекс на хеш таблица. Роля: бързо намиране на позиция на елемента.</strong>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Четири главни обхождания на дърво?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>Inorder (LNR), Preorder (NLR), Postorder (LRN), Level-order (BFS).</strong>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Какво е Load Factor в хеш таблица?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>α = n/m, където n е брой елементи, m е размер на таблица. Влияе на вероятност на колизии.</strong>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Какъв е разликата между Linear и Quadratic Probing?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>Linear: проверява (h + i) mod m. Quadratic: проверява (h + c₁×i + c₂×i²) mod m. Quadratic избягва clustering.</strong>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front">
+                            <strong>Какво е Heapify операция?</strong>
+                        </div>
+                        <div class="flashcard-back">
+                            <strong>Процес на преобразуване на произволен масив в валидна heap структура. Сложност: O(n).</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUICK REFERENCE -->
+            <section id="quick-ref">
+                <h2>Бърза справка</h2>
+
+                <div class="quick-ref">
+                    <h3>Сравнителна таблица на основни структури</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Структура</th>
+                                <th>Средна сложност</th>
+                                <th>Място</th>
+                                <th>Главна приложение</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Array</td>
+                                <td>Достъп O(1)</td>
+                                <td>O(n)</td>
+                                <td>Директен достъп по индекс</td>
+                            </tr>
+                            <tr>
+                                <td>LinkedList</td>
+                                <td>Вставяне O(1)*</td>
+                                <td>O(n)</td>
+                                <td>Динамичен размер</td>
+                            </tr>
+                            <tr>
+                                <td>Stack</td>
+                                <td>Push/Pop O(1)</td>
+                                <td>O(n)</td>
+                                <td>Undo, DFS, Expressions</td>
+                            </tr>
+                            <tr>
+                                <td>Queue</td>
+                                <td>Enq/Deq O(1)</td>
+                                <td>O(n)</td>
+                                <td>Scheduling, BFS</td>
+                            </tr>
+                            <tr>
+                                <td>BST</td>
+                                <td>Търсене O(log n)**</td>
+                                <td>O(n)</td>
+                                <td>Сортиран ред</td>
+                            </tr>
+                            <tr>
+                                <td>AVL Tree</td>
+                                <td>Търсене O(log n)</td>
+                                <td>O(n)</td>
+                                <td>Балансирано търсене</td>
+                            </tr>
+                            <tr>
+                                <td>Heap</td>
+                                <td>Insert/Delete O(log n)</td>
+                                <td>O(n)</td>
+                                <td>Приоритетна опашка</td>
+                            </tr>
+                            <tr>
+                                <td>Hash Table</td>
+                                <td>Търсене O(1)***</td>
+                                <td>O(n)</td>
+                                <td>Най-бързо търсене</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="color: #e0e7ff; font-size: 0.85rem; margin-top: 1rem;">* С указател. ** O(n) дегенериран. *** Средна; O(n) колизии.</p>
+                </div>
+            </section>
+
+            <!-- LITERATURE -->
+            <section id="literature">
+                <h2>Литература</h2>
+                <ul style="margin-left: 1.5rem;">
+                    <li><strong>[9]</strong> Goodrich, M. T., Tamassia, R., Goldwasser, M. H. (2013). <em>Data Structures and Algorithms in Java</em>. 6th ed. Wiley.</li>
+                    <li><strong>[21]</strong> Scott M. L. (2015). <em>Programming Language Pragmatics</em>. 3rd ed. Morgan Kaufmann. (Chapter on type systems and data structures).</li>
+                    <li><strong>[25]</strong> Weiss, M. A. (2012). <em>Data Structures and Algorithm Analysis in Java</em>. 3rd ed. Pearson Education.</li>
+                </ul>
+
+                <div class="note-box">
+                    <strong>Бележка за изпита:</strong> При 4-часовия PhD кандидатски изпит с две произволни теми, очаква се дълбоко разбиране на концепциите, способност за писане на псевдокод или примери, и сравнения между подходи. Запаметете основните сложности, преминете през работените примери, и тренирайте да рисувате дърветата и да трасирате алгоритми.
+                </div>
+            </section>
+
+            <footer>
+                <p><strong>Тема 5: Типове данни. Структури от данни</strong></p>
+                <p>ИМИ-БАН | PhD Кандидатски изпит | Март 2026</p>
+                <p style="font-size: 0.8rem; margin-top: 1rem;">Последно актуализирано: 2026-03-18</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Mermaid initialization
+        mermaid.initialize({ startOnLoad: true, theme: 'light' });
+        mermaid.contentLoaded();
+
+        // Smooth scroll for sidebar links
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Flashcard flip with keyboard support
+        document.querySelectorAll('.flashcard').forEach((card, index) => {
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.classList.toggle('flipped');
+                }
+            });
+            // Make flashcards focusable
+            card.setAttribute('tabindex', '0');
+        });
+    </script>
+</body>
+</html>

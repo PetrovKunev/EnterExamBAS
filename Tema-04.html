@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 4: Формални езици и пораждащи граматики. Йерархия на Чомски</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f2744;
+            --blue: #2563a8;
+            --green: #166534;
+            --purple: #5b21b6;
+            --orange: #9a3412;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+            --light-gray: #f3f4f6;
+            --border-gray: #d1d5db;
+            --text-dark: #1f2937;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--cream);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar TOC */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: white;
+            overflow-y: auto;
+            padding: 30px 20px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar h2 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 12px;
+        }
+
+        .toc-list a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 15px;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .toc-list a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding-left: 16px;
+        }
+
+        .toc-list a.active {
+            background-color: var(--orange);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px 50px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-top: 50px;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--blue);
+        }
+
+        h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--blue);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--purple);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        /* Component boxes */
+        .def-box {
+            background: linear-gradient(135deg, rgba(37, 99, 168, 0.08) 0%, rgba(37, 99, 168, 0.04) 100%);
+            border-left: 5px solid var(--blue);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .def-box strong {
+            color: var(--blue);
+        }
+
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(22, 101, 52, 0.08) 0%, rgba(22, 101, 52, 0.04) 100%);
+            border-left: 5px solid var(--green);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .theorem-box strong {
+            color: var(--green);
+        }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(154, 52, 18, 0.08) 0%, rgba(154, 52, 18, 0.04) 100%);
+            border-left: 5px solid var(--orange);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .note-box strong {
+            color: var(--orange);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(153, 27, 27, 0.08) 0%, rgba(153, 27, 27, 0.04) 100%);
+            border-left: 5px solid var(--red);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .warning-box strong {
+            color: var(--red);
+        }
+
+        .formula-block {
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-gray);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        .proof-steps {
+            background-color: white;
+            border: 1px solid var(--border-gray);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid var(--purple);
+        }
+
+        .proof-steps ol {
+            margin-left: 25px;
+        }
+
+        .proof-steps li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .gen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .gen-table thead {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: white;
+        }
+
+        .gen-table thead th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .gen-table tbody tr {
+            border-bottom: 1px solid var(--border-gray);
+            transition: background-color 0.2s ease;
+        }
+
+        .gen-table tbody tr:hover {
+            background-color: var(--light-gray);
+        }
+
+        .gen-table tbody td {
+            padding: 14px 16px;
+            font-size: 16px;
+        }
+
+        .gen-table tbody tr:nth-child(even) {
+            background-color: rgba(243, 244, 246, 0.5);
+        }
+
+        /* Flashcards */
+        .flashcard-section {
+            margin-top: 50px;
+        }
+
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .flashcard {
+            background: white;
+            border: 2px solid var(--border-gray);
+            border-radius: 10px;
+            padding: 25px;
+            min-height: 200px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            border-color: var(--blue);
+        }
+
+        .flashcard.flipped {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: white;
+        }
+
+        .flashcard-question {
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 10px;
+            color: var(--blue);
+        }
+
+        .flashcard.flipped .flashcard-question {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .flashcard-answer {
+            display: none;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .flashcard.flipped .flashcard-answer {
+            display: block;
+        }
+
+        .flashcard.flipped .flashcard-question {
+            display: none;
+        }
+
+        .flashcard-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .flashcard.flipped .flashcard-hint {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Quick reference */
+        .quick-ref {
+            background: linear-gradient(135deg, var(--light-gray) 0%, white 100%);
+            border: 2px solid var(--border-gray);
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        .quick-ref h3 {
+            color: var(--navy);
+            margin-top: 0;
+        }
+
+        /* Code/formula formatting */
+        code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--purple);
+        }
+
+        strong code {
+            color: var(--blue);
+        }
+
+        /* Mermaid diagram */
+        .diagram-container {
+            background: white;
+            border: 1px solid var(--border-gray);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Worked examples */
+        .example-box {
+            background: linear-gradient(135deg, rgba(91, 33, 182, 0.08) 0%, rgba(91, 33, 182, 0.04) 100%);
+            border-left: 5px solid var(--purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .example-box strong {
+            color: var(--purple);
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .literature {
+            background: linear-gradient(135deg, var(--light-gray) 0%, white 100%);
+            border: 1px solid var(--border-gray);
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .literature h4 {
+            color: var(--navy);
+            margin-top: 0;
+        }
+
+        .literature ul {
+            margin-left: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+                padding: 30px 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                max-height: 400px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            .header h1 {
+                font-size: 28px;
+            }
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .scroll-to-top:hover {
+            background: var(--navy);
+        }
+    </style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:10px;right:16px;z-index:9999;background:#0f2744;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-family:Inter,sans-serif;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">← Портал</a>
+    <!-- Sidebar TOC -->
+    <aside class="sidebar">
+        <h2>Съдържание</h2>
+        <ul class="toc-list">
+            <li><a href="#overview">Обзор</a></li>
+            <li><a href="#section1">Раздел 1: Формални езици</a></li>
+            <li><a href="#section2">Раздел 2: Пораждащи граматики</a></li>
+            <li><a href="#section3">Раздел 3: Йерархия на Чомски</a></li>
+            <li><a href="#section4">Раздел 4: Регулярни езици</a></li>
+            <li><a href="#section5">Раздел 5: Безконтекстни езици</a></li>
+            <li><a href="#flashcards">Флашкарти</a></li>
+            <li><a href="#quick-reference">Бърза справка</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1>Тема 4: Формални езици и пораждащи граматики</h1>
+            <p>Йерархия на Чомски • Докторска подготовка • ИМИ-БАН</p>
+            <p style="margin-top: 15px; font-size: 15px; opacity: 0.9;">Экзамен: 4 часа | 2 теми по жребий | ~2 часа/тема | 3-5 ръкописни страници | Анонимна оценка</p>
+        </div>
+
+        <!-- Overview -->
+        <section id="overview">
+            <h2>Обзор</h2>
+            <p>Този раздел е централен в теорията на формалните езици и техните генериращи системи. Той се разглежда в контекста на:</p>
+            <ul>
+                <li><strong>Тема 3 (Предходна):</strong> Машини на Тюринг и изчислимост — определят какво е изчислимо</li>
+                <li><strong>Тема 4 (Текущa):</strong> Формални езици и йерархия на Чомски — класифицираме езици по тяхната сложност</li>
+                <li><strong>Тема 7 (Следваща):</strong> Езици за програмиране и парадигми — приложение на теорията в практиката</li>
+            </ul>
+            <p>Йерархията на Чомски е фундаментална за разбирането на:</p>
+            <ul>
+                <li>Какви езици могат да бъдат разпознати от различни видове автомати</li>
+                <li>Сложността на синтаксния анализ (parsing)</li>
+                <li>Дизайна на компилатори и интерпретатори</li>
+                <li>Граници на това, което може да бъде изразено в даден език</li>
+            </ul>
+        </section>
+
+        <!-- Раздел 1: Формални езици -->
+        <section id="section1">
+            <h2>Раздел 1: Формални езици</h2>
+
+            <h3>Определение и основни понятия</h3>
+            <div class="def-box">
+                <strong>Азбука (Alphabet) Σ:</strong> Краен набор от символи. Например, Σ = {a, b, c} или Σ = {0, 1}.
+            </div>
+
+            <div class="def-box">
+                <strong>Низ (String):</strong> Крайна последователност от символи от азбуката Σ. Празният низ се обозначава с ε (epsilon).
+            </div>
+
+            <div class="def-box">
+                <strong>Σ* (затворена звезда):</strong> Множеството на всички възможни низове, образувани от символите на Σ, включително празния низ. Например, ако Σ = {a, b}, то Σ* = {ε, a, b, aa, ab, ba, bb, aaa, ...}
+            </div>
+
+            <div class="def-box">
+                <strong>Формален език L:</strong> Подмножество на Σ*, т.е. L ⊆ Σ*. Език е всяка колекция от низове над дадена азбука.
+            </div>
+
+            <h3>Операции над езици</h3>
+            <p>Тъй като езиците са множества от низове, можем да извършваме операции над тях:</p>
+
+            <h4>1. Обединение (Union)</h4>
+            <div class="formula-block">
+L₁ ∪ L₂ = {w | w ∈ L₁ или w ∈ L₂}
+            </div>
+            <p><strong>Пример:</strong> L₁ = {a, ab}, L₂ = {b, ba} ⟹ L₁ ∪ L₂ = {a, ab, b, ba}</p>
+
+            <h4>2. Пресичане (Intersection)</h4>
+            <div class="formula-block">
+L₁ ∩ L₂ = {w | w ∈ L₁ и w ∈ L₂}
+            </div>
+
+            <h4>3. Конкатенация (Concatenation)</h4>
+            <div class="formula-block">
+L₁ · L₂ = {wv | w ∈ L₁ и v ∈ L₂}
+            </div>
+            <p>Конкатенираме всеки низ от L₁ с всеки низ от L₂.</p>
+
+            <h4>4. Клиниева звезда (Kleene Star)</h4>
+            <div class="formula-block">
+L* = {ε} ∪ L ∪ L · L ∪ L · L · L ∪ ...
+            </div>
+            <p>L* съдържа нулата или повече повторения на низове от L.</p>
+
+            <h4>5. Допълнение (Complement)</h4>
+            <div class="formula-block">
+L̄ = Σ* \ L = {w ∈ Σ* | w ∉ L}
+            </div>
+
+            <h3>Работен пример: Операции с езици</h3>
+            <div class="example-box">
+                <div class="example-title">Пример 1: Конкатенация на езици</div>
+                <p><strong>Дано:</strong> Σ = {a, b}, L₁ = {a, ab}, L₂ = {b, ba}</p>
+                <p><strong>Намиране:</strong> L₁ · L₂</p>
+                <p><strong>Решение:</strong></p>
+                <div class="formula-block">
+L₁ · L₂ = {a·b, a·ba, ab·b, ab·ba}
+       = {ab, aba, abb, abba}
+                </div>
+                <p><strong>Обяснение:</strong> За всяка дума от L₁ я свързваме със всяка дума от L₂:</p>
+                <ul>
+                    <li>a · b = ab</li>
+                    <li>a · ba = aba</li>
+                    <li>ab · b = abb</li>
+                    <li>ab · ba = abba</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">Пример 2: Клиева звезда</div>
+                <p><strong>Дано:</strong> L = {a, b}</p>
+                <p><strong>Намиране:</strong> L*</p>
+                <p><strong>Решение:</strong></p>
+                <div class="formula-block">
+L* = {ε, a, b, aa, ab, ba, bb, aaa, aab, aba, ...}
+   = {всички низове над {a, b}}
+                </div>
+            </div>
+        </section>
+
+        <!-- Раздел 2: Пораждащи граматики -->
+        <section id="section2">
+            <h2>Раздел 2: Пораждащи граматики</h2>
+
+            <h3>Формално определение на граматика</h3>
+            <div class="def-box">
+                <strong>Пораждаща граматика G = (V, Σ, R, S):</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>V:</strong> Крайно множество от променливи (нетерминални символи)</li>
+                    <li><strong>Σ:</strong> Крайно множество от терминални символи (азбука), V ∩ Σ = ∅</li>
+                    <li><strong>R:</strong> Крайно множество от продукционни правила (production rules) от вида α → β, където α ∈ (V ∪ Σ)⁺ и β ∈ (V ∪ Σ)*</li>
+                    <li><strong>S ∈ V:</strong> Начален символ (start symbol)</li>
+                </ul>
+            </div>
+
+            <h3>Деривация (Derivation)</h3>
+            <p>Деривацията е процес на генериране на низове от граматиката чрез последователно применение на продукционни правила.</p>
+
+            <div class="def-box">
+                <strong>Пряка деривация (α ⟹ β):</strong> Ако имаме продукционно правило A → γ в R и α = ξAζ (където ξ, ζ са низи), то можем да напишем α ⟹ ξγζ.
+            </div>
+
+            <div class="def-box">
+                <strong>Деривация (α ⟹* β):</strong> Рефлексивното и транзитивното затваряне на ⟹. Съществува поредица от деривации α ⟹ α₁ ⟹ α₂ ⟹ ... ⟹ β.
+            </div>
+
+            <h3>Видове деривации</h3>
+            <ul>
+                <li><strong>Лямо деривация (Leftmost):</strong> На всяка стъпка заменяме най-левия променлив символ</li>
+                <li><strong>Дясно деривация (Rightmost):</strong> На всяка стъпка заменяме най-десния променлив символ</li>
+            </ul>
+
+            <h3>Дърво на деривацията (Parse Tree)</h3>
+            <p>Дърво, чиято корен е началния символ S, листата са терминални символи, а вътрешните възли са променливи. Всеки възел А с деца B₁, B₂, ..., Bₙ съответства на продукционно правило A → B₁B₂...Bₙ.</p>
+
+            <h3>Неоднозначност (Ambiguity)</h3>
+            <div class="def-box">
+                <strong>Неоднозначна граматика:</strong> Граматика, при която един и същи низ може да бъде генериран по два или повече различни начина (т.е. съществуват две различни дървета на деривацията за един низ).
+            </div>
+
+            <div class="warning-box">
+                <strong>Важно за изпита:</strong> Неоднозначността е проблем при проектирането на компилатори, тъй като води до неопределеност на семантиката. При реални езици за програмиране се изискват еднозначни (или по-добре казано, недвусмислени) граматики.
+            </div>
+
+            <h3>Работен пример: Деривация и неоднозначност</h3>
+            <div class="example-box">
+                <div class="example-title">Пример 3: Деривация на низ</div>
+                <p><strong>Дано граматика G:</strong></p>
+                <div class="formula-block">
+S → AB
+A → a
+B → b
+                </div>
+                <p><strong>Задача:</strong> Дериват низа "ab" от S и начертайте дърво на деривацията.</p>
+                <p><strong>Решение (лямо деривация):</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li>S ⟹ AB (прилагаме S → AB)</li>
+                        <li>AB ⟹ aB (прилагаме A → a)</li>
+                        <li>aB ⟹ ab (прилагаме B → b)</li>
+                    </ol>
+                </div>
+                <p><strong>Дърво на деривацията:</strong></p>
+                <div class="formula-block">
+        S
+       / \
+      A   B
+      |   |
+      a   b
+                </div>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">Пример 4: Неоднозначна граматика</div>
+                <p><strong>Дано граматика G:</strong></p>
+                <div class="formula-block">
+E → E + E | E * E | (E) | id
+                </div>
+                <p><strong>Дърво на деривацията за "id + id * id":</strong></p>
+                <p>Этa граматика е неоднозначна, защото низа "id + id * id" може да се парсира по две различни начина, в зависимост от приоритета на операторите.</p>
+                <p><strong>Дърво 1: (id + id) * id</strong></p>
+                <p><strong>Дърво 2: id + (id * id)</strong></p>
+                <p>В реална граматика на езика за програмиране ще уточним приоритета и асоциативността, за да избегнем неоднозначността.</p>
+            </div>
+        </section>
+
+        <!-- Раздел 3: Йерархия на Чомски -->
+        <section id="section3">
+            <h2>Раздел 3: Йерархия на Чомски</h2>
+
+            <p>Йерархията на Чомски класифицира формалните граматики на четири типа, които отговарят на четири класа формални езици. Всеки тип налага все по-строги ограничения на формата на продукционните правила.</p>
+
+            <h3>Йерархия на Чомски (от общо към специално)</h3>
+
+            <h4>Тип 0: Неограничени граматики (Unrestricted Grammars)</h4>
+            <div class="def-box">
+                <strong>Ограничение на продукциите:</strong> α → β, където α ∈ (V ∪ Σ)⁺ и β ∈ (V ∪ Σ)* (без ограничения)
+            </div>
+            <div class="def-box">
+                <strong>Генерирани езици:</strong> Рекурсивно изчислими езици (Recursively Enumerable Languages)
+            </div>
+            <div class="def-box">
+                <strong>Еквивалентен автомат:</strong> Машини на Тюринг (Turing Machines)
+            </div>
+            <div class="note-box">
+                <strong>Свойство:</strong> Тип 0 граматики могат да генерират всеки език, който може да бъде разпознат от машина на Тюринг. Това включва и езици, които не се спиране за някои входове (неразрешими езици).
+            </div>
+
+            <h4>Тип 1: Контекстно зависимо граматики (Context-Sensitive Grammars, CSG)</h4>
+            <div class="def-box">
+                <strong>Ограничение на продукциите:</strong> α → β, където |α| ≤ |β| (продукциите не намаляват дължината на низа), или A → ε само ако S не се появява в дясната страна на каквото и да е продукционно правило
+            </div>
+            <div class="def-box">
+                <strong>Генерирани езици:</strong> Контекстно зависимо езици (Context-Sensitive Languages)
+            </div>
+            <div class="def-box">
+                <strong>Еквивалентен автомат:</strong> Линейно ограничени автомати (Linear Bounded Automata, LBA)
+            </div>
+            <div class="note-box">
+                <strong>Свойство:</strong> Контекстно зависимите граматики генерират езици, които могат да бъдат разпознати с ограничена памет (линейна спрямо дължината на входа).
+            </div>
+
+            <h4>Тип 2: Безконтекстни граматики (Context-Free Grammars, CFG)</h4>
+            <div class="def-box">
+                <strong>Ограничение на продукциите:</strong> A → β, където A ∈ V и β ∈ (V ∪ Σ)* (лявата страна е един променлив символ)
+            </div>
+            <div class="def-box">
+                <strong>Генерирани езици:</strong> Безконтекстни езици (Context-Free Languages)
+            </div>
+            <div class="def-box">
+                <strong>Еквивалентен автомат:</strong> Натискащи автомати (Pushdown Automata, PDA)
+            </div>
+            <div class="note-box">
+                <strong>Свойство:</strong> Безконтекстните граматики са фундаментални за синтаксиса на езиците за програмиране. Те позволяват вложеност и могат да генерират всички регулярни езици (но не всички контекстно зависимо езици).
+            </div>
+
+            <h4>Тип 3: Регулярни граматики (Regular Grammars)</h4>
+            <div class="def-box">
+                <strong>Ограничение на продукциите:</strong> A → aB или A → a (дясна регулярна граматика) ИЛИ A → Ba или A → a (лява регулярна граматика), където a ∈ Σ ∪ {ε}, A, B ∈ V
+            </div>
+            <div class="def-box">
+                <strong>Генерирани езици:</strong> Регулярни езици (Regular Languages)
+            </div>
+            <div class="def-box">
+                <strong>Еквивалентен автомат:</strong> Крайни автомати (Finite Automata, DFA/NFA)
+            </div>
+            <div class="note-box">
+                <strong>Свойство:</strong> Регулярните езици са най-простите и най-ефикасни за разпознаване. Те се използват в лексичния анализ на компилаторите и в регулярни израази.
+            </div>
+
+            <h3>Таблица на йерархията на Чомски</h3>
+            <table class="gen-table">
+                <thead>
+                    <tr>
+                        <th>Тип</th>
+                        <th>Наименование</th>
+                        <th>Ограничение на продукциите</th>
+                        <th>Генерирани езици</th>
+                        <th>Еквивалентен автомат</th>
+                        <th>Свойства</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>Неограничени</td>
+                        <td>α → β</td>
+                        <td>Рекурсивно изчислими</td>
+                        <td>Машина на Тюринг</td>
+                        <td>Най-мощни, неразрешими проблеми</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Контекстно зависимо</td>
+                        <td>|α| ≤ |β|</td>
+                        <td>Контекстно зависимо</td>
+                        <td>LBA</td>
+                        <td>Разрешими с ограничена памет</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Безконтекстни</td>
+                        <td>A → β</td>
+                        <td>Безконтекстни</td>
+                        <td>PDA</td>
+                        <td>Основа на програмни езици</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Регулярни</td>
+                        <td>A → aB или A → a</td>
+                        <td>Регулярни</td>
+                        <td>DFA/NFA</td>
+                        <td>Най-прости, лексичен анализ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Диаграма на съдържаност (Containment Diagram)</h3>
+            <p>Всяка по-специална граматика генерира подмножество от езиците на предходния тип:</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    subgraph H ["Йерархия на Чомски"]
+        A["<b>Тип 0</b><br/>Неограничени граматики<br/>Рекурсивно изчислими езици<br/>Машини на Тюринг"]
+        B["<b>Тип 1</b><br/>Контекстно зависимо<br/>Контекстно зависимо езици<br/>LBA"]
+        C["<b>Тип 2</b><br/>Безконтекстни<br/>Безконтекстни езици<br/>PDA"]
+        D["<b>Тип 3</b><br/>Регулярни<br/>Регулярни езици<br/>DFA/NFA"]
+    end
+    A --> B
+    B --> C
+    C --> D
+                </div>
+            </div>
+
+            <h3>Работен пример: Определяне типът на граматика</h3>
+            <div class="example-box">
+                <div class="example-title">Пример 5: Класифициране на граматика</div>
+                <p><strong>Дано граматика G:</strong></p>
+                <div class="formula-block">
+S → aB | ε
+B → bC
+C → c
+                </div>
+                <p><strong>Задача:</strong> Определете типът на граматиката според йерархията на Чомски.</p>
+                <p><strong>Решение:</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li>Проверяваме всяка продукция:
+                            <ul>
+                                <li>S → aB: Лявата страна е един символ (S ∈ V), дясната страна е терминал и променлив (aB ∈ (V ∪ Σ)*) ✓</li>
+                                <li>S → ε: Лявата страна е един символ (S ∈ V), дясната страна е ε ✓</li>
+                                <li>B → bC: Лявата страна е един символ (B ∈ V), дясната страна е терминал и променлив (bC ∈ (V ∪ Σ)*) ✓</li>
+                                <li>C → c: Лявата страна е един символ (C ∈ V), дясната страна е терминал (c ∈ Σ) ✓</li>
+                            </ul>
+                        </li>
+                        <li>Всички продукции имат формата A → β, където A ∈ V</li>
+                        <li>⟹ Граматиката е <strong>Безконтекстна (Тип 2)</strong></li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">Пример 6: Регулярна граматика</div>
+                <p><strong>Дано граматика G:</strong></p>
+                <div class="formula-block">
+S → aA | b
+A → bB | a
+B → aA | ε
+                </div>
+                <p><strong>Задача:</strong> Определете типът на граматиката.</p>
+                <p><strong>Решение:</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li>Всяка продукция има формата A → aB или A → a (дясна регулярна граматика)</li>
+                        <li>S → aA (A е променлив)</li>
+                        <li>S → b (b е терминал)</li>
+                        <li>A → bB (B е променлив)</li>
+                        <li>A → a (a е терминал)</li>
+                        <li>B → aA (A е променлив)</li>
+                        <li>B → ε (празен низ)</li>
+                        <li>⟹ Граматиката е <strong>Регулярна (Тип 3)</strong></li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Раздел 4: Регулярни езици -->
+        <section id="section4">
+            <h2>Раздел 4: Регулярни езици</h2>
+
+            <h3>Крайни автомати (Finite Automata)</h3>
+            <div class="def-box">
+                <strong>Детерминиран крайна автомат (DFA):</strong> M = (Q, Σ, δ, q₀, F), където:
+                <ul style="margin-top: 10px;">
+                    <li>Q е крайно множество от състояния</li>
+                    <li>Σ е входна азбука</li>
+                    <li>δ: Q × Σ → Q е функция на преходите</li>
+                    <li>q₀ ∈ Q е начално състояние</li>
+                    <li>F ⊆ Q е множество на приемащи (финални) състояния</li>
+                </ul>
+            </div>
+
+            <div class="def-box">
+                <strong>Недетерминиран крайна автомат (NFA):</strong> M = (Q, Σ, δ, q₀, F), където δ: Q × Σ → P(Q) (функцията на преходите връща множество от възможни следващи състояния). Допускат се и преходи с ε (епсилон преходи).
+            </div>
+
+            <h3>Регулярни израази (Regular Expressions)</h3>
+            <p>Регулярните израази е синтаксис за описване на регулярни езици. Те се градят от:</p>
+            <ul>
+                <li>∅ (празния язык)</li>
+                <li>ε (еднооток на празния низ)</li>
+                <li>a (eднооток, съдържащ едно буква)</li>
+                <li>r₁ | r₂ (обединение)</li>
+                <li>r₁ · r₂ (конкатенация)</li>
+                <li>r* (Kleene star)</li>
+            </ul>
+
+            <h3>Еквивалентност: DFA ↔ NFA ↔ RegExp ↔ Регулярни граматики</h3>
+            <div class="theorem-box">
+                <strong>Теорема:</strong> Следните са еквивалентни за езиците:
+                <ul style="margin-top: 10px;">
+                    <li>Езикът се разпознава от някой DFA</li>
+                    <li>Езикът се разпознава от някой NFA</li>
+                    <li>Езикът може да се опише с някой регулярен израз</li>
+                    <li>Езикът генерирано от някоя регулярна граматика</li>
+                </ul>
+            </div>
+
+            <h3>Лемата за насочване за регулярни езици (Pumping Lemma for Regular Languages)</h3>
+            <div class="theorem-box">
+                <strong>Твърдение:</strong> Ако L е регулярен язык, тогава съществува естествено число p (дължина на насочване) такова, че всяка дума w ∈ L с |w| ≥ p може да се напишu w = xyz, където:
+                <ul style="margin-top: 10px;">
+                    <li>|xy| ≤ p</li>
+                    <li>|y| > 0</li>
+                    <li>За всяко i ≥ 0: xy^i z ∈ L</li>
+                </ul>
+            </div>
+
+            <div class="note-box">
+                <strong>Использование:</strong> Лемата за насочване се използва за доказване, че един език е НЕ регулярен. Ако можем да покажем, че условията на лемата се нарушават, то языком е нерегулярен.
+            </div>
+
+            <h3>Работен пример: Докажете, че езикът е нерегулярен</h3>
+            <div class="example-box">
+                <div class="example-title">Пример 7: Доказване с лемата за насочване</div>
+                <p><strong>Задача:</strong> Докажете, че L = {aⁿbⁿ | n ≥ 0} НЕ е регулярен език.</p>
+                <p><strong>Доказателство (по противоречие):</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li>Предполагаме, че L е регулярен.</li>
+                        <li>По лемата за насочване съществува стойност p такава, че произволна дума w ∈ L с |w| ≥ p може да се разложи като w = xyz със свойствата от лемата.</li>
+                        <li>Разглеждаме конкретната дума w = aᵖbᵖ. Явно |w| = 2p ≥ p.</li>
+                        <li>По лемата w = xyz, където |xy| ≤ p и |y| > 0.</li>
+                        <li>Тъй като |xy| ≤ p, то y съставено само от символи 'a' (y = aᵏ за някое k > 0).</li>
+                        <li>Сега разглеждаме w' = xy²z = aᵖ⁺ᵏbᵖ. Тази дума има различит брой 'a' и 'b' символи, т.е. w' ∉ L.</li>
+                        <li>Но по лемата трябва xy²z ∈ L. <strong>Противоречие!</strong></li>
+                        <li>⟹ L НЕ е регулярен език.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <h3>Работен пример: Преобразуване на NFA в DFA</h3>
+            <div class="example-box">
+                <div class="example-title">Пример 8: Subset construction (подмножествено конструиране)</div>
+                <p><strong>Дано NFA M = (Q, Σ, δ, q₀, F):</strong></p>
+                <div class="formula-block">
+Q = {q₀, q₁, q₂}
+Σ = {a, b}
+q₀ е начално състояние
+F = {q₂}
+
+Преходи:
+δ(q₀, a) = {q₀, q₁}    (недетерминизъм)
+δ(q₀, b) = {q₀}
+δ(q₁, b) = {q₂}
+δ(q₂, a) = ∅
+δ(q₂, b) = ∅
+                </div>
+                <p><strong>Задача:</strong> Преобразувайте този NFA в еквивалентен DFA, използвайки subset construction (подмножествено конструиране).</p>
+                <p><strong>Решение (скицирано):</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li>Началното състояние на DFA е {{q₀}} (множеството съдържащо началното състояние на NFA)</li>
+                        <li>Изчисляваме преходите:
+                            <ul>
+                                <li>δ'({q₀}, a) = δ(q₀, a) ∪ δ(q₁, a) = {q₀, q₁} ∪ ∅ = {q₀, q₁}</li>
+                                <li>δ'({q₀}, b) = δ(q₀, b) ∪ δ(q₁, b) = {q₀} ∪ ∅ = {q₀}</li>
+                            </ul>
+                        </li>
+                        <li>Продължаваме с новите състояния докато не исчерпим всички възможности</li>
+                        <li>Приемащите състояния на DFA са онези множества, които съдържат поне един приемащо състояние от NFA</li>
+                    </ol>
+                </div>
+                <p><strong>Резултат:</strong> DFA има до 2³ = 8 възможни състояния (подмножества на Q), но в практиката многи са неразрешими.</p>
+            </div>
+        </section>
+
+        <!-- Раздел 5: Безконтекстни езици -->
+        <section id="section5">
+            <h2>Раздел 5: Безконтекстни езици</h2>
+
+            <h3>Безконтекстни граматики (CFG)</h3>
+            <p>Както мълсихме, безконтекстна граматика има продукции от вида A → β, където A е един változлив символ и β е низ от терминали и променливи. CFG са фундаментални за проектирането на езици за програмиране.</p>
+
+            <h3>Натискащи автомати (Pushdown Automata, PDA)</h3>
+            <div class="def-box">
+                <strong>Натискащ автомат M = (Q, Σ, Γ, δ, q₀, Z₀, F):</strong> където:
+                <ul style="margin-top: 10px;">
+                    <li>Q е крайно множество от състояния</li>
+                    <li>Σ е входна азбука</li>
+                    <li>Γ е азбука на стекало</li>
+                    <li>δ: Q × (Σ ∪ {ε}) × Γ → P(Q × Γ*) е функция на преходите</li>
+                    <li>q₀ е начално състояние</li>
+                    <li>Z₀ ∈ Γ е начален символ на стекало</li>
+                    <li>F ⊆ Q е множество на приемащи състояния</li>
+                </ul>
+            </div>
+
+            <p>PDA разпознава безконтекстни езици. Те имат памет (стекало) която позволява вложеност и контекст, които са необходими за синтаксис на езиците за програмиране.</p>
+
+            <h3>Нормални форми за CFG</h3>
+
+            <h4>Чомски нормална форма (Chomsky Normal Form, CNF)</h4>
+            <div class="def-box">
+                <strong>Чомски нормална форма:</strong> Всяко продукционно правило е от вида:
+                <ul style="margin-top: 10px;">
+                    <li>A → BC (където B, C ∈ V)</li>
+                    <li>A → a (където a ∈ Σ)</li>
+                    <li>S → ε (само за началния символ S, ако ε ∈ L(G))</li>
+                </ul>
+            </div>
+
+            <p>Чомски нормална форма е полезна, защото:</p>
+            <ul>
+                <li>Позволява лесен анализ</li>
+                <li>Használуется в CYK алгоритъма за принадлежност на низ към езика</li>
+                <li>Всяка CFG може да бъде преобразувана в еквивалентна в CNF</li>
+            </ul>
+
+            <h4>Грайбах нормална форма (Greibach Normal Form, GNF)</h4>
+            <div class="def-box">
+                <strong>Грайбах нормална форма:</strong> Всяко продукционно правило е от вида:
+                <ul style="margin-top: 10px;">
+                    <li>A → aα (където a ∈ Σ и α ∈ V*)</li>
+                    <li>S → ε (само за началния символ S, ако ε ∈ L(G))</li>
+                </ul>
+            </div>
+
+            <h3>Преобразуване в Чомски нормална форма</h3>
+            <p>Процесът на преобразуване в CNF включва несколко етапи:</p>
+            <ol>
+                <li>Премахване на ε-продукции (освен за S → ε)</li>
+                <li>Премахване на единични продукции (A → B)</li>
+                <li>Замяна на терминали в продукциите</li>
+                <li>Разбиване на дълги продукции</li>
+            </ol>
+
+            <h3>CYK алгоритъм (Cocke–Younger–Kasami)</h3>
+            <p>CYK алгоритъмът решава проблема за принадлежност: Дадена е CFG в CNF и входен низ w, принадлежи ли w на L(G)?</p>
+            <p><strong>Сложност:</strong> O(n³ · |G|), където n е дължината на входния низ и |G| е размерът на граматиката.</p>
+
+            <h3>Лемата за насочване за безконтекстни езици (Pumping Lemma for CFLs)</h3>
+            <div class="theorem-box">
+                <strong>Твърдение:</strong> Ако L е безконтекстен язык, тогава съществува естествено число p (дължина на насочване) такова, че всяка дума w ∈ L с |w| ≥ p може да се напишет w = uvxyz, където:
+                <ul style="margin-top: 10px;">
+                    <li>|vxy| ≤ p</li>
+                    <li>|vx| > 0 (поне един от v или x е непразен)</li>
+                    <li>За всяко i ≥ 0: uvⁱxyⁱz ∈ L</li>
+                </ul>
+            </div>
+
+            <h3>Работен пример: Преобразуване в Чомски нормална форма</h3>
+            <div class="example-box">
+                <div class="example-title">Пример 9: Преобразуване в CNF</div>
+                <p><strong>Дано граматика G:</strong></p>
+                <div class="formula-block">
+S → AB | a
+A → aA | ε
+B → bB | b
+                </div>
+                <p><strong>Задача:</strong> Преобразувайте тази граматика в Чомски нормална форма.</p>
+                <p><strong>Решение (стъпка по стъпка):</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li><strong>Стъпка 1: Премахване на ε-продукции</strong>
+                            <ul>
+                                <li>A → ε, significança че S → AB devient S → B</li>
+                                <li>Новите продукции: S → AB | B | a, A → aA | a, B → bB | b</li>
+                            </ul>
+                        </li>
+                        <li><strong>Стъпка 2: Премахване на единични продукции (A → B)</strong>
+                            <ul>
+                                <li>S → B трябва да бъде разширена. B генерира bB | b, т.е. S → bB | b</li>
+                            </ul>
+                        </li>
+                        <li><strong>Стъпка 3: Замяна на терминали</strong>
+                            <ul>
+                                <li>Въвеждаме нови променливи за терминали: Ca → a, Cb → b</li>
+                                <li>S → AB | CbB | Ca, A → CaA | Ca, B → CbB | Cb</li>
+                            </ul>
+                        </li>
+                        <li><strong>Стъпка 4: Разбиване на дълги продукции</strong>
+                            <ul>
+                                <li>S → AB (вече е в порядък), S → CbB (вече е в порядък), S → Ca (уже е в порядък)</li>
+                                <li>A → CaA (вече е в порядък), A → Ca (вече е в порядък)</li>
+                                <li>B → CbB (вече е в порядък), B → Cb (вже е в порядък)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Резултат - граматика в CNF:</strong></li>
+                    </ol>
+                </div>
+                <div class="formula-block">
+S → AB | CbB | Ca
+A → CaA | Ca
+B → CbB | Cb
+Ca → a
+Cb → b
+                </div>
+            </div>
+        </section>
+
+        <!-- Flashcards -->
+        <section id="flashcards" class="flashcard-section">
+            <h2>Флашкарти за преговор</h2>
+            <p>Кликнете на всяка карта, за да видите отговора. Използвайте ги за бързо преповтяне преди изпита.</p>
+
+            <div class="flashcard-grid">
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какво е формален език?</div>
+                    <div class="flashcard-answer">Формален език L е подмножество на Σ* (множеството на всички возможни низи от азбука Σ). Това е математически обект, който описва колекция от низове.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Дефинирайте продукционно правило в граматика G.</div>
+                    <div class="flashcard-answer">Продукционно правило е съответствие α → β, където α (лава страна) е niepusty низ от теминали и променливи, а β (дясна страна) е низ от терминали и променливи. Правилата определят как да генерираме езика.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какво е йерархия на Чомски?</div>
+                    <div class="flashcard-answer">Йерархия на Чомски е класификация на формалните граматики на четири типа (0, 1, 2, 3), които генерират четири съответни класа езици. Всеки тип налага все по-строги ограничения на продукциите.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какви автомати разпознават регулярни езици?</div>
+                    <div class="flashcard-answer">Регулярни езици се разпознават от крайни автомати (Finite Automata): DFA (детерминиран) и NFA (недетерминиран). DFA и NFA са еквивалентни по мощност.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какво е натискащ автомат (PDA)?</div>
+                    <div class="flashcard-answer">Натискащ автомат (Pushdown Automaton, PDA) е автомат със стекало памет. PDA разпознават безконтекстни езици (Тип 2). Стекалото позволява запомняне и последувша проверка на условия.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какво е неоднозначна граматика?</div>
+                    <div class="flashcard-answer">Неоднозначна граматика е такава, при която един и същи низ може да генерирано по два или повече различни начина (съществуват минимум две различни дървета на деривацията). Неоднозначността е проблем при компилаторите.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какво е Чомски нормална форма (CNF)?</div>
+                    <div class="flashcard-answer">Чомски нормална форма е специална форма на CFG, където всяко правило е A → BC (две променливи) или A → a (един терминал). CNF се използва за CYK алгоритъма и улеснява анализа.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Изложете лемата за насочване за регулярни езици.</div>
+                    <div class="flashcard-answer">Ако L е регулярен, akkor съществува p такова, че всяка дума w ∈ L с |w| ≥ p може да се напишe w = xyz с |xy| ≤ p, |y| > 0, и xy^i z ∈ L за всяко i ≥ 0. Използва се за доказване, че един език НЕ е регулярен.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какво е контекстно зависима граматика (CSG)?</div>
+                    <div class="flashcard-answer">Контекстно зависима граматика (Тип 1) имат правила α → β където |α| ≤ |β|. Тте генерират контекстно зависимо езици, които разпознават линейно ограничени автомати (LBA).</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Reference / Бърза справка -->
+        <section id="quick-reference" class="quick-ref">
+            <h2>Бърза справка: Йерархия на Чомски</h2>
+
+            <table class="gen-table" style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>Характеристика</th>
+                        <th>Тип 0</th>
+                        <th>Тип 1</th>
+                        <th>Тип 2</th>
+                        <th>Тип 3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Наименование</strong></td>
+                        <td>Неограничени</td>
+                        <td>Контекстно зависимо</td>
+                        <td>Безконтекстни</td>
+                        <td>Регулярни</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Продукции</strong></td>
+                        <td>α → β</td>
+                        <td>|α| ≤ |β|</td>
+                        <td>A → β</td>
+                        <td>A → aB или A → a</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Езици</strong></td>
+                        <td>Рекурсивно изчислими</td>
+                        <td>Контекстно зависимо</td>
+                        <td>Безконтекстни</td>
+                        <td>Регулярни</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Автомат</strong></td>
+                        <td>Машина на Тюринг</td>
+                        <td>LBA</td>
+                        <td>PDA</td>
+                        <td>DFA/NFA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Памет</strong></td>
+                        <td>Неограничена</td>
+                        <td>Линейна</td>
+                        <td>Стекало</td>
+                        <td>Нямаме</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Примери на езици</strong></td>
+                        <td>Хибертови проблеми</td>
+                        <td>{aⁿbⁿcⁿ | n ≥ 0}</td>
+                        <td>{aⁿbⁿ | n ≥ 0}</td>
+                        <td>{aⁿ | n ≥ 0}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Затворен при операции</strong></td>
+                        <td>Никои</td>
+                        <td>Обединение, конкат</td>
+                        <td>Обединение, конкат, Kleene*</td>
+                        <td>Всички</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px;">Еквивалентност на представянията</h3>
+            <table class="gen-table">
+                <thead>
+                    <tr>
+                        <th>Тип 3 (Регулярни)</th>
+                        <th>Еквивалентни са:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2" style="padding: 15px;"><strong>Регулярна граматика ↔ DFA ↔ NFA ↔ Регулярен израз</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 15px;"><strong>Пример:</strong> Граматика: S → aA | ε, A → bS ↔ DFA/NFA ↔ RegExp: (ab)* ↔ Языык: {(ab)ⁿ | n ≥ 0}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px;">Ключови резултати</h3>
+            <ul>
+                <li><strong>Type Ordering:</strong> Всеки тип е подмножество на предходния тип по отношение на генерираемите езици (Тип 3 ⊂ Тип 2 ⊂ Тип 1 ⊂ Тип 0)</li>
+                <li><strong>Разрешимост:</strong> За Тип 0 много проблеми са неразрешими. За Тип 1 повечето проблеми са разрешими. За Тип 2 и 3 имаме разрешими алгоритми.</li>
+                <li><strong>Затвореност:</strong> Регулярни езици са затворени при всички операции. Безконтекстни езици НЕ са затворени при пресичане и допълнение.</li>
+                <li><strong>Парсиране:</strong> Для Тип 3 — O(n). За Тип 2 — O(n³) (CYK). За Тип 1 — може да бъде експоненциално.</li>
+            </ul>
+        </section>
+
+        <!-- Literature -->
+        <section class="literature">
+            <h4>Препоръчана литература</h4>
+            <ul>
+                <li><strong>[4] Biggs N.</strong> — Дискретна математика (основи на граматики и автомати)</li>
+                <li><strong>[32] Манев К.</strong> — Формални езици и пораждащи граматики (специализиран източник за теория на формалните езици)</li>
+                <li><strong>Допълнително:</strong> Ахо, Лам, Сетхи, Улман — "Компилатори: Принципи, техники и инструменти" (за приложение в компилаторното инженерство)</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Scroll to top button -->
+    <div class="scroll-to-top" id="scrollToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">↑</div>
+
+    <script>
+        // Scroll to top button visibility
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 300) {
+                scrollBtn.style.display = 'flex';
+            } else {
+                scrollBtn.style.display = 'none';
+            }
+        });
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-list a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Update active link
+                    document.querySelectorAll('.toc-list a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Mark active section on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.toc-list a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+        mermaid.contentLoaded();
+    </script>
+</body>
+</html>

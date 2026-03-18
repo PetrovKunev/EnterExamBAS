@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 6: Графи и дървета - PhD Кандидатски Изпит</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --navy: #0f2744;
+            --blue: #2563a8;
+            --green: #166534;
+            --purple: #5b21b6;
+            --orange: #9a3412;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background-color: var(--cream);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: var(--navy);
+            color: white;
+            padding: 2rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 0.5rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 0.8rem 0;
+        }
+
+        .sidebar a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            padding: 0.4rem 0.8rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sidebar a:hover {
+            border-left-color: var(--blue);
+            color: white;
+            background-color: rgba(37, 99, 168, 0.2);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 3rem;
+            max-width: 1200px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 3px solid var(--navy);
+            padding-bottom: 1.5rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--blue);
+            font-weight: 500;
+        }
+
+        section {
+            margin: 3rem 0;
+            scroll-margin-top: 100px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--navy);
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--blue);
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: var(--blue);
+            margin: 1.5rem 0 0.8rem 0;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            color: var(--purple);
+            margin: 1.2rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        p, li {
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .overview-box {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
+            border-left: 5px solid var(--blue);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .overview-box h3 {
+            color: var(--navy);
+            margin-top: 0;
+        }
+
+        .def-box {
+            background-color: #f0f9ff;
+            border-left: 5px solid var(--blue);
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .def-box strong {
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .theorem-box {
+            background-color: #fef3c7;
+            border-left: 5px solid var(--orange);
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .theorem-box strong {
+            color: var(--orange);
+        }
+
+        .note-box {
+            background-color: #f3f4f6;
+            border: 1px dashed var(--purple);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+
+        .formula-block {
+            background-color: #f9fafb;
+            border: 1px solid var(--blue);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        .gen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .gen-table thead {
+            background-color: var(--navy);
+            color: white;
+        }
+
+        .gen-table th {
+            padding: 0.8rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #ddd;
+        }
+
+        .gen-table td {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+        }
+
+        .gen-table tbody tr:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+
+        .gen-table tbody tr:hover {
+            background-color: #e0f2fe;
+        }
+
+        .proof-steps {
+            background-color: #fafafa;
+            border: 1px solid #d1d5db;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .proof-steps ol {
+            margin-left: 1.5rem;
+        }
+
+        .proof-steps li {
+            margin-bottom: 1rem;
+        }
+
+        .worked-example {
+            background-color: #ecfdf5;
+            border-left: 5px solid var(--green);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .worked-example h4 {
+            color: var(--green);
+            margin-top: 0;
+        }
+
+        .algorithm-pseudo {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .mermaid-container {
+            background-color: white;
+            border: 1px solid #d1d5db;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .flashcard {
+            background: white;
+            border: 2px solid var(--blue);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .flashcard:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(37, 99, 168, 0.2);
+        }
+
+        .flashcard.flipped {
+            background: var(--blue);
+            color: white;
+        }
+
+        .flashcard-front, .flashcard-back {
+            font-weight: 500;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .flashcard-back {
+            display: none;
+        }
+
+        .flashcard.flipped .flashcard-front {
+            display: none;
+        }
+
+        .flashcard.flipped .flashcard-back {
+            display: block;
+        }
+
+        .quick-ref {
+            background-color: #f3f4f6;
+            border: 2px solid var(--navy);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .quick-ref h3 {
+            color: var(--navy);
+            margin-top: 0;
+        }
+
+        code {
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--red);
+        }
+
+        .pre-code {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        .literature {
+            background-color: #f0fdf4;
+            border-left: 5px solid var(--green);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .literature h3 {
+            color: var(--green);
+            margin-top: 0;
+        }
+
+        .literature ul {
+            margin-left: 1.5rem;
+        }
+
+        .literature li {
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:10px;right:16px;z-index:9999;background:#0f2744;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-family:Inter,sans-serif;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">← Портал</a>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>📚 Съдържание</h2>
+            <ul>
+                <li><a href="#overview">Обзор</a></li>
+                <li><a href="#section1">Основни понятия</a></li>
+                <li><a href="#section2">Обхождане на графи</a></li>
+                <li><a href="#section3">Мин. покриващо дърво</a></li>
+                <li><a href="#section4">Най-кратък път</a></li>
+                <li><a href="#section5">Дървета</a></li>
+                <li><a href="#section6">Специални задачи</a></li>
+                <li><a href="#flashcards">Flashcards</a></li>
+                <li><a href="#quick-ref">Бърза справка</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Тема 6: Графи и дървета</h1>
+                <p>PhD Кандидатски Изпит | ИМИ-БАН</p>
+            </header>
+
+            <!-- ОБЗОР -->
+            <section id="overview">
+                <h2>Обзор</h2>
+                <div class="overview-box">
+                    <h3>Контекст на изпита</h3>
+                    <ul>
+                        <li><strong>Формат:</strong> 4-часов писмен изпит</li>
+                        <li><strong>Избор на теми:</strong> 2 теми выбора на случаен принцип</li>
+                        <li><strong>Време на тема:</strong> ~2 часа</li>
+                        <li><strong>Обем:</strong> 3-5 ръчно написани страници</li>
+                        <li><strong>Преглеждане:</strong> Анонимно</li>
+                        <li><strong>Материали:</strong> Без допълнителни материали</li>
+                    </ul>
+                </div>
+
+                <h3>Връзки между теми</h3>
+                <p><strong>Тема 5 (Структури от данни)</strong> → <strong>Тема 6 (Графи и дървета)</strong> → <strong>Тема 3 (Алгоритми)</strong> → <strong>Тема 8 (Бази от данни)</strong></p>
+                <ul>
+                    <li>Дърветата са специален случай на графи (от Тема 5)</li>
+                    <li>Алгоритмите на графи (BFS, DFS, Dijkstra) са класически от Тема 3</li>
+                    <li>Гра́фовите структури се използват в индексирането на БД (Тема 8)</li>
+                </ul>
+            </section>
+
+            <!-- РАЗДЕЛ 1: ОСНОВНИ ПОНЯТИЯ -->
+            <section id="section1">
+                <h2>Раздел 1: Основни понятия</h2>
+
+                <h3>Определение и основни характеристики</h3>
+                <div class="def-box">
+                    <strong>Граф G = (V, E):</strong> Ordenied pair where V = {v₁, v₂, ..., vₙ} is a set of vertices (nodes) and E ⊆ V × V is a set of edges (connections between vertices).
+                </div>
+
+                <h3>Видове графи</h3>
+                <ul>
+                    <li><strong>Насочен граф (Directed graph):</strong> Всяко ребро има посока (u, v) ≠ (v, u)</li>
+                    <li><strong>Ненасочен граф (Undirected graph):</strong> Ребра без посока; (u, v) = (v, u)</li>
+                    <li><strong>Претеглен граф (Weighted):</strong> Всяко ребро има тегло w(e) ≥ 0</li>
+                    <li><strong>Непретеглен граф (Unweighted):</strong> Всички тегла = 1</li>
+                    <li><strong>Ацикличен насочен граф (DAG):</strong> Насочен граф без цикли</li>
+                </ul>
+
+                <h3>Степени и пътища</h3>
+                <div class="def-box">
+                    <ul>
+                        <li><strong>Степен (Degree):</strong> Брой ребра, инцидентни на върха v</li>
+                        <li><strong>In-degree (indeg):</strong> Брой входящи ребра (само в насочени графи)</li>
+                        <li><strong>Out-degree (outdeg):</strong> Брой изходящи ребра (само в насочени графи)</li>
+                        <li><strong>Път (Path):</strong> Последователност от върхове (v₁, v₂, ..., vₖ), където (vᵢ, vᵢ₊₁) ∈ E</li>
+                        <li><strong>Прост път:</strong> Път без повтаряне на върхове</li>
+                        <li><strong>Цикъл (Cycle):</strong> Път, където v₁ = vₖ</li>
+                        <li><strong>Свързана компонента:</strong> Максимално подмножество на върхове, между които съществува път</li>
+                    </ul>
+                </div>
+
+                <h3>Представяния на графи</h3>
+                <p>Две основни структури за съхранение:</p>
+
+                <h4>1. Матрица на съседствата (Adjacency Matrix)</h4>
+                <div class="formula-block">
+                    A[i][j] = { weight(i,j), if (i,j) ∈ E; 0 or ∞, otherwise }
+                </div>
+                <div class="worked-example">
+                    <h4>Пример за 4-върхов граф:</h4>
+                    <pre class="pre-code">      0   1   2   3
+    0 [0   1   0   4]
+    1 [1   0   2   0]
+    2 [0   2   0   3]
+    3 [4   0   3   0]</pre>
+                </div>
+
+                <h4>2. Списък на съседствата (Adjacency List)</h4>
+                <div class="worked-example">
+                    <h4>За същия граф:</h4>
+                    <pre class="pre-code">    0: [1→1, 3→4]
+    1: [0→1, 2→2]
+    2: [1→2, 3→3]
+    3: [0→4, 2→3]</pre>
+                </div>
+
+                <h3>Сравнение на представянията</h3>
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Операция</th>
+                            <th>Матрица</th>
+                            <th>Списък</th>
+                            <th>Бележка</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Съхранение</td>
+                            <td>O(V²)</td>
+                            <td>O(V+E)</td>
+                            <td>Списък е по-ефикасен за разредени графи</td>
+                        </tr>
+                        <tr>
+                            <td>Проверка (u,v)</td>
+                            <td>O(1)</td>
+                            <td>O(deg(u))</td>
+                            <td>Матрица е по-бърза</td>
+                        </tr>
+                        <tr>
+                            <td>Намиране съседи</td>
+                            <td>O(V)</td>
+                            <td>O(deg(v))</td>
+                            <td>Списък е по-бърз</td>
+                        </tr>
+                        <tr>
+                            <td>Добавяне ребро</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                            <td>Еднакво</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Специални видове графи</h3>
+
+                <h4>Пълен граф (Complete graph Kₙ)</h4>
+                <div class="def-box">
+                    Всеки връх е свързан с всеки други връх. |E| = n(n-1)/2 за ненасочен, n(n-1) за насочен.
+                </div>
+
+                <h4>Двуделен граф (Bipartite graph)</h4>
+                <div class="def-box">
+                    V може да се дели на две непразни множества U и V, така че всяко ребро има един край в U и един в V.
+                </div>
+
+                <h4>Планарен граф (Planar graph)</h4>
+                <div class="def-box">
+                    Граф, който може да бъде начертан на равнина без пресичане на ребра.
+                </div>
+
+                <h3>Ключови теореми</h3>
+
+                <div class="theorem-box">
+                    <strong>Лема на ръкуванието (Handshaking Lemma):</strong><br>
+                    Σ deg(v) = 2|E| за ненасочени графи.<br>
+                    За насочени: Σ indeg(v) = Σ outdeg(v) = |E|.
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Формула на Euler за планарни графи:</strong><br>
+                    V - E + F = 2, където V е върхове, E е ребра, F е лица.
+                </div>
+
+                <div class="note-box">
+                    <strong>Практично приложение:</strong> Формулата на Euler се използва за проверка на планарност. Ако граф е планарен и свързан: E ≤ 3V - 6.
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 2: ОБХОЖДАНЕ -->
+            <section id="section2">
+                <h2>Раздел 2: Обхождане на графи</h2>
+
+                <h3>Преглед на методите</h3>
+                <p>Обхождането (traversal) посещава всеки връх точно веднъж. Два основни подхода:</p>
+
+                <h3>BFS - Търсене в ширина (Breadth-First Search)</h3>
+
+                <h4>Алгоритъм</h4>
+                <div class="algorithm-pseudo">
+BFS(Graph G, Vertex start):
+    queue ← new Queue()
+    visited ← empty set
+    queue.enqueue(start)
+    visited.add(start)
+
+    while queue is not empty:
+        v ← queue.dequeue()
+        process(v)
+
+        for each neighbor u of v:
+            if u not in visited:
+                visited.add(u)
+                queue.enqueue(u)
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O(V + E) при представяне със списък на съседствата.
+                </div>
+
+                <div class="def-box">
+                    <strong>Приложение:</strong> Намиране на най-кратък път в ненагласен граф, проверка на свързаност, намиране на слабо свързани компоненти.
+                </div>
+
+                <h3>DFS - Търсене в дълбочина (Depth-First Search)</h3>
+
+                <h4>Алгоритъм (рекурсивен)</h4>
+                <div class="algorithm-pseudo">
+DFS(Graph G, Vertex v, Set visited):
+    visited.add(v)
+    process(v)
+
+    for each neighbor u of v:
+        if u not in visited:
+            DFS(G, u, visited)
+
+DFS-All(Graph G):
+    visited ← empty set
+    for each vertex v in G:
+        if v not in visited:
+            DFS(G, v, visited)
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O(V + E) при представяне със списък на съседствата.
+                </div>
+
+                <div class="def-box">
+                    <strong>Приложения:</strong> Топологично сортиране, откритие на цикли, силно свързани компоненти, мост-ребра.
+                </div>
+
+                <h3>Работена примера: BFS и DFS на конкретен граф</h3>
+
+                <div class="worked-example">
+                    <h4>Граф с 6 върха:</h4>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+graph LR
+    A["A"]
+    B["B"]
+    C["C"]
+    D["D"]
+    E["E"]
+    F["F"]
+
+    A -->|1| B
+    A -->|1| C
+    B -->|1| D
+    C -->|1| E
+    D -->|1| F
+    E -->|1| F
+                        </div>
+                    </div>
+
+                    <h4>BFS от A:</h4>
+                    <ol>
+                        <li>Начало: visited = {A}, queue = [A]</li>
+                        <li>Обход A: посещаване на B, C. queue = [B, C]</li>
+                        <li>Обход B: посещаване на D. queue = [C, D]</li>
+                        <li>Обход C: посещаване на E. queue = [D, E]</li>
+                        <li>Обход D: посещаване на F. queue = [E, F]</li>
+                        <li>Обход E: F вече посещен. queue = [F]</li>
+                        <li>Обход F: никакви нови съседи. queue = []</li>
+                    </ol>
+                    <p><strong>Ред на посещение:</strong> A, B, C, D, E, F</p>
+
+                    <h4>DFS от A:</h4>
+                    <ol>
+                        <li>Начало: посещаване на A</li>
+                        <li>От A: отиваме на B (първи съсед)</li>
+                        <li>От B: отиваме на D (първи неопосещен)</li>
+                        <li>От D: отиваме на F</li>
+                        <li>От F: съсед E неопосещен, отиваме на E</li>
+                        <li>От E: всички съседи посещени</li>
+                        <li>Връщане и посещаване на C (съсед на A)</li>
+                    </ol>
+                    <p><strong>Ред на посещение:</strong> A, B, D, F, E, C</p>
+                </div>
+
+                <h3>Топологично сортиране</h3>
+
+                <div class="def-box">
+                    <strong>Топологично сортиране:</strong> Линейно подредени всички върхове така, че за всяко ребро (u, v) във V, u идва преди v. Възможно само в DAG.
+                </div>
+
+                <h4>Алгоритъм на Kahn</h4>
+                <div class="algorithm-pseudo">
+Topological-Sort(DAG G):
+    indegrees ← calculate in-degrees
+    queue ← vertices with indegree 0
+    result ← []
+
+    while queue is not empty:
+        v ← queue.dequeue()
+        result.add(v)
+
+        for each neighbor u of v:
+            indegree[u]--
+            if indegree[u] == 0:
+                queue.enqueue(u)
+
+    return result
+                </div>
+
+                <div class="worked-example">
+                    <h4>Пример: DAG с 5 върха</h4>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+graph LR
+    A["A (indeg:0)"]
+    B["B (indeg:1)"]
+    C["C (indeg:1)"]
+    D["D (indeg:2)"]
+    E["E (indeg:1)"]
+
+    A -->|1| B
+    A -->|1| C
+    B -->|1| D
+    C -->|1| D
+    D -->|1| E
+                        </div>
+                    </div>
+                    <p><strong>Топологично сортиране:</strong> A, B, C, D, E (или A, C, B, D, E)</p>
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 3: МИНИМАЛНО ПОКРИВАЩО ДЪРВО -->
+            <section id="section3">
+                <h2>Раздел 3: Минимално покриващо дърво (MST)</h2>
+
+                <div class="def-box">
+                    <strong>Минимално покриващо дърво:</strong> Подмножество от ребра, свързващо всички върхове с минимално сумарно тегло, без цикли.
+                </div>
+
+                <p>Два класически алгоритма, базирани на гординска стратегия:</p>
+
+                <h3>Алгоритъм на Kruskal</h3>
+
+                <div class="algorithm-pseudo">
+Kruskal(Graph G with weights):
+    edges ← sort G.E by weight (ascending)
+    mst ← []
+    uf ← UnionFind(G.V)
+
+    for each edge (u,v,w) in edges:
+        if uf.find(u) != uf.find(v):
+            mst.add((u,v,w))
+            uf.union(u, v)
+
+    return mst
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O(E log E) за сортиране + O(E α(V)) за Union-Find = O(E log E).
+                    <br><strong>Подход:</strong> Гордийски - добавяме ребра в нарастващ ред на тегло, избягвайки цикли.
+                </div>
+
+                <h3>Алгоритъм на Prim</h3>
+
+                <div class="algorithm-pseudo">
+Prim(Graph G, Vertex start):
+    mst ← []
+    visited ← {start}
+    pq ← priority queue with edges from start
+
+    while |visited| < |V|:
+        (u, v, w) ← pq.extractMin()
+
+        if v not in visited:
+            visited.add(v)
+            mst.add((u,v,w))
+
+            for each neighbor x of v:
+                if x not in visited:
+                    pq.insert((v, x, weight(v,x)))
+
+    return mst
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O((V+E) log V) с двоична приоритетна опашка или O(V²) с масив.
+                    <br><strong>Подход:</strong> Разширяме MST от един връх, винаги добавяйки най-леко ребро до нов връх.
+                </div>
+
+                <h3>Работена примера: Kruskal на претеглен граф</h3>
+
+                <div class="worked-example">
+                    <h4>Граф с 6 върха и 9 ребра:</h4>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+graph LR
+    A["A"]
+    B["B"]
+    C["C"]
+    D["D"]
+    E["E"]
+    F["F"]
+
+    A -->|1| B
+    A -->|4| C
+    B -->|2| C
+    B -->|5| D
+    C -->|3| D
+    C -->|6| E
+    D -->|7| E
+    D -->|8| F
+    E -->|9| F
+                        </div>
+                    </div>
+
+                    <h4>Стъпки на Kruskal:</h4>
+                    <ol>
+                        <li><strong>Сортиране:</strong> (A,B,1), (B,C,2), (C,D,3), (A,C,4), (B,D,5), (C,E,6), (D,E,7), (D,F,8), (E,F,9)</li>
+                        <li><strong>Стъп 1:</strong> Добавяме (A,B,1). MST={(A,B,1)}, тегло=1</li>
+                        <li><strong>Стъп 2:</strong> Добавяме (B,C,2). MST={(A,B,1), (B,C,2)}, тегло=3</li>
+                        <li><strong>Стъп 3:</strong> Добавяме (C,D,3). MST={(A,B,1), (B,C,2), (C,D,3)}, тегло=6</li>
+                        <li><strong>Стъп 4:</strong> Пропускаме (A,C,4) - циклус с A-B-C</li>
+                        <li><strong>Стъп 5:</strong> Пропускаме (B,D,5) - циклус</li>
+                        <li><strong>Стъп 6:</strong> Добавяме (C,E,6). MST={(A,B), (B,C), (C,D), (C,E)}, тегло=12</li>
+                        <li><strong>Стъп 7:</strong> Добавяме (D,F,8). MST завършено (5 ребра за 6 върха)</li>
+                    </ol>
+                    <p><strong>Тегло на MST:</strong> 1+2+3+6+8 = 20</p>
+                </div>
+
+                <div class="note-box">
+                    <strong>Забележка за коректност:</strong> Tanto Kruskal, както и Prim, дават оптимално решение. Доказателството използва обмен на аргумент (exchange argument).
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 4: НАЙ-КРАТЪК ПЪТ -->
+            <section id="section4">
+                <h2>Раздел 4: Най-кратък път</h2>
+
+                <h3>Проблем на най-краткия път</h3>
+                <p>Дадени:  Граф G, начален връх s, целеви връх t (или всички върхове). Намерете пътя с минимално сумарно тегло.</p>
+
+                <h3>Алгоритъм на Dijkstra</h3>
+
+                <div class="def-box">
+                    <strong>Предпоставка:</strong> Всички тегла са неотрицателни (w(e) ≥ 0).
+                </div>
+
+                <div class="algorithm-pseudo">
+Dijkstra(Graph G, Vertex start):
+    dist[start] ← 0
+    dist[v] ← ∞ for all other v
+    pq ← priority queue with (0, start)
+
+    while pq is not empty:
+        (d, u) ← pq.extractMin()
+
+        if d > dist[u]:
+            continue
+
+        for each neighbor v of u:
+            if dist[u] + weight(u,v) < dist[v]:
+                dist[v] ← dist[u] + weight(u,v)
+                pq.insert((dist[v], v))
+
+    return dist
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O((V+E) log V) с двоична приоритетна опашка. Може да бъде O(V²) с масив.
+                </div>
+
+                <h3>Алгоритъм на Bellman-Ford</h3>
+
+                <div class="def-box">
+                    <strong>Преимущество:</strong> Работи с отрицателни тегла и открива отрицателни цикли!
+                </div>
+
+                <div class="algorithm-pseudo">
+Bellman-Ford(Graph G, Vertex start):
+    dist[start] ← 0
+    dist[v] ← ∞ for all other v
+
+    for i = 1 to |V|-1:
+        for each edge (u,v,w):
+            if dist[u] != ∞ and dist[u] + w < dist[v]:
+                dist[v] ← dist[u] + w
+
+    // Проверка за отрицателни цикли
+    for each edge (u,v,w):
+        if dist[u] + w < dist[v]:
+            return "Отрицателен цикъл!"
+
+    return dist
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O(V·E) - по-бавно от Dijkstra, но по-гъвкаво.
+                </div>
+
+                <h3>Floyd-Warshall (Всички двойки)</h3>
+
+                <div class="def-box">
+                    <strong>Проблем:</strong> Намиране на най-краткия път между ВСИЧКИ двойки върхове.
+                </div>
+
+                <div class="algorithm-pseudo">
+Floyd-Warshall(Matrix dist):
+    for k = 0 to |V|-1:
+        for i = 0 to |V|-1:
+            for j = 0 to |V|-1:
+                dist[i][j] ← min(dist[i][j], dist[i][k] + dist[k][j])
+
+    return dist
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O(V³) - проста, но тежка за голяма V.
+                </div>
+
+                <h3>Работена примера: Dijkstra</h3>
+
+                <div class="worked-example">
+                    <h4>Претеглен граф с 5 върха, начало A:</h4>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+graph LR
+    A["A"]
+    B["B"]
+    C["C"]
+    D["D"]
+    E["E"]
+
+    A -->|2| B
+    A -->|4| C
+    B -->|1| C
+    B -->|7| D
+    C -->|3| D
+    C -->|5| E
+    D -->|1| E
+                        </div>
+                    </div>
+
+                    <h4>Таблица на обновяванията:</h4>
+                    <table class="gen-table">
+                        <thead>
+                            <tr>
+                                <th>Стъп</th>
+                                <th>Текущ (d)</th>
+                                <th>dist[A]</th>
+                                <th>dist[B]</th>
+                                <th>dist[C]</th>
+                                <th>dist[D]</th>
+                                <th>dist[E]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0 (начало)</td>
+                                <td>-</td>
+                                <td>0</td>
+                                <td>∞</td>
+                                <td>∞</td>
+                                <td>∞</td>
+                                <td>∞</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>A(0)</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>4</td>
+                                <td>∞</td>
+                                <td>∞</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>B(2)</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>9</td>
+                                <td>∞</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>C(3)</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>6</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>D(6)</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>6</td>
+                                <td>7</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>E(7)</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>6</td>
+                                <td>7</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Резултат:</strong> dist[A]=0, dist[B]=2, dist[C]=3, dist[D]=6, dist[E]=7</p>
+                </div>
+
+                <h3>Сравнение на алгоритмите</h3>
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Алгоритъм</th>
+                            <th>Сложност</th>
+                            <th>Отрицателни тегла</th>
+                            <th>Всички двойки</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dijkstra</td>
+                            <td>O((V+E) log V)</td>
+                            <td>❌ Не</td>
+                            <td>Един източник</td>
+                        </tr>
+                        <tr>
+                            <td>Bellman-Ford</td>
+                            <td>O(V·E)</td>
+                            <td>✓ Да</td>
+                            <td>Един източник</td>
+                        </tr>
+                        <tr>
+                            <td>Floyd-Warshall</td>
+                            <td>O(V³)</td>
+                            <td>✓ Да</td>
+                            <td>✓ Всички двойки</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- РАЗДЕЛ 5: ДЪРВЕТА -->
+            <section id="section5">
+                <h2>Раздел 5: Дървета (като графи)</h2>
+
+                <h3>Дърво като специален граф</h3>
+
+                <div class="def-box">
+                    <strong>Дърво:</strong> Свързан ненасочен граф без цикли. Еквивалентно: G е дърво iff G е свързан и |E| = |V| - 1.
+                </div>
+
+                <h3>Основни свойства</h3>
+                <ul>
+                    <li><strong>Единствен път:</strong> Между всеки две върхове в дърво съществува точно един прост път.</li>
+                    <li><strong>Ребра:</strong> За n върхове, има точно n-1 ребра.</li>
+                    <li><strong>Листо:</strong> Връх с степен 1 (в ненасочен случай).</li>
+                    <li><strong>Корен:</strong> В насочено дърво - един връх без входящи ребра (родител на всички).</li>
+                </ul>
+
+                <h3>Вкоренено дърво (Rooted Tree)</h3>
+
+                <div class="def-box">
+                    <strong>Вкоренено дърво:</strong> Дърво с выбран корен r. Всяко ребро е насочено от родител към дете.
+                </div>
+
+                <ul>
+                    <li><strong>Височина на дърво:</strong> Максимално разстояние от корена до листо.</li>
+                    <li><strong>Дълбочина на връх:</strong> Разстояние от корена до върха.</li>
+                    <li><strong>Поддърво:</strong> Дърво с корен като някой връх v.</li>
+                </ul>
+
+                <h3>Двоично дърво (Binary Tree)</h3>
+
+                <div class="def-box">
+                    Всеки върх има най-много 2 деца (ляво и дясно). Класификация:
+                </div>
+
+                <ul>
+                    <li><strong>Пълно двоично дърво:</strong> Всеки връх има 0 или 2 деца.</li>
+                    <li><strong>Перфектно двоично дърво:</strong> Всички листа на една височина.</li>
+                    <li><strong>Балансирано двоично дърво:</strong> Височина = O(log n).</li>
+                </ul>
+
+                <div class="note-box">
+                    За детайлно на двоични дървета като структури от данни, вж. <strong>Тема 5: Структури от данни</strong>.
+                </div>
+
+                <h3>Преходи на дърво</h3>
+
+                <p>От гра́фова перспектива, преходите са специфични DFS/BFS реализации:</p>
+
+                <h4>Вътрешен преход (Inorder) за двоично дърво</h4>
+                <div class="algorithm-pseudo">
+Inorder(Node v):
+    if v is not null:
+        Inorder(v.left)
+        process(v)
+        Inorder(v.right)
+                </div>
+
+                <h4>Преход на Euler тур</h4>
+                <div class="def-box">
+                    <strong>Euler тур:</strong> Тур по всички ребра точно веднъж. Възможен iff граф е свързан и всички върхове имат четна степен (за Euler верига: точно 2 върхове с нечетна степен).
+                </div>
+
+                <h3>Пример: Дърво с преход</h3>
+
+                <div class="worked-example">
+                    <h4>Двоично дърво с 7 върха:</h4>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+graph TD
+    A["A"]
+    B["B"]
+    C["C"]
+    D["D"]
+    E["E"]
+    F["F"]
+    G["G"]
+
+    A --> B
+    A --> C
+    B --> D
+    B --> E
+    C --> F
+    C --> G
+                        </div>
+                    </div>
+
+                    <h4>Преходи:</h4>
+                    <ul>
+                        <li><strong>Inorder:</strong> D, B, E, A, F, C, G</li>
+                        <li><strong>Preorder:</strong> A, B, D, E, C, F, G</li>
+                        <li><strong>Postorder:</strong> D, E, B, F, G, C, A</li>
+                        <li><strong>BFS (ниво):</strong> A | B, C | D, E, F, G</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 6: СПЕЦИАЛНИ ЗАДАЧИ -->
+            <section id="section6">
+                <h2>Раздел 6: Специални задачи и проблеми</h2>
+
+                <h3>Euler пътя и верига</h3>
+
+                <div class="def-box">
+                    <strong>Euler верига (Euler circuit):</strong> Път, който преминава всяко ребро точно веднъж и се завършва в началния връх.
+                    <br><strong>Euler пътя (Euler path):</strong> Път, който преминава всяко ребро точно веднъж (разпочива в един връх, завършва в друг).
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Условие на Euler:</strong>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Euler верига съществува iff граф е свързан и ВСЕ върхове имат четна степен.</li>
+                        <li>Euler пътя съществува iff граф е свързан и имаме ТОЧНО 2 върхове с нечетна степен.</li>
+                    </ul>
+                </div>
+
+                <h3>Hamilton пътя и верига</h3>
+
+                <div class="def-box">
+                    <strong>Hamilton верига:</strong> Път, който посещава всеки връх точно веднъж и се завършва в началния.
+                    <br><strong>Hamilton пътя:</strong> Път, който посещава всеки връх точно веднъж.
+                </div>
+
+                <div class="theorem-box">
+                    <strong>NP-пълнота:</strong> Проблемът на Hamilton верига е NP-пълен. Няма известен полиномиален алгоритъм.
+                </div>
+
+                <div class="note-box">
+                    <strong>Связь с Тема 3 (Алгоритми):</strong> Hamilton верига е класически пример за NP-пълен проблем, който демонстрира разликата между P и NP класове.
+                </div>
+
+                <h3>Оцветяване на граф (Graph Coloring)</h3>
+
+                <div class="def-box">
+                    <strong>Оцветяване на върхове:</strong> Назначаване на цветове на върхове така, че никой съседни върхове да няма същия цвят.
+                    <br><strong>Хроматично число χ(G):</strong> Минимален брой цветове, необходими.
+                </div>
+
+                <h4>Гордийски алгоритъм на оцветяване</h4>
+                <div class="algorithm-pseudo">
+Greedy-Coloring(Graph G):
+    color[v] ← undefined for all v
+
+    for each vertex v in order:
+        used_colors ← set of colors of neighbors of v
+        color[v] ← smallest color not in used_colors
+
+    return color
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O(V + E) за оцветяване.
+                    <br><strong>Оптималност:</strong> Не е гарантирано оптимално решение, но е O(Δ+1)-приближение, където Δ е максимална степен.
+                </div>
+
+                <h3>Максимален поток / Минимално сечение (Max Flow / Min Cut)</h3>
+
+                <div class="def-box">
+                    <strong>Проблем:</strong> Дан е граф с капацитети на ребра. Намерете максимален поток от източник s до сифон t.
+                </div>
+
+                <h4>Ford-Fulkerson алгоритъм (кратко)</h4>
+                <div class="algorithm-pseudo">
+Ford-Fulkerson(Graph G, Vertex s, Vertex t):
+    flow ← 0
+
+    while exists path from s to t in residual graph:
+        f_path ← capacity of minimum edge in path
+        flow += f_path
+        update residual capacities
+
+    return flow
+                </div>
+
+                <div class="def-box">
+                    <strong>Теорема на Max-Flow Min-Cut:</strong> Максимален поток = минимално сечение.
+                </div>
+
+                <h3>Двуделно съвпадение</h3>
+
+                <div class="def-box">
+                    <strong>Двуделно съвпадение (Bipartite Matching):</strong> Намиране на максимален набор от несвързващи се ребра между две раздели множества.
+                </div>
+
+                <p>Може да се реши през алгоритъм на максимален поток с единични капацитети.</p>
+
+                <div class="theorem-box">
+                    <strong>Теорема на König:</strong> В двуделен граф, размерът на максимално съвпадение = размерът на минимално върхово покритие.
+                </div>
+            </section>
+
+            <!-- FLASHCARDS -->
+            <section id="flashcards">
+                <h2>Flashcards</h2>
+                <p>Кликнете на всяка карта, за да видите отговора.</p>
+
+                <div class="flashcard-grid">
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Какво е граф G = (V, E)?</strong></div>
+                        <div class="flashcard-back">Наредена двойка където V е множество върхове, E ⊆ V × V е множество ребра.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Лема на ръкуванието</strong></div>
+                        <div class="flashcard-back">Сума от степени = 2|E| в ненасочен граф. За насочен: сума in-deg = сума out-deg = |E|.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Сложност на BFS/DFS?</strong></div>
+                        <div class="flashcard-back">O(V + E) при представяне със списък на съседствата.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Кога е възможна Euler верига?</strong></div>
+                        <div class="flashcard-back">Граф свързан И всички върхове имат четна степен.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Сложност Dijkstra?</strong></div>
+                        <div class="flashcard-back">O((V+E) log V) с приоритетна опашка, работи за неотрицателни тегла.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Сложност Kruskal MST?</strong></div>
+                        <div class="flashcard-back">O(E log E) за сортиране + O(E α(V)) за Union-Find = O(E log E).</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Дърво: колко ребра за n върхове?</strong></div>
+                        <div class="flashcard-back">Точно n - 1 ребра. Свързано и без цикли.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Hamilton верига е...</strong></div>
+                        <div class="flashcard-back">NP-пълен проблем. Посещава всеки връх точно веднъж.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Floyd-Warshall сложност?</strong></div>
+                        <div class="flashcard-back">O(V³). За всички двойки най-кратки пътища. Работи с отрицателни тегла.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>DAG определение</strong></div>
+                        <div class="flashcard-back">Directed Acyclic Graph - насочен граф без цикли. Позволява топологично сортиране.</div>
+                    </div>
+                </div>
+
+                <p style="margin-top: 2rem; font-style: italic; color: #666;">За интерактивност, flashcard-ите са кликабилни карти.</p>
+            </section>
+
+            <!-- БЪРЗА СПРАВКА -->
+            <section id="quick-ref">
+                <h2>Бърза справка - Сравнение на алгоритми</h2>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Алгоритъм</th>
+                            <th>Проблем</th>
+                            <th>Сложност</th>
+                            <th>Ключови условия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>BFS</strong></td>
+                            <td>Обхождане, най-кратък път (неважки)</td>
+                            <td>O(V+E)</td>
+                            <td>Списък съседства</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DFS</strong></td>
+                            <td>Обхождане, цикли, силни компоненти</td>
+                            <td>O(V+E)</td>
+                            <td>Рекурсия или стек</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Топо. сорт.</strong></td>
+                            <td>Линейно подредяне на DAG</td>
+                            <td>O(V+E)</td>
+                            <td>Само за DAG</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kruskal</strong></td>
+                            <td>Минимално покриващо дърво</td>
+                            <td>O(E log E)</td>
+                            <td>Union-Find структура</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Prim</strong></td>
+                            <td>Минимално покриващо дърво</td>
+                            <td>O((V+E)log V)</td>
+                            <td>Приоритетна опашка</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dijkstra</strong></td>
+                            <td>Един източник най-кратък път</td>
+                            <td>O((V+E)log V)</td>
+                            <td>Неотрицателни тегла</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bellman-Ford</strong></td>
+                            <td>Един източник най-кратък път</td>
+                            <td>O(V·E)</td>
+                            <td>Открива отрицателни цикли</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Floyd-Warshall</strong></td>
+                            <td>Всички двойки най-кратък път</td>
+                            <td>O(V³)</td>
+                            <td>Отрицателни тегла OK</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ford-Fulkerson</strong></td>
+                            <td>Максимален поток</td>
+                            <td>O(E·max_flow)</td>
+                            <td>Зависи от метода</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Greedy Coloring</strong></td>
+                            <td>Оцветяване върхове (приближение)</td>
+                            <td>O(V+E)</td>
+                            <td>Не оптимално, но близо</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ЛИТЕРАТУРА -->
+            <section class="literature">
+                <h3>Препоръчана литература</h3>
+                <ul>
+                    <li><strong>[25] Weiss M.A.</strong> "Data Structures and Algorithm Analysis in C" - Фундаментално за представяния на графи и алгоритми.</li>
+                    <li><strong>[27] Бойчева С.</strong> Материали по Структури от данни - Дърветата като разширение.</li>
+                    <li><strong>[32] Манев К.</strong> "Дискретна математика" - Теоретични основи на графите.</li>
+                    <li><strong>[33] Манев Кр.</strong> Лекции по Алгоритми - Практични реализации.</li>
+                </ul>
+            </section>
+
+            <footer style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--navy); color: #666; font-size: 0.9rem; text-align: center;">
+                <p>Материали за подготовка на PhD кандидатски изпит | ИМИ-БАН | Тема 6: Графи и дървета</p>
+                <p>Дата на последното обновление: 18 март 2026</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Flashcard interactivity
+        document.querySelectorAll('.flashcard').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('flipped');
+            });
+        });
+
+        // Sidebar active link highlighting
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar a').forEach(a => a.style.borderLeftColor = 'transparent');
+                this.style.borderLeftColor = 'var(--blue)';
+            });
+        });
+
+        // Mermaid initialization
+        if (typeof mermaid !== 'undefined') {
+            mermaid.initialize({ startOnLoad: true, theme: 'default' });
+            mermaid.contentLoaded();
+        }
+    </script>
+</body>
+</html>

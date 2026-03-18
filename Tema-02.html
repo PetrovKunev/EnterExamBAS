@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тема 2: Математическа логика | ИМИ-БАН</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f2744;
+  --navy2: #1a3a5c;
+  --blue: #2563a8;
+  --lblue: #dbeafe;
+  --green: #166534;
+  --lgreen: #dcfce7;
+  --purple: #5b21b6;
+  --lpurple: #ede9fe;
+  --orange: #9a3412;
+  --lorange: #ffedd5;
+  --red: #991b1b;
+  --cream: #fdfaf5;
+  --text: #1a1a2e;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --sidebar-w: 270px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--navy);
+  overflow-y: auto;
+  z-index: 100;
+  padding: 0 0 40px 0;
+}
+
+#sidebar-header {
+  background: var(--navy2);
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#sidebar-header .badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #93c5fd;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+#sidebar-header h2 {
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+#toc { padding: 16px 0; }
+
+#toc a {
+  display: block;
+  color: #94a3b8;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 6px 20px;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+
+#toc a:hover, #toc a.active {
+  color: #fff;
+  background: rgba(255,255,255,0.06);
+  border-left-color: #60a5fa;
+}
+
+#toc .toc-section {
+  color: #60a5fa;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 14px 20px 4px;
+  font-weight: 500;
+}
+
+#toc .toc-sub {
+  padding-left: 32px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* ── MAIN CONTENT ── */
+#main {
+  margin-left: var(--sidebar-w);
+  max-width: 900px;
+  padding: 48px 56px 80px;
+}
+
+/* ── HERO ── */
+#hero {
+  background: var(--navy);
+  color: #fff;
+  padding: 48px 56px;
+  margin-left: var(--sidebar-w);
+  border-bottom: 4px solid #2563a8;
+}
+
+#hero .meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #93c5fd;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+#hero h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+#hero .subtitle {
+  font-size: 18px;
+  color: #93c5fd;
+  font-style: italic;
+}
+
+#hero .lit {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(255,255,255,0.06);
+  padding: 10px 14px;
+  border-radius: 6px;
+  border-left: 3px solid #2563a8;
+}
+
+/* ── HEADINGS ── */
+h1.section-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 48px 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+  position: relative;
+}
+
+h1.section-title::before {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 60px; height: 2px;
+  background: var(--blue);
+}
+
+h2.sub-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--navy2);
+  margin: 32px 0 12px;
+}
+
+h3.sub-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 24px 0 10px;
+}
+
+p { margin-bottom: 16px; }
+
+/* ── DEFINITION BOXES ── */
+.def-box {
+  border-left: 4px solid var(--blue);
+  background: var(--lblue);
+  padding: 14px 18px;
+  margin: 18px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.def-box .def-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--blue);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.def-box p { margin: 0; font-size: 17px; }
+
+.note-box {
+  border-left: 4px solid var(--orange);
+  background: var(--lorange);
+  padding: 14px 20px;
+  margin: 16px 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 16px;
+}
+
+.theorem-box {
+  border: 1.5px solid var(--purple);
+  background: var(--lpurple);
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-radius: 8px;
+}
+
+.theorem-box .theorem-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--purple);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+/* ── TRUTH TABLES ── */
+.truth-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+}
+
+.truth-table th {
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 16px;
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.truth-table td {
+  padding: 8px 16px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.truth-table tr:nth-child(even) td { background: #f8fafc; }
+.truth-table tr:hover td { background: var(--lblue); }
+
+.truth-table .T { color: var(--green); font-weight: 600; }
+.truth-table .F { color: var(--red); font-weight: 600; }
+
+/* ── GENERAL TABLES ── */
+.gen-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-size: 16px;
+}
+
+.gen-table th {
+  background: var(--navy2);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.gen-table td {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.gen-table tr:nth-child(even) td { background: #f8fafc; }
+
+/* ── FORMULA BLOCKS ── */
+.formula-block {
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  padding: 20px 24px;
+  border-radius: 8px;
+  margin: 14px 0;
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+.formula-block .hl { color: #93c5fd; }
+.formula-block .op { color: #f59e0b; }
+.formula-block .comment { color: #64748b; font-style: italic; }
+
+/* ── MERMAID ── */
+.diagram-wrap {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 20px 0;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.diagram-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* ── PROOF STEPS ── */
+.proof-steps {
+  counter-reset: step;
+  margin: 14px 0;
+}
+
+.proof-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.proof-step::before {
+  counter-increment: step;
+  content: counter(step);
+  background: var(--navy);
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── EQUIVALENCES GRID ── */
+.equiv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.equiv-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.equiv-card .law-name {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.equiv-card .law-formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* ── FLASHCARDS ── */
+.flashcard-section {
+  background: var(--navy);
+  color: #fff;
+  padding: 40px 56px;
+  margin-left: var(--sidebar-w);
+  margin-top: 40px;
+}
+
+.flashcard-section h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.flashcard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.fc {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.fc:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
+
+.fc .fc-q {
+  font-size: 14px;
+  color: #93c5fd;
+  font-weight: 600;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.fc .fc-a {
+  font-size: 13.5px;
+  color: #e2e8f0;
+  line-height: 1.6;
+  display: none;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fc.open .fc-a { display: block; }
+
+.fc .fc-toggle {
+  position: absolute;
+  top: 14px; right: 14px;
+  font-size: 11px;
+  color: #475569;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── QUICK REF ── */
+.quick-ref {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 24px 0;
+}
+
+.quick-ref h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  color: var(--navy);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── HISTORY CARDS ── */
+.historian-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.historian-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  border-top: 4px solid var(--navy);
+}
+
+.historian-card .name {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 2px;
+}
+
+.historian-card .years {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.historian-card ul {
+  padding-left: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── TIMELINE ── */
+.timeline {
+  position: relative;
+  padding-left: 30px;
+  margin: 20px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.tl-item {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -26px; top: 6px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px var(--blue);
+}
+
+.tl-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--blue);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.tl-text { font-size: 14px; color: var(--text); }
+
+/* ── PRINT ── */
+@media print {
+  #sidebar { display: none; }
+  #hero, #main, .flashcard-section { margin-left: 0; }
+  .fc .fc-a { display: block !important; }
+  .diagram-wrap { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:10px;right:16px;z-index:9999;background:#0f2744;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-family:Inter,sans-serif;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">← Портал</a>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <div class="badge">ИМИ-БАН · Информатика</div>
+    <h2>Тема 2: Математическа логика</h2>
+  </div>
+  <div id="toc">
+    <div class="toc-section">Съдържание</div>
+    <a href="#s1">1. Съждителна логика</a>
+    <a href="#s1-1" class="toc-sub">1.1 Съждения и стойности</a>
+    <a href="#s1-2" class="toc-sub">1.2 Логически свързки</a>
+    <a href="#s1-3" class="toc-sub">1.3 Еквивалентности</a>
+    <a href="#s1-4" class="toc-sub">1.4 КНФ и ДНФ</a>
+    <a href="#s1-5" class="toc-sub">1.5 Методи на доказателство</a>
+    <div class="toc-section">Раздел 2</div>
+    <a href="#s2">2. Предикатна логика</a>
+    <a href="#s2-1" class="toc-sub">2.1 Предикати</a>
+    <a href="#s2-2" class="toc-sub">2.2 Квантори</a>
+    <a href="#s2-3" class="toc-sub">2.3 Свободни/свързани</a>
+    <a href="#s2-4" class="toc-sub">2.4 Интерпретация и модел</a>
+    <a href="#s2-5" class="toc-sub">2.5 Формализация с квантори</a>
+    <a href="#s2-6" class="toc-sub">2.6 Правила за извод</a>
+    <a href="#s2-8" class="toc-sub">2.8 Теореми на Гьодел</a>
+    <div class="toc-section">Раздел 3</div>
+    <a href="#s3">3. Булева алгебра</a>
+    <a href="#s3-1" class="toc-sub">3.1 Аксиоми</a>
+    <a href="#s3-3" class="toc-sub">3.3 Канонични форми</a>
+    <a href="#s3-4" class="toc-sub">3.4 Минимизация</a>
+    <a href="#s3-5" class="toc-sub">3.5 Декомпозиция на Шанън</a>
+    <div class="toc-section">Допълнения</div>
+    <a href="#s4">4. Исторически контекст</a>
+    <a href="#s5">5. Бърза справка</a>
+    <a href="#flashcards">🃏 Flashcards</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="meta">Кандидат-докторантски изпит · Март 2026</div>
+  <h1>Тема 2: Математическа логика<br>Съждения, предикати, Булева алгебра</h1>
+  <div class="subtitle">Topic 2: Mathematical Logic · Propositional & Predicate Logic · Boolean Algebra</div>
+  <div class="lit">📚 Литература: [4] Biggs N. — Discrete Mathematics &nbsp;|&nbsp; [27] Бойчева С. &nbsp;|&nbsp; [32] Манев К.</div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- ОБЗОР: Как трите части се свързват -->
+<div class="note-box" style="border-left-color:var(--blue); background:var(--lblue); padding:20px 24px; margin-bottom:32px;">
+  <p style="font-size:17px; font-weight:600; margin-bottom:10px; color:var(--navy);">Как трите части на темата се свързват помежду си</p>
+  <p style="font-size:16px;"><strong>Съждителната логика</strong> (раздел 1) е фундаментът — оперира с прости твърдения (T/F) и логически свързки. <strong>Предикатната логика</strong> (раздел 2) я разширява, като добавя променливи, квантори и предикати — позволява да изразяваме твърдения за обекти от даден домейн. Теоремите на Гьодел поставят фундаменталните граници на формалните системи.</p>
+  <p style="font-size:16px;"><strong>Булевата алгебра</strong> (раздел 3) формализира съждителната логика алгебрично — с аксиоми (Хънтингтън), канонични форми (SOP/POS) и методи за минимизация (Карно, Куайн-Маклъски). Тя е мостът между математическата логика и практическото проектиране на цифрови схеми (Шанън, 1937).</p>
+  <p style="font-size:14px; color:var(--muted); margin-bottom:0;">На изпита се очаква да покажете и трите нива: дефиниции, формално разсъждение и практически умения за преобразуване и минимизация.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: СЪЖДИТЕЛНА ЛОГИКА -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h1 class="section-title" id="s1">1. СЪЖДИТЕЛНА ЛОГИКА (Propositional Logic)</h1>
+
+<h2 class="sub-title" id="s1-1">1.1 Съждения и истинностни стойности</h2>
+
+<div class="def-box">
+  <div class="def-label">Определение</div>
+  <p><strong>Съждение</strong> (proposition) е декларативно твърдение, което е или <strong>истина (T/И)</strong>, или <strong>лъжа (F/Л)</strong>, но не и двете едновременно. Означават се с малки латински букви: p, q, r, ...</p>
+</div>
+
+<p><strong>Примери:</strong></p>
+<ul style="padding-left:20px; margin-bottom:14px;">
+  <li>„2 + 3 = 5" — съждение (истина)</li>
+  <li>„София е столицата на България" — съждение (истина)</li>
+  <li>„x + 1 = 3" — <strong>НЕ е</strong> съждение (зависи от x — предикат)</li>
+  <li>„Затвори вратата!" — <strong>НЕ е</strong> съждение (повелително изречение)</li>
+</ul>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Класификация на формулите</div>
+  <div class="mermaid">
+graph TD
+    F["Пропозиционална формула"]
+    F --> T["Тавтология<br/>(Tautology)<br/>Винаги истина"]
+    F --> C["Контингентност<br/>(Contingency)<br/>Понякога T, понякога F"]
+    F --> X["Противоречие<br/>(Contradiction)<br/>Винаги лъжа"]
+    T --- ex1["Пример: p ∨ ¬p"]
+    C --- ex2["Пример: p ∨ q"]
+    X --- ex3["Пример: p ∧ ¬p"]
+    style T fill:#166534,color:#fff
+    style C fill:#854d0e,color:#fff
+    style X fill:#991b1b,color:#fff
+  </div>
+</div>
+
+<h2 class="sub-title" id="s1-2">1.2 Логически свързки (Logical Connectives)</h2>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Схема на свързките</div>
+  <div class="mermaid">
+graph LR
+    subgraph "Унарни"
+        NOT["¬ НЕ (NOT)"]
+    end
+    subgraph "Бинарни"
+        AND["∧ И (AND)"]
+        OR["∨ ИЛИ (OR)"]
+        XOR["⊕ Изкл. ИЛИ (XOR)"]
+        IMP["→ Импликация"]
+        IFF["↔ Еквивалентност"]
+    end
+    style NOT fill:#e1bee7
+    style AND fill:#bbdefb
+    style OR fill:#bbdefb
+    style XOR fill:#bbdefb
+    style IMP fill:#c8e6c9
+    style IFF fill:#c8e6c9
+  </div>
+</div>
+
+<h3 class="sub-sub">Таблици на истинност</h3>
+
+<div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px; margin:16px 0;">
+
+<div>
+<p style="font-weight:600; margin-bottom:6px; font-family:'JetBrains Mono',monospace; font-size:13px;">¬p &nbsp;(NOT)</p>
+<table class="truth-table">
+  <thead><tr><th>p</th><th>¬p</th></tr></thead>
+  <tbody>
+    <tr><td class="T">T</td><td class="F">F</td></tr>
+    <tr><td class="F">F</td><td class="T">T</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<p style="font-weight:600; margin-bottom:6px; font-family:'JetBrains Mono',monospace; font-size:13px;">p ∧ q &nbsp;(AND)</p>
+<table class="truth-table">
+  <thead><tr><th>p</th><th>q</th><th>p∧q</th></tr></thead>
+  <tbody>
+    <tr><td class="T">T</td><td class="T">T</td><td class="T">T</td></tr>
+    <tr><td class="T">T</td><td class="F">F</td><td class="F">F</td></tr>
+    <tr><td class="F">F</td><td class="T">T</td><td class="F">F</td></tr>
+    <tr><td class="F">F</td><td class="F">F</td><td class="F">F</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<p style="font-weight:600; margin-bottom:6px; font-family:'JetBrains Mono',monospace; font-size:13px;">p ∨ q &nbsp;(OR)</p>
+<table class="truth-table">
+  <thead><tr><th>p</th><th>q</th><th>p∨q</th></tr></thead>
+  <tbody>
+    <tr><td class="T">T</td><td class="T">T</td><td class="T">T</td></tr>
+    <tr><td class="T">T</td><td class="F">F</td><td class="T">T</td></tr>
+    <tr><td class="F">F</td><td class="T">T</td><td class="T">T</td></tr>
+    <tr><td class="F">F</td><td class="F">F</td><td class="F">F</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<p style="font-weight:600; margin-bottom:6px; font-family:'JetBrains Mono',monospace; font-size:13px;">p ⊕ q &nbsp;(XOR)</p>
+<table class="truth-table">
+  <thead><tr><th>p</th><th>q</th><th>p⊕q</th></tr></thead>
+  <tbody>
+    <tr><td class="T">T</td><td class="T">T</td><td class="F">F</td></tr>
+    <tr><td class="T">T</td><td class="F">F</td><td class="T">T</td></tr>
+    <tr><td class="F">F</td><td class="T">T</td><td class="T">T</td></tr>
+    <tr><td class="F">F</td><td class="F">F</td><td class="F">F</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<p style="font-weight:600; margin-bottom:6px; font-family:'JetBrains Mono',monospace; font-size:13px;">p → q &nbsp;(IMPLIES)</p>
+<table class="truth-table">
+  <thead><tr><th>p</th><th>q</th><th>p→q</th></tr></thead>
+  <tbody>
+    <tr><td class="T">T</td><td class="T">T</td><td class="T">T</td></tr>
+    <tr><td class="T">T</td><td class="F">F</td><td class="F">F</td></tr>
+    <tr><td class="F">F</td><td class="T">T</td><td class="T">T</td></tr>
+    <tr><td class="F">F</td><td class="F">F</td><td class="T">T</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<p style="font-weight:600; margin-bottom:6px; font-family:'JetBrains Mono',monospace; font-size:13px;">p ↔ q &nbsp;(IFF)</p>
+<table class="truth-table">
+  <thead><tr><th>p</th><th>q</th><th>p↔q</th></tr></thead>
+  <tbody>
+    <tr><td class="T">T</td><td class="T">T</td><td class="T">T</td></tr>
+    <tr><td class="T">T</td><td class="F">F</td><td class="F">F</td></tr>
+    <tr><td class="F">F</td><td class="T">T</td><td class="F">F</td></tr>
+    <tr><td class="F">F</td><td class="F">F</td><td class="T">T</td></tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+<div class="note-box">
+  ⚠️ <strong>p → q е лъжа само когато p е истина, а q е лъжа.</strong> „От лъжлива хипотеза следва всичко" (ex falso quodlibet).
+</div>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Свързани форми на импликацията</div>
+  <div class="mermaid">
+graph TD
+    O["p → q<br/>(Оригинал)"]
+    C["q → p<br/>(Обратно / Converse)"]
+    I["¬p → ¬q<br/>(Инверсно / Inverse)"]
+    CP["¬q → ¬p<br/>(Контрапозиция)"]
+    O ---|"логически еквивалентни"| CP
+    C ---|"логически еквивалентни"| I
+    O -.-|"НЕ са еквивалентни"| C
+    O -.-|"НЕ са еквивалентни"| I
+    style O fill:#166534,color:#fff
+    style CP fill:#166534,color:#fff
+    style C fill:#854d0e,color:#fff
+    style I fill:#854d0e,color:#fff
+  </div>
+</div>
+
+<h3 class="sub-sub">Приоритет на операциите</h3>
+<table class="gen-table">
+  <thead><tr><th>Приоритет</th><th>Оператор</th><th>Ime</th></tr></thead>
+  <tbody>
+    <tr><td>1 (най-висок)</td><td style="font-family:'JetBrains Mono',monospace">¬</td><td>NOT</td></tr>
+    <tr><td>2</td><td style="font-family:'JetBrains Mono',monospace">∧</td><td>AND</td></tr>
+    <tr><td>3</td><td style="font-family:'JetBrains Mono',monospace">∨</td><td>OR</td></tr>
+    <tr><td>4</td><td style="font-family:'JetBrains Mono',monospace">→</td><td>IMPLIES</td></tr>
+    <tr><td>5 (най-нисък)</td><td style="font-family:'JetBrains Mono',monospace">↔</td><td>IFF</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sub-title" id="s1-3">1.3 Логически еквивалентности</h2>
+
+<div class="equiv-grid">
+  <div class="equiv-card">
+    <div class="law-name">Закони за идентитет</div>
+    <div class="law-formula">p ∧ T ≡ p<br>p ∨ F ≡ p</div>
+  </div>
+  <div class="equiv-card">
+    <div class="law-name">Закони за доминиране</div>
+    <div class="law-formula">p ∨ T ≡ T<br>p ∧ F ≡ F</div>
+  </div>
+  <div class="equiv-card">
+    <div class="law-name">Комутативни закони</div>
+    <div class="law-formula">p ∨ q ≡ q ∨ p<br>p ∧ q ≡ q ∧ p</div>
+  </div>
+  <div class="equiv-card">
+    <div class="law-name">Асоциативни закони</div>
+    <div class="law-formula">(p ∨ q) ∨ r ≡ p ∨ (q ∨ r)<br>(p ∧ q) ∧ r ≡ p ∧ (q ∧ r)</div>
+  </div>
+  <div class="equiv-card">
+    <div class="law-name">Дистрибутивни закони</div>
+    <div class="law-formula">p ∧ (q ∨ r) ≡ (p∧q) ∨ (p∧r)<br>p ∨ (q ∧ r) ≡ (p∨q) ∧ (p∨r)</div>
+  </div>
+  <div class="equiv-card">
+    <div class="law-name">Закони за абсорбция</div>
+    <div class="law-formula">p ∧ (p ∨ q) ≡ p<br>p ∨ (p ∧ q) ≡ p</div>
+  </div>
+  <div class="equiv-card" style="border-left:3px solid var(--blue);">
+    <div class="law-name">Закони на Де Морган ⭐</div>
+    <div class="law-formula">¬(p ∨ q) ≡ ¬p ∧ ¬q<br>¬(p ∧ q) ≡ ¬p ∨ ¬q</div>
+  </div>
+  <div class="equiv-card">
+    <div class="law-name">Закони за допълнение</div>
+    <div class="law-formula">p ∨ ¬p ≡ T &nbsp;(Изкл. трето)<br>p ∧ ¬p ≡ F &nbsp;(Непротиворечие)</div>
+  </div>
+  <div class="equiv-card">
+    <div class="law-name">Еквивалентности за →</div>
+    <div class="law-formula">p → q ≡ ¬p ∨ q<br>p → q ≡ ¬q → ¬p</div>
+  </div>
+  <div class="equiv-card">
+    <div class="law-name">Еквивалентности за ↔</div>
+    <div class="law-formula">p ↔ q ≡ (p→q) ∧ (q→p)<br>p ↔ q ≡ (p∧q) ∨ (¬p∧¬q)</div>
+  </div>
+</div>
+
+<div class="note-box">
+  🧠 <strong>Мнемоника за Де Морган:</strong> Отрицанието „разбива скобите" и <strong>сменя операцията</strong> (∨↔∧), а всеки аргумент се отрича.
+</div>
+
+<h2 class="sub-title" id="s1-4">1.4 Нормални форми: КНФ и ДНФ</h2>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0;">
+<div class="def-box" style="border-color:var(--green); background:var(--lgreen);">
+  <div class="def-label" style="color:var(--green)">ДНФ — Дизюнктивна нормална форма</div>
+  <p><strong>Дизюнкция на термове</strong>, където терм = конюнкция на литерали.<br>
+  Пример: <code>(p ∧ q) ∨ (¬p ∧ r)</code></p>
+</div>
+<div class="def-box" style="border-color:var(--purple); background:var(--lpurple);">
+  <div class="def-label" style="color:var(--purple)">КНФ — Конюнктивна нормална форма</div>
+  <p><strong>Конюнкция на клаузи</strong>, където клауза = дизюнкция на литерали.<br>
+  Пример: <code>(p ∨ q) ∧ (¬p ∨ r)</code></p>
+</div>
+</div>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Алгоритъм за преобразуване в КНФ</div>
+  <div class="mermaid">
+graph TD
+    S["Изходна формула"] --> S1["Стъпка 1: Елиминиране на ↔ и →"]
+    S1 --> S2["Стъпка 2: Де Морган + двойно отрицание (→ NNF)"]
+    S2 --> S3["Стъпка 3: Разпределение на ∨ над ∧"]
+    S3 --> R["Резултат в КНФ ✓"]
+    S1 -.- N1["p↔q → (p→q)∧(q→p); p→q → ¬p∨q"]
+    S2 -.- N2["¬(p∧q) → ¬p∨¬q; ¬(¬p) → p"]
+    S3 -.- N3["p∨(q∧r) → (p∨q)∧(p∨r)"]
+    style S fill:#fff3e0
+    style R fill:#e8f5e9
+  </div>
+</div>
+
+<!-- WORKED EXAMPLE: КНФ преобразуване -->
+<div class="theorem-box" style="border-color:var(--green); background:var(--lgreen);">
+  <div class="theorem-label" style="color:var(--green)">Решен пример — Преобразуване в КНФ</div>
+  <p style="margin-bottom:10px;"><strong>Задача:</strong> Преобразувайте в КНФ формулата: <code style="font-size:16px">(p → q) ↔ r</code></p>
+  <div class="proof-steps">
+    <div class="proof-step"><span><strong>Стъпка 1 — Елиминиране на ↔:</strong><br>
+      (p → q) ↔ r &nbsp;≡&nbsp; [(p → q) → r] ∧ [r → (p → q)]</span></div>
+    <div class="proof-step"><span><strong>Стъпка 2 — Елиминиране на →:</strong><br>
+      (p → q) → r &nbsp;≡&nbsp; ¬(¬p ∨ q) ∨ r &nbsp;≡&nbsp; (p ∧ ¬q) ∨ r<br>
+      r → (p → q) &nbsp;≡&nbsp; ¬r ∨ (¬p ∨ q) &nbsp;≡&nbsp; ¬r ∨ ¬p ∨ q</span></div>
+    <div class="proof-step"><span><strong>Стъпка 3 — Де Морган (NNF):</strong><br>
+      Вече сме в NNF (отрицания само пред атоми).</span></div>
+    <div class="proof-step"><span><strong>Стъпка 4 — Разпределяне на ∨ над ∧:</strong><br>
+      (p ∧ ¬q) ∨ r &nbsp;≡&nbsp; <strong>(p ∨ r) ∧ (¬q ∨ r)</strong><br>
+      Вторият конюнкт ¬r ∨ ¬p ∨ q вече е клауза.</span></div>
+    <div class="proof-step"><span><strong>Резултат (КНФ):</strong><br>
+      <code style="font-size:16px; color:var(--green)">(p ∨ r) ∧ (¬q ∨ r) ∧ (¬r ∨ ¬p ∨ q)</code><br>
+      <em>Три клаузи, всяка е дизюнкция на литерали.</em></span></div>
+  </div>
+</div>
+
+<!-- WORKED EXAMPLE: ДНФ преобразуване -->
+<div class="theorem-box" style="border-color:var(--orange); background:var(--lorange);">
+  <div class="theorem-label" style="color:var(--orange)">Решен пример — Преобразуване в ДНФ</div>
+  <p style="margin-bottom:10px;"><strong>Задача:</strong> Преобразувайте в ДНФ: <code style="font-size:16px">¬(p ∧ q) ∨ (p ∧ r)</code></p>
+  <div class="proof-steps">
+    <div class="proof-step"><span><strong>Де Морган:</strong> ¬(p ∧ q) ≡ ¬p ∨ ¬q<br>
+      Формулата: (¬p ∨ ¬q) ∨ (p ∧ r)</span></div>
+    <div class="proof-step"><span><strong>Разпределяне на ∧ над ∨ (обратна посока):</strong><br>
+      ¬p ∨ ¬q ≡ (¬p ∧ T) ∨ (¬q ∧ T) — вече термове!</span></div>
+    <div class="proof-step"><span><strong>Резултат (ДНФ):</strong><br>
+      <code style="font-size:16px; color:var(--orange)">¬p ∨ ¬q ∨ (p ∧ r)</code><br>
+      <em>Три терма: ¬p, ¬q, (p ∧ r).</em></span></div>
+  </div>
+</div>
+
+<!-- ДОКАЗАТЕЛСТВО: Де Морган чрез таблица на истинност -->
+<div class="theorem-box">
+  <div class="theorem-label">Доказателство — Първи закон на Де Морган чрез таблица на истинност</div>
+  <p style="margin-bottom:10px;">Доказваме: <code>¬(p ∨ q) ≡ ¬p ∧ ¬q</code></p>
+  <table class="truth-table" style="max-width:600px">
+    <thead><tr><th>p</th><th>q</th><th>p∨q</th><th>¬(p∨q)</th><th>¬p</th><th>¬q</th><th>¬p∧¬q</th></tr></thead>
+    <tbody>
+      <tr><td class="T">T</td><td class="T">T</td><td class="T">T</td><td class="F">F</td><td class="F">F</td><td class="F">F</td><td class="F">F</td></tr>
+      <tr><td class="T">T</td><td class="F">F</td><td class="T">T</td><td class="F">F</td><td class="F">F</td><td class="T">T</td><td class="F">F</td></tr>
+      <tr><td class="F">F</td><td class="T">T</td><td class="T">T</td><td class="F">F</td><td class="T">T</td><td class="F">F</td><td class="F">F</td></tr>
+      <tr><td class="F">F</td><td class="F">F</td><td class="F">F</td><td class="T">T</td><td class="T">T</td><td class="T">T</td><td class="T">T</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:10px; font-size:15px;"><strong>Колоните ¬(p∨q) и ¬p∧¬q са идентични</strong> за всички входни комбинации, следователно формулите са логически еквивалентни. ∎</p>
+</div>
+
+<h2 class="sub-title" id="s1-5">1.5 Методи на доказателство</h2>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Четири основни метода</div>
+  <div class="mermaid">
+graph TD
+    MP["Методи на доказателство"]
+    MP --> D["Пряко доказателство<br/>(Direct Proof)"]
+    MP --> CP["Контрапозиция<br/>(Contraposition)"]
+    MP --> CR["Противоречие<br/>(Contradiction)"]
+    MP --> MI["Математическа индукция<br/>(Induction)"]
+    D -.- D1["Допускаме p, извеждаме q"]
+    CP -.- CP1["Доказваме ¬q → ¬p<br/>вместо p → q"]
+    CR -.- CR1["Допускаме ¬p,<br/>извеждаме противоречие"]
+    MI -.- MI1["База + Индуктивна стъпка"]
+    style D fill:#dbeafe
+    style CP fill:#dcfce7
+    style CR fill:#fee2e2
+    style MI fill:#fef9c3
+  </div>
+</div>
+
+<div class="theorem-box">
+  <div class="theorem-label">Математическа индукция — схема</div>
+  <div class="proof-steps">
+    <div class="proof-step"><span>Стъпка 1 — БАЗА: Доказваме P(n₀) директно.</span></div>
+    <div class="proof-step"><span>Стъпка 2 — ИНДУКТИВНА ХИПОТЕЗА: Приемаме P(k) за вярно.</span></div>
+    <div class="proof-step"><span>Стъпка 3 — ИНДУКТИВНА СТЪПКА: Доказваме P(k+1).</span></div>
+    <div class="proof-step"><span>ЗАКЛЮЧЕНИЕ: P(n) е вярно за всяко n ≥ n₀.</span></div>
+  </div>
+  <p style="margin-top:10px; font-size:14px; color:var(--muted)">Пример: 1+2+...+n = n(n+1)/2</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: ПРЕДИКАТНА ЛОГИКА -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h1 class="section-title" id="s2">2. ПРЕДИКАТНА ЛОГИКА (Predicate Logic)</h1>
+
+<h2 class="sub-title" id="s2-1">2.1 Предикати и променливи</h2>
+
+<div class="def-box">
+  <div class="def-label">Определение</div>
+  <p><strong>Предикат</strong> е твърдение с една или повече променливи, което става съждение при заместване с конкретни стойности. Формално — булева функция.<br><br>
+  Пример: P(x): „x е по-голямо от 5" — при x=10 е истина, при x=3 е лъжа.</p>
+</div>
+
+<h2 class="sub-title" id="s2-2">2.2 Квантори (Quantifiers)</h2>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Видове квантори</div>
+  <div class="mermaid">
+graph TD
+    Q["Квантори"] --> U["∀ — Универсален квантор<br/>'За всяко x'"]
+    Q --> E["∃ — Екзистенциален квантор<br/>'Съществува x'"]
+    Q --> EU["∃! — Квантор за единственост<br/>'Съществува точно едно x'"]
+    U -.- UF["Краен домейн: ∀x P(x) ≡ P(a₁)∧P(a₂)∧...∧P(aₙ)"]
+    E -.- EF["Краен домейн: ∃x P(x) ≡ P(a₁)∨P(a₂)∨...∨P(aₙ)"]
+    EU -.- EUF["∃!x P(x) ≡ ∃x[P(x) ∧ ∀y(P(y)→y=x)]"]
+    style U fill:#bbdefb
+    style E fill:#c8e6c9
+    style EU fill:#fff3e0
+  </div>
+</div>
+
+<div class="def-box" style="border-color:var(--red); background:#fee2e2;">
+  <div class="def-label" style="color:var(--red)">Де Морган за квантори ⭐</div>
+  <p>
+    <strong>¬∀x P(x) ≡ ∃x ¬P(x)</strong> &nbsp;— „не всички са P" = „съществува такова, което не е P"<br>
+    <strong>¬∃x P(x) ≡ ∀x ¬P(x)</strong> &nbsp;— „няма такова, което е P" = „всички не са P"
+  </p>
+</div>
+
+<div class="note-box">
+  ⚠️ <strong>Важно:</strong> ∃x ∀y P(x,y) ⟹ ∀y ∃x P(x,y), но обратното НЕ е вярно! Редът на квантори от различен тип <strong>е от значение</strong>.
+</div>
+
+<h2 class="sub-title" id="s2-3">2.3 Свободни и свързани променливи</h2>
+
+<table class="gen-table">
+  <thead><tr><th>Тип</th><th>Определение</th><th>Пример: ∀x (P(x) → Q(x,y))</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Свързана</strong> (bound)</td><td>Попада в областта на квантор</td><td>x е свързана (от ∀x)</td></tr>
+    <tr><td><strong>Свободна</strong> (free)</td><td>Не е свързана от никой квантор</td><td>y е свободна</td></tr>
+  </tbody>
+</table>
+
+<p>Формула без свободни променливи = <strong>изречение</strong> (sentence / затворена формула). Само изреченията имат определени истинностни стойности.</p>
+
+<!-- NEW: Интерпретация и модел -->
+<h2 class="sub-title" id="s2-4">2.4 Интерпретация и модел</h2>
+
+<div class="def-box">
+  <div class="def-label">Определение — Интерпретация</div>
+  <p><strong>Интерпретация</strong> на формула от предикатна логика се състои от:
+  (1) <strong>домейн</strong> (универсум) D — непразно множество;
+  (2) присвояване на конкретни обекти/релации/функции на всички символи в езика.
+  <br><br>
+  <strong>Модел</strong> за формула φ е интерпретация, при която φ е истина. Формула е <strong>валидна</strong> (⊨ φ), ако е истина при всяка интерпретация. Формула е <strong>изпълнима</strong>, ако съществува поне един модел.</p>
+</div>
+
+<div class="theorem-box" style="border-color:var(--green); background:var(--lgreen);">
+  <div class="theorem-label" style="color:var(--green)">Решен пример — Интерпретация</div>
+  <p><strong>Формула:</strong> ∀x ∃y (x + y = 0)</p>
+  <p style="margin-top:8px;"><strong>Интерпретация 1:</strong> D = ℤ (целите числа), + е обикновено събиране, 0 е нулата.<br>
+  → <strong>Истина</strong> (за всяко цяло число x, вземаме y = −x).</p>
+  <p style="margin-top:8px;"><strong>Интерпретация 2:</strong> D = ℕ (естествените числа), + е обикновено събиране, 0 е нулата.<br>
+  → <strong>Лъжа</strong> (за x = 5 няма естествено число y такова, че 5 + y = 0).</p>
+  <p style="margin-top:8px; font-size:14px; color:var(--muted)">Извод: Формулата е <strong>изпълнима</strong>, но не е <strong>валидна</strong> (зависи от домейна).</p>
+</div>
+
+<!-- NEW: Формализация на естественоезикови твърдения -->
+<h2 class="sub-title" id="s2-5">2.5 Формализация с квантори</h2>
+
+<div class="theorem-box" style="border-color:var(--blue); background:var(--lblue);">
+  <div class="theorem-label" style="color:var(--blue)">Решен пример — Формализация на твърдения</div>
+  <p>Нека D = множество от хора, S(x) = „x е студент", P(x) = „x е подготвен", L(x,y) = „x слуша y".</p>
+
+  <table class="gen-table" style="margin-top:12px">
+    <thead><tr><th>Естествен език</th><th>Формална запис</th></tr></thead>
+    <tbody>
+      <tr><td>Всички студенти са подготвени</td><td style="font-family:'JetBrains Mono',monospace;font-size:14px">∀x (S(x) → P(x))</td></tr>
+      <tr><td>Някои студенти не са подготвени</td><td style="font-family:'JetBrains Mono',monospace;font-size:14px">∃x (S(x) ∧ ¬P(x))</td></tr>
+      <tr><td>Никой студент не е подготвен</td><td style="font-family:'JetBrains Mono',monospace;font-size:14px">¬∃x (S(x) ∧ P(x))&nbsp; ≡ &nbsp;∀x (S(x) → ¬P(x))</td></tr>
+      <tr><td>Всеки студент слуша някого</td><td style="font-family:'JetBrains Mono',monospace;font-size:14px">∀x (S(x) → ∃y L(x,y))</td></tr>
+      <tr><td>Има някой, когото всички слушат</td><td style="font-family:'JetBrains Mono',monospace;font-size:14px">∃y ∀x L(x,y)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="note-box">
+  ⚠️ <strong>Типична грешка на изпит:</strong> „Всички студенти са подготвени" НЕ е ∀x (S(x) ∧ P(x))! Това означава „всичко е студент И подготвено". Правилната формализация е с <strong>→</strong>, не с <strong>∧</strong>. При ∀ — импликация; при ∃ — конюнкция.
+</div>
+
+<!-- NEW: Пренексна нормална форма -->
+<h3 class="sub-sub">Пренексна нормална форма (PNF)</h3>
+
+<div class="def-box">
+  <div class="def-label">Определение</div>
+  <p>Формула е в <strong>пренексна нормална форма</strong>, ако всички квантори са в началото (пренекс): <code>Q₁x₁ Q₂x₂ ... Qₙxₙ φ</code>, където Qᵢ ∈ {∀, ∃} и φ е безкванторна (матрица).</p>
+</div>
+
+<div class="theorem-box" style="border-color:var(--green); background:var(--lgreen);">
+  <div class="theorem-label" style="color:var(--green)">Решен пример — Преобразуване в PNF</div>
+  <p><strong>Задача:</strong> Преобразувайте: <code>∀x P(x) → ∃y Q(y)</code></p>
+  <div class="proof-steps">
+    <div class="proof-step"><span><strong>Елиминиране на →:</strong><br>
+      ¬(∀x P(x)) ∨ ∃y Q(y)</span></div>
+    <div class="proof-step"><span><strong>Де Морган за квантори:</strong><br>
+      ∃x ¬P(x) ∨ ∃y Q(y)</span></div>
+    <div class="proof-step"><span><strong>Изнасяне на квантори (преименуване ако трябва):</strong><br>
+      <code style="color:var(--green)">∃x ∃y (¬P(x) ∨ Q(y))</code></span></div>
+  </div>
+  <p style="margin-top:8px; font-size:14px; color:var(--muted)">Пренекс: ∃x∃y, Матрица: ¬P(x) ∨ Q(y)</p>
+</div>
+
+<h2 class="sub-title" id="s2-6">2.6 Правила за извод (Rules of Inference)</h2>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Modus Ponens и Modus Tollens</div>
+  <div class="mermaid">
+graph LR
+    subgraph "Modus Ponens"
+        MP1["p е истина"] --> MP2["p → q"]
+        MP2 --> MP3["∴ q е истина"]
+    end
+    subgraph "Modus Tollens"
+        MT1["¬q (q е лъжа)"] --> MT2["p → q"]
+        MT2 --> MT3["∴ ¬p (p е лъжа)"]
+    end
+    style MP3 fill:#166534,color:#fff
+    style MT3 fill:#166534,color:#fff
+  </div>
+</div>
+
+<table class="gen-table">
+  <thead><tr><th>Правило</th><th>Схема</th><th>Латинско име</th></tr></thead>
+  <tbody>
+    <tr><td>Правило за отделяне</td><td style="font-family:'JetBrains Mono',monospace;font-size:13px">p, p→q ⊢ q</td><td>Modus Ponens</td></tr>
+    <tr><td>Контрапозитивно отделяне</td><td style="font-family:'JetBrains Mono',monospace;font-size:13px">¬q, p→q ⊢ ¬p</td><td>Modus Tollens</td></tr>
+    <tr><td>Хипотетичен силогизъм</td><td style="font-family:'JetBrains Mono',monospace;font-size:13px">p→q, q→r ⊢ p→r</td><td>Hypothetical Syllogism</td></tr>
+    <tr><td>Дизюнктивен силогизъм</td><td style="font-family:'JetBrains Mono',monospace;font-size:13px">p∨q, ¬p ⊢ q</td><td>Disjunctive Syllogism</td></tr>
+    <tr><td>Резолюция</td><td style="font-family:'JetBrains Mono',monospace;font-size:13px">p∨q, ¬p∨r ⊢ q∨r</td><td>Resolution</td></tr>
+  </tbody>
+</table>
+
+<!-- NEW: Решен пример с резолюция -->
+<div class="theorem-box" style="border-color:var(--green); background:var(--lgreen);">
+  <div class="theorem-label" style="color:var(--green)">Решен пример — Доказателство чрез резолюция</div>
+  <p><strong>Задача:</strong> Докажете, че от предпоставките (1) p ∨ q, (2) ¬p ∨ r, (3) ¬q ∨ r следва r.</p>
+  <div class="proof-steps">
+    <div class="proof-step"><span><strong>Добавяме отрицанието на целта:</strong> ¬r (допускаме, че r е лъжа)</span></div>
+    <div class="proof-step"><span><strong>Клаузи:</strong> {p, q}, {¬p, r}, {¬q, r}, {¬r}</span></div>
+    <div class="proof-step"><span><strong>Резолюция (2) + (4):</strong> {¬p, r} + {¬r} → <strong>{¬p}</strong></span></div>
+    <div class="proof-step"><span><strong>Резолюция (3) + (4):</strong> {¬q, r} + {¬r} → <strong>{¬q}</strong></span></div>
+    <div class="proof-step"><span><strong>Резолюция (1) + {¬p}:</strong> {p, q} + {¬p} → <strong>{q}</strong></span></div>
+    <div class="proof-step"><span><strong>Резолюция {q} + {¬q}:</strong> → <strong>□ (празна клауза)</strong></span></div>
+    <div class="proof-step"><span><strong>Заключение:</strong> Достигнахме противоречие (□), следователно ¬r е невъзможно → <strong>r е вярно</strong>. ∎</span></div>
+  </div>
+</div>
+
+<!-- NEW: Пример с Modus Ponens и верижно разсъждение -->
+<div class="theorem-box" style="border-color:var(--blue); background:var(--lblue);">
+  <div class="theorem-label" style="color:var(--blue)">Решен пример — Верижно разсъждение (прилагане на правила за извод)</div>
+  <p><strong>Дадено:</strong> (1) „Ако вали, земята е мокра." (2) „Ако земята е мокра, пътят е хлъзгав." (3) „Вали."<br>
+  <strong>Докажете:</strong> „Пътят е хлъзгав."</p>
+  <p style="margin-top:8px;"><strong>Формализация:</strong> p = „Вали", q = „Земята е мокра", r = „Пътят е хлъзгав".<br>
+  Предпоставки: p → q, q → r, p. Цел: r.</p>
+  <div class="proof-steps">
+    <div class="proof-step"><span><strong>Хипотетичен силогизъм:</strong> p → q, q → r ⊢ <strong>p → r</strong></span></div>
+    <div class="proof-step"><span><strong>Modus Ponens:</strong> p, p → r ⊢ <strong>r</strong> ∎</span></div>
+  </div>
+</div>
+
+<h2 class="sub-title" id="s2-8">2.8 Теореми на Гьодел</h2>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Три ключови теореми</div>
+  <div class="mermaid">
+graph TD
+    G["Теореми на Гьодел"] --> GC["Теорема за пълнотата (1929)<br/>Логиката от I ред е ПЪЛНА"]
+    G --> GI1["Първа теорема за непълнотата (1931)<br/>Всяка достатъчно силна система е НЕПЪЛНА"]
+    G --> GI2["Втора теорема за непълнотата (1931)<br/>Системата не доказва собствената си непротиворечивост"]
+    style GC fill:#166534,color:#fff
+    style GI1 fill:#991b1b,color:#fff
+    style GI2 fill:#991b1b,color:#fff
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0;">
+<div class="theorem-box">
+  <div class="theorem-label">Теорема за пълнотата (1929)</div>
+  <p style="font-size:14px">Логиката от I ред е <strong>пълна</strong>: ако φ е валидна (⊨ φ), то φ е доказуема (⊢ φ).</p>
+  <p style="font-size:13px; color:var(--muted); margin-top:8px">Следствие: Теорема за компактност.</p>
+</div>
+<div class="theorem-box" style="border-color:var(--red); background:#fee2e2;">
+  <div class="theorem-label" style="color:var(--red)">Теореми за непълнотата (1931)</div>
+  <p style="font-size:14px"><strong>Първа:</strong> Всяка непротиворечива система, съдържаща аритметиката, е непълна — съществуват недоказуеми истини.</p>
+  <p style="font-size:14px; margin-top:8px"><strong>Втора:</strong> Такава система не може да докаже собствената си непротиворечивост.</p>
+</div>
+</div>
+
+<div class="note-box">
+  💡 <strong>Помирение:</strong> Пълнотата на ЛОГИКАТА (1929) ≠ непълнота на ТЕОРИЯ (1931). Няма противоречие — различни нива на анализ.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: БУЛЕВА АЛГЕБРА -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h1 class="section-title" id="s3">3. БУЛЕВА АЛГЕБРА (Boolean Algebra)</h1>
+
+<h2 class="sub-title" id="s3-1">3.1 Определение и аксиоми на Хънтингтън</h2>
+
+<div class="def-box">
+  <div class="def-label">Определение</div>
+  <p><strong>Булева алгебра</strong> е алгебрична структура (B, +, ·, ', 0, 1) с операции OR(+), AND(·), NOT(') и елементи 0 и 1.</p>
+</div>
+
+<table class="gen-table">
+  <thead><tr><th>#</th><th>Аксиома</th><th>Форма с +</th><th>Форма с ·</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Идентитет</td><td>a + 0 = a</td><td>a · 1 = a</td></tr>
+    <tr><td>2</td><td>Комутативност</td><td>a + b = b + a</td><td>a · b = b · a</td></tr>
+    <tr><td>3</td><td>Дистрибутивност</td><td>a+(b·c) = (a+b)·(a+c)</td><td>a·(b+c) = (a·b)+(a·c)</td></tr>
+    <tr><td>4</td><td>Допълнение</td><td>a + a' = 1</td><td>a · a' = 0</td></tr>
+    <tr><td>5</td><td>Различни елементи</td><td colspan="2">0 ≠ 1</td></tr>
+  </tbody>
+</table>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Производни теореми от аксиомите</div>
+  <div class="mermaid">
+graph TD
+    AX["Аксиоми на Хънтингтън"] --> AS["Асоциативност<br/>a+(b+c)=(a+b)+c"]
+    AX --> ID["Идемпотентност<br/>a+a=a; a·a=a"]
+    AX --> AB["Абсорбция<br/>a+(a·b)=a"]
+    AX --> DO["Доминиране<br/>a+1=1; a·0=0"]
+    AX --> DM["Де Морган<br/>(a+b)'=a'·b'"]
+    AX --> IN["Инволюция<br/>(a')'=a"]
+    style AX fill:#5b21b6,color:#fff
+  </div>
+</div>
+
+<h2 class="sub-title" id="s3-3">3.3 Канонични форми</h2>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0;">
+<div class="def-box" style="border-color:var(--green); background:var(--lgreen);">
+  <div class="def-label" style="color:var(--green)">Минтерм (Minterm)</div>
+  <p>AND на всички n променливи. Равен на <strong>1</strong> за точно една входна комбинация.<br>
+  SOP: f = <strong>Σm</strong>(i₁, i₂, ...)</p>
+</div>
+<div class="def-box" style="border-color:var(--purple); background:var(--lpurple);">
+  <div class="def-label" style="color:var(--purple)">Макстерм (Maxterm)</div>
+  <p>OR на всички n променливи. Равен на <strong>0</strong> за точно една входна комбинация.<br>
+  POS: f = <strong>ΠM</strong>(j₁, j₂, ...)</p>
+</div>
+</div>
+
+<div class="note-box">
+  ⭐ <strong>Ключова връзка:</strong> Mᵢ = (mᵢ)' — всеки макстерм е допълнение на съответния минтерм.<br>
+  Ако f = Σm(1,3,5,7) → f = ΠM(0,2,4,6)
+</div>
+
+<h2 class="sub-title" id="s3-4">3.4 Методи за минимизация</h2>
+
+<h3 class="sub-sub">Карти на Карно (K-Map)</h3>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Правила за групиране в K-Map</div>
+  <div class="mermaid">
+graph TD
+    R["Правила за K-Map"] --> R1["1. Само клетки с 1"]
+    R --> R2["2. Размери: степени на 2 (1,2,4,8,16)"]
+    R --> R3["3. Групите да са максимално големи"]
+    R --> R4["4. Всяка 1 в поне една група"]
+    R --> R5["5. Припокриване е допустимо"]
+    R --> R6["6. Wrap-around е допустимо"]
+    style R fill:#1e3a5f,color:#fff
+  </div>
+</div>
+
+<div class="formula-block">
+<span class="comment">Четене на опростения израз от K-Map:</span>
+<br>
+Винаги 1 в групата → <span class="hl">недопълнена</span> променлива
+<br>
+Винаги 0 в групата → <span class="hl">допълнена</span> променлива
+<br>
+Променя се        → <span class="op">елиминира се</span>
+</div>
+
+<!-- WORKED EXAMPLE: Карта на Карно с 4 променливи -->
+<div class="theorem-box" style="border-color:var(--green); background:var(--lgreen);">
+  <div class="theorem-label" style="color:var(--green)">Решен пример — Карта на Карно (4 променливи)</div>
+  <p><strong>Задача:</strong> Минимизирайте f(A,B,C,D) = Σm(0, 2, 5, 7, 8, 10, 13, 15)</p>
+
+  <p style="margin:12px 0 6px; font-weight:600;">Стъпка 1: Попълване на K-Map (Gray code подредба)</p>
+  <table class="truth-table" style="max-width:440px; font-size:14px;">
+    <thead>
+      <tr><th style="background:var(--muted)">AB \ CD</th><th>00</th><th>01</th><th>11</th><th>10</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style="background:var(--navy);color:#fff;font-weight:600;">00</td>
+        <td style="background:#bfdbfe;font-weight:700">1<br><small>m₀</small></td>
+        <td>0<br><small>m₁</small></td>
+        <td>0<br><small>m₃</small></td>
+        <td style="background:#bfdbfe;font-weight:700">1<br><small>m₂</small></td></tr>
+      <tr><td style="background:var(--navy);color:#fff;font-weight:600;">01</td>
+        <td>0<br><small>m₄</small></td>
+        <td style="background:#fde68a;font-weight:700">1<br><small>m₅</small></td>
+        <td style="background:#fde68a;font-weight:700">1<br><small>m₇</small></td>
+        <td>0<br><small>m₆</small></td></tr>
+      <tr><td style="background:var(--navy);color:#fff;font-weight:600;">11</td>
+        <td>0<br><small>m₁₂</small></td>
+        <td style="background:#fde68a;font-weight:700">1<br><small>m₁₃</small></td>
+        <td style="background:#fde68a;font-weight:700">1<br><small>m₁₅</small></td>
+        <td>0<br><small>m₁₄</small></td></tr>
+      <tr><td style="background:var(--navy);color:#fff;font-weight:600;">10</td>
+        <td style="background:#bfdbfe;font-weight:700">1<br><small>m₈</small></td>
+        <td>0<br><small>m₉</small></td>
+        <td>0<br><small>m₁₁</small></td>
+        <td style="background:#bfdbfe;font-weight:700">1<br><small>m₁₀</small></td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin:12px 0 6px; font-weight:600;">Стъпка 2: Идентифициране на групи</p>
+  <div class="proof-steps">
+    <div class="proof-step"><span><strong style="color:var(--blue)">Група 1 (синя):</strong> {m₀, m₂, m₈, m₁₀} — 4 клетки в ъглите (wrap-around по AB и CD).<br>
+      A се сменя (0→1) → елиминира; B = 0 винаги; C се сменя → елиминира; D = 0 винаги.<br>
+      Резултат: <code><strong>B'D'</strong></code></span></div>
+    <div class="proof-step"><span><strong style="color:#ca8a04">Група 2 (жълта):</strong> {m₅, m₇, m₁₃, m₁₅} — правоъгълник 2×2 в средата.<br>
+      A се сменя → елиминира; B = 1 винаги; C се сменя → елиминира; D = 1 винаги.<br>
+      Резултат: <code><strong>BD</strong></code></span></div>
+  </div>
+
+  <p style="margin:12px 0 6px; font-weight:600;">Стъпка 3: Крайният минимизиран израз</p>
+  <div class="formula-block">
+<span class="hl">f = B'D' + BD</span>
+<br>
+<span class="comment">Забележка: Може да се запише и като f = B ⊕ D (= B XNOR D = ¬(B ⊕ D))</span>
+<br>
+<span class="comment">Всъщност f = (B ↔ D)' = B ⊕ D... нека проверим: B'D' + BD = ¬(B⊕D). Да!</span>
+  </div>
+  <p style="font-size:14px; color:var(--muted)"><strong>Проверка:</strong> B'D' покрива {0,2,8,10}; BD покрива {5,7,13,15}. Обединение = {0,2,5,7,8,10,13,15} ✓</p>
+</div>
+
+<h3 class="sub-sub">Метод на Куайн-Маклъски</h3>
+
+<div class="diagram-wrap">
+  <div class="diagram-label">Алгоритъм на Куайн-Маклъски</div>
+  <div class="mermaid">
+graph TD
+    S1["1. Групиране на минтерми по брой единици"] --> S2["2. Комбиниране на съседни групи (разлика в 1 бит)"]
+    S2 --> S3["3. Повторение до невъзможност"]
+    S3 --> S4["4. Таблица на простите импликанти"]
+    S4 --> S5["5. Намиране на съществени прости импликанти"]
+    S5 --> S6["6. Избор на минимално покритие"]
+    S3 -.- PI["Некомбинирани = ПРОСТИ ИМПЛИКАНТИ"]
+    S5 -.- EPI["Минтерм с единствен импликант = СЪЩЕСТВЕН"]
+    style PI fill:#fef9c3
+    style EPI fill:#dcfce7
+  </div>
+</div>
+
+<!-- WORKED EXAMPLE: Куайн-Маклъски -->
+<div class="theorem-box" style="border-color:var(--green); background:var(--lgreen);">
+  <div class="theorem-label" style="color:var(--green)">Решен пример — Метод на Куайн-Маклъски</div>
+  <p><strong>Задача:</strong> Минимизирайте f(A,B,C) = Σm(1, 2, 3, 5, 7) с 3 променливи.</p>
+
+  <p style="margin:12px 0 6px; font-weight:600;">Стъпка 1: Минтерми по брой единици</p>
+  <table class="gen-table" style="max-width:400px">
+    <thead><tr><th>Група</th><th>Минтерм</th><th>ABC</th></tr></thead>
+    <tbody>
+      <tr><td>1 единица</td><td>m₁</td><td style="font-family:'JetBrains Mono',monospace">001</td></tr>
+      <tr><td>1 единица</td><td>m₂</td><td style="font-family:'JetBrains Mono',monospace">010</td></tr>
+      <tr><td>2 единици</td><td>m₃</td><td style="font-family:'JetBrains Mono',monospace">011</td></tr>
+      <tr><td>2 единици</td><td>m₅</td><td style="font-family:'JetBrains Mono',monospace">101</td></tr>
+      <tr><td>3 единици</td><td>m₇</td><td style="font-family:'JetBrains Mono',monospace">111</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin:12px 0 6px; font-weight:600;">Стъпка 2: Комбиниране (разлика в 1 бит)</p>
+  <table class="gen-table" style="max-width:500px">
+    <thead><tr><th>Двойка</th><th>Резултат</th><th>Покрити минтерми</th></tr></thead>
+    <tbody>
+      <tr><td>m₁ + m₃</td><td style="font-family:'JetBrains Mono',monospace">0-1</td><td>{1,3} → A'C</td></tr>
+      <tr><td>m₁ + m₅</td><td style="font-family:'JetBrains Mono',monospace">-01</td><td>{1,5} → B'C</td></tr>
+      <tr><td>m₂ + m₃</td><td style="font-family:'JetBrains Mono',monospace">01-</td><td>{2,3} → A'B</td></tr>
+      <tr><td>m₃ + m₇</td><td style="font-family:'JetBrains Mono',monospace">-11</td><td>{3,7} → BC</td></tr>
+      <tr><td>m₅ + m₇</td><td style="font-family:'JetBrains Mono',monospace">1-1</td><td>{5,7} → AC</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin:12px 0 6px; font-weight:600;">Стъпка 3: Второ комбиниране</p>
+  <table class="gen-table" style="max-width:500px">
+    <thead><tr><th>Двойка</th><th>Резултат</th><th>Покрити минтерми</th></tr></thead>
+    <tbody>
+      <tr><td>{1,3} + {5,7}</td><td style="font-family:'JetBrains Mono',monospace">--1</td><td>{1,3,5,7} → <strong>C</strong></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14px;">Също {1,5} + {3,7} = --1 → същият резултат.</p>
+
+  <p style="margin:12px 0 6px; font-weight:600;">Стъпка 4: Таблица на прости импликанти</p>
+  <table class="gen-table" style="max-width:500px">
+    <thead><tr><th>Прост импликант</th><th>m₁</th><th>m₂</th><th>m₃</th><th>m₅</th><th>m₇</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:'JetBrains Mono',monospace"><strong>C</strong> (--1)</td><td>✓</td><td></td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td style="font-family:'JetBrains Mono',monospace"><strong>A'B</strong> (01-)</td><td></td><td>✓</td><td>✓</td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14px;">m₂ се покрива <strong>само</strong> от A'B → A'B е <strong>съществен</strong>. C покрива всички останали → C е <strong>съществен</strong>.</p>
+
+  <div class="formula-block">
+<span class="hl">f = C + A'B</span>
+<br>
+<span class="comment">Проверка: C покрива {1,3,5,7}, A'B покрива {2,3} → обединение = {1,2,3,5,7} ✓</span>
+  </div>
+</div>
+
+<h2 class="sub-title" id="s3-5">3.5 Декомпозиция на Шанън</h2>
+
+<div class="theorem-box">
+  <div class="theorem-label">Теорема за разлагане на Шанън / Бул</div>
+  <p style="font-family:'JetBrains Mono',monospace; font-size:15px; margin:10px 0;">
+    f = xᵢ · f(xᵢ=1) + xᵢ' · f(xᵢ=0)
+  </p>
+  <p style="font-size:14px; color:var(--muted)">Приложения: BDD, мултиплексори, SAT солвъри, рекурсивно разлагане.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: ИСТОРИЯ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h1 class="section-title" id="s4">4. Исторически контекст</h1>
+
+<div class="historian-grid">
+  <div class="historian-card">
+    <div class="name">Джордж Бул</div>
+    <div class="years">George Boole · 1815–1864</div>
+    <ul>
+      <li>„The Mathematical Analysis of Logic" (1847)</li>
+      <li>„An Investigation of the Laws of Thought" (1854)</li>
+      <li>Създава Булевата алгебра с двоични стойности (0 и 1)</li>
+    </ul>
+  </div>
+  <div class="historian-card">
+    <div class="name">Огъстъс де Морган</div>
+    <div class="years">Augustus De Morgan · 1806–1871</div>
+    <ul>
+      <li>„Formal Logic" (1847)</li>
+      <li>Формулира Законите на Де Морган</li>
+      <li>Въвежда „универсум на дискурса"</li>
+    </ul>
+  </div>
+  <div class="historian-card">
+    <div class="name">Готлоб Фреге</div>
+    <div class="years">Gottlob Frege · 1848–1925</div>
+    <ul>
+      <li>„Begriffsschrift" (1879) — първа формална предикатна логика</li>
+      <li>Въвежда квантори ∀ и ∃</li>
+      <li>Логицистка програма: математика → логика</li>
+    </ul>
+  </div>
+  <div class="historian-card">
+    <div class="name">Курт Гьодел</div>
+    <div class="years">Kurt Gödel · 1906–1978</div>
+    <ul>
+      <li>Теорема за пълнотата (1929)</li>
+      <li>Теореми за непълнотата (1931)</li>
+      <li>Слага край на програмата на Хилберт</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="sub-sub" style="margin-top:32px">Хронология на ключови събития</h3>
+<div class="timeline">
+  <div class="tl-item"><div class="tl-year">1847</div><div class="tl-text">Бул — „Mathematical Analysis of Logic" · Де Морган — „Formal Logic"</div></div>
+  <div class="tl-item"><div class="tl-year">1854</div><div class="tl-text">Бул — „An Investigation of the Laws of Thought"</div></div>
+  <div class="tl-item"><div class="tl-year">1879</div><div class="tl-text">Фреге — „Begriffsschrift" (първа формална предикатна логика)</div></div>
+  <div class="tl-item"><div class="tl-year">1902</div><div class="tl-text">Ръсел открива парадокса на Ръсел</div></div>
+  <div class="tl-item"><div class="tl-year">1910</div><div class="tl-text">Уайтхед и Ръсел — „Principia Mathematica"</div></div>
+  <div class="tl-item"><div class="tl-year">1929</div><div class="tl-text">Гьодел — Теорема за пълнотата</div></div>
+  <div class="tl-item"><div class="tl-year">1931</div><div class="tl-text">Гьодел — Теореми за непълнотата</div></div>
+  <div class="tl-item"><div class="tl-year">1936</div><div class="tl-text">Чърч и Тюринг — резултати за неразрешимост</div></div>
+  <div class="tl-item"><div class="tl-year">1937</div><div class="tl-text">Шанън — Булева алгебра в превключващи схеми (магистърска теза)</div></div>
+  <div class="tl-item"><div class="tl-year">1952</div><div class="tl-text">Карно — Карта на Карно за булева минимизация</div></div>
+  <div class="tl-item"><div class="tl-year">1956</div><div class="tl-text">Куайн-Маклъски — таблично-базиран метод за минимизация</div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: БЪРЗА СПРАВКА -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h1 class="section-title" id="s5">5. Бърза справка с формули</h1>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+<div class="quick-ref">
+  <h3>Логически еквивалентности</h3>
+  <div class="formula-block" style="font-size:12.5px">
+p → q       ≡  ¬p ∨ q<br>
+p ↔ q       ≡  (p→q) ∧ (q→p)<br>
+¬(p ∧ q)    ≡  ¬p ∨ ¬q<br>
+¬(p ∨ q)    ≡  ¬p ∧ ¬q<br>
+p ∨ (q ∧ r) ≡  (p∨q) ∧ (p∨r)<br>
+p ∧ (q ∨ r) ≡  (p∧q) ∨ (p∧r)
+  </div>
+</div>
+
+<div class="quick-ref">
+  <h3>Закони за квантори</h3>
+  <div class="formula-block" style="font-size:12.5px">
+¬∀x P(x)         ≡  ∃x ¬P(x)<br>
+¬∃x P(x)         ≡  ∀x ¬P(x)<br>
+∀x(P(x) ∧ Q(x))  ≡  ∀x P(x) ∧ ∀x Q(x)<br>
+∃x(P(x) ∨ Q(x))  ≡  ∃x P(x) ∨ ∃x Q(x)
+  </div>
+</div>
+
+<div class="quick-ref">
+  <h3>Булева алгебра</h3>
+  <div class="formula-block" style="font-size:12.5px">
+Шанън:   f = x·f(x=1) + x'·f(x=0)<br>
+Консенсус: AB + A'C + BC = AB + A'C<br>
+Mᵢ = (mᵢ)'<br>
+SOP ↔ POS: Σm(i,...) = ΠM(останалите)
+  </div>
+</div>
+
+<div class="quick-ref">
+  <h3>Правила за извод</h3>
+  <div class="formula-block" style="font-size:12.5px">
+Modus Ponens:    p, p→q  ⊢  q<br>
+Modus Tollens:   ¬q, p→q ⊢  ¬p<br>
+Хип. силогизъм:  p→q, q→r ⊢ p→r<br>
+Диз. силогизъм:  p∨q, ¬p ⊢  q<br>
+Резолюция:       p∨q, ¬p∨r ⊢ q∨r
+  </div>
+</div>
+
+<div class="quick-ref" style="grid-column: 1 / -1;">
+  <h3>Ключови теореми на Гьодел</h3>
+  <div class="formula-block" style="font-size:12.5px">
+Гьодел (1929):  Логиката от I ред е пълна: ⊨ φ ⟹ ⊢ φ
+Гьодел (1931):  Достатъчно силна непротиворечива система е непълна
+                Такава система не може да докаже собствената си непротиворечивост
+  </div>
+</div>
+
+</div>
+
+</div><!-- end #main -->
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- FLASHCARDS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="flashcard-section" id="flashcards">
+  <h2>🃏 Flashcards — кликни за отговор</h2>
+  <div class="flashcard-grid">
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Какво е съждение (proposition)?</div>
+      <div class="fc-a">Декларативно твърдение, което е или T, или F, но не и двете. Означава се с p, q, r...</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Кога е лъжа импликацията p → q?</div>
+      <div class="fc-a">Само когато p е истина, а q е лъжа. (T → F = F)</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Законите на Де Морган — запиши ги.</div>
+      <div class="fc-a">¬(p ∨ q) ≡ ¬p ∧ ¬q<br>¬(p ∧ q) ≡ ¬p ∨ ¬q<br><br>Мнемоника: разбива скобите, сменя операцията.</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Каква е разликата между Конверс и Контрапозиция на p → q?</div>
+      <div class="fc-a">Конверс: q → p (НЕ е еквивалентен!)<br>Контрапозиция: ¬q → ¬p (ЕКВИВАЛЕНТЕН на p → q)</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">¬∀x P(x) = ?</div>
+      <div class="fc-a">∃x ¬P(x)<br>„не всички са P" = „съществува такова, което не е P"</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">¬∃x P(x) = ?</div>
+      <div class="fc-a">∀x ¬P(x)<br>„няма такова P" = „всички не са P"</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Вярно ли е: ∃x ∀y P(x,y) ≡ ∀y ∃x P(x,y)?</div>
+      <div class="fc-a">НЕ! Само импликация: ∃x ∀y ⟹ ∀y ∃x<br>Редът на различни квантори е от ЗНАЧЕНИЕ!</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Декомпозиция на Шанън — формула</div>
+      <div class="fc-a">f = xᵢ · f(xᵢ=1) + xᵢ' · f(xᵢ=0)</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Какво е минтерм и какво е макстерм?</div>
+      <div class="fc-a">Минтерм mᵢ: AND на всички n промен., = 1 за точно една комбинация<br>Макстерм Mᵢ: OR на всички n промен., = 0 за точно една комбинация<br>Mᵢ = (mᵢ)'</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Защо NAND е универсална порта?</div>
+      <div class="fc-a">NOT(a) = NAND(a,a)<br>AND(a,b) = NOT(NAND(a,b))<br>OR(a,b) = NAND(NOT(a), NOT(b))<br>→ Всяка булева функция се изразява само с NAND.</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Теоремата за пълнотата на Гьодел (1929)</div>
+      <div class="fc-a">Логиката от I ред е ПЪЛНА:<br>Ако φ е валидна (⊨ φ), то φ е доказуема (⊢ φ).</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Първата теорема за непълнотата (1931)</div>
+      <div class="fc-a">Всяка непротиворечива формална система, съдържаща аритметиката, е НЕПЪЛНА — съществуват истинни твърдения, които не могат нито да се докажат, нито опровергаят.</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Modus Ponens и Modus Tollens</div>
+      <div class="fc-a">MP: p, p→q ⊢ q<br>MT: ¬q, p→q ⊢ ¬p</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Кой и кога свързва Булевата алгебра с електрическите схеми?</div>
+      <div class="fc-a">Клод Шанън, 1937 г., магистърска теза:<br>„A Symbolic Analysis of Relay and Switching Circuits"</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Правила за K-Map групиране — изброй</div>
+      <div class="fc-a">1. Само клетки с 1<br>2. Размери: степени на 2 (1,2,4,8,16)<br>3. Максимално големи групи<br>4. Всяка 1 в поне 1 група<br>5. Припокриване е OK<br>6. Wrap-around е OK</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Какво е КНФ? Какво е ДНФ?</div>
+      <div class="fc-a">КНФ: Конюнкция на клаузи (клауза = дизюнкция на литерали)<br>(p∨q)∧(¬p∨r)<br><br>ДНФ: Дизюнкция на термове (терм = конюнкция на литерали)<br>(p∧q)∨(¬p∧r)</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Какво е интерпретация в предикатна логика?</div>
+      <div class="fc-a">Домейн D (непразно множество) + присвояване на конкретни обекти/релации/функции на всички символи. Модел = интерпретация, при която формулата е истина.</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">„Всички студенти са подготвени" — как НЕ се формализира?</div>
+      <div class="fc-a">НЕ: ∀x (S(x) ∧ P(x)) — това значи „всичко е студент И подготвено"!<br>ПРАВИЛНО: ∀x (S(x) → P(x))<br><br>Правило: ∀ → импликация, ∃ → конюнкция.</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Какво е пренексна нормална форма (PNF)?</div>
+      <div class="fc-a">Формула с всички квантори отпред: Q₁x₁ Q₂x₂...Qₙxₙ φ, където φ е безкванторна (матрица). Всяка формула от предикатна логика може да се преобразува в PNF.</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Как работи резолюцията?</div>
+      <div class="fc-a">1. Добавяме отрицанието на целта<br>2. Представяме като КНФ (множество клаузи)<br>3. Комбинираме клаузи с комплементарни литерали<br>4. Ако достигнем □ (празна клауза) → оригиналната цел е доказана</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Стъпки за преобразуване в КНФ?</div>
+      <div class="fc-a">1. Елиминиране на ↔ и → (замяна с ∧, ∨, ¬)<br>2. Де Морган + двойно отрицание → NNF<br>3. Разпределение на ∨ над ∧<br>Резултат: конюнкция от клаузи (клауза = дизюнкция от литерали)</div>
+    </div>
+
+    <div class="fc" onclick="this.classList.toggle('open')">
+      <div class="fc-toggle">кликни</div>
+      <div class="fc-q">Какво е съществен прост импликант (Куайн-Маклъски)?</div>
+      <div class="fc-a">Прост импликант, който е единственият покриващ даден минтерм. Той задължително влиза в минималния израз. Ако всички минтерми са покрити от съществени импликанти — минимизацията е завършена.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    primaryColor: '#dbeafe',
+    primaryTextColor: '#1e3a5f',
+    primaryBorderColor: '#2563a8',
+    lineColor: '#64748b',
+    secondaryColor: '#dcfce7',
+    tertiaryColor: '#fef9c3',
+    background: '#ffffff',
+    fontSize: '14px',
+  },
+  flowchart: { curve: 'basis', padding: 20 }
+});
+
+// Active TOC highlight on scroll
+const sections = document.querySelectorAll('[id]');
+const tocLinks = document.querySelectorAll('#toc a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  tocLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
