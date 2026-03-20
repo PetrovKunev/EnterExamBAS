@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 11: Методи за машинно самообучение</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --navy: #0f2744;
+            --blue: #2563a8;
+            --green: #166534;
+            --purple: #5b21b6;
+            --orange: #9a3412;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--cream);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 270px;
+            background-color: var(--navy);
+            color: white;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 12px 0;
+        }
+
+        .sidebar a {
+            color: #e0e7ff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            color: white;
+            background-color: var(--blue);
+        }
+
+        .sidebar .sub-item {
+            margin-left: 15px;
+            font-size: 15px;
+        }
+
+        .main {
+            margin-left: 270px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--navy);
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: var(--blue);
+            font-size: 28px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--blue);
+        }
+
+        h3 {
+            color: var(--navy);
+            font-size: 22px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .overview-section {
+            background-color: white;
+            border-left: 5px solid var(--purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .overview-section h4 {
+            color: var(--purple);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .def-box {
+            background-color: #f0f4ff;
+            border-left: 5px solid var(--blue);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .def-box strong {
+            color: var(--navy);
+        }
+
+        .theorem-box {
+            background-color: #f0fdf4;
+            border-left: 5px solid var(--green);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .theorem-box.worked-example {
+            background-color: #f0fdf4;
+            border-left: 5px solid var(--green);
+        }
+
+        .theorem-box.worked-example h4 {
+            color: var(--green);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .note-box {
+            background-color: #fff8e1;
+            border-left: 5px solid var(--orange);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .note-box strong {
+            color: var(--orange);
+        }
+
+        .formula-block {
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            overflow-x: auto;
+        }
+
+        .formula-block code {
+            color: var(--navy);
+        }
+
+        .gen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .gen-table th {
+            background-color: var(--navy);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .gen-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        .gen-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .gen-table tr:hover {
+            background-color: #f0f4ff;
+        }
+
+        .proof-steps {
+            background-color: white;
+            border: 1px solid var(--blue);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .proof-steps ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .proof-steps li {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .flashcards {
+            margin: 20px 0;
+        }
+
+        .fc {
+            background-color: white;
+            border: 2px solid var(--purple);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .fc:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .fc-q {
+            color: var(--purple);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .fc-a {
+            color: var(--navy);
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--purple);
+        }
+
+        .fc.active .fc-a {
+            display: block;
+        }
+
+        .portal-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: var(--navy);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            z-index: 100;
+        }
+
+        .portal-btn:hover {
+            background-color: var(--blue);
+        }
+
+        .quick-ref {
+            background-color: white;
+            border: 2px solid var(--green);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .quick-ref h4 {
+            color: var(--green);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .quick-ref ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .quick-ref li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .quick-ref li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+        }
+
+        .literature {
+            background-color: white;
+            border-left: 5px solid var(--red);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .literature h4 {
+            color: var(--red);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .literature ul {
+            list-style: none;
+            margin-left: 10px;
+        }
+
+        .literature li {
+            margin: 8px 0;
+        }
+
+        .algo-box {
+            background-color: #fff1f5;
+            border-left: 5px solid var(--red);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .algo-box strong {
+            color: var(--red);
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        ul li {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .portal-btn {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Съдържание</h2>
+            <ul>
+                <li><a href="#overview">Обзор</a></li>
+                <li><a href="#section1">1. Supervised: Класификация</a>
+                    <ul>
+                        <li class="sub-item"><a href="#s1-1">1.1 Decision Trees</a></li>
+                        <li class="sub-item"><a href="#s1-2">1.2 k-NN</a></li>
+                        <li class="sub-item"><a href="#s1-3">1.3 Naive Bayes</a></li>
+                        <li class="sub-item"><a href="#s1-4">1.4 SVM</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section2">2. Supervised: Регресия</a>
+                    <ul>
+                        <li class="sub-item"><a href="#s2-1">2.1 Linear Regression</a></li>
+                        <li class="sub-item"><a href="#s2-2">2.2 Logistic Regression</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section3">3. Unsupervised Learning</a>
+                    <ul>
+                        <li class="sub-item"><a href="#s3-1">3.1 K-Means</a></li>
+                        <li class="sub-item"><a href="#s3-2">3.2 Hierarchical</a></li>
+                        <li class="sub-item"><a href="#s3-3">3.3 DBSCAN</a></li>
+                        <li class="sub-item"><a href="#s3-4">3.4 PCA</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section4">4. Ensemble методи</a>
+                    <ul>
+                        <li class="sub-item"><a href="#s4-1">4.1 Bagging</a></li>
+                        <li class="sub-item"><a href="#s4-2">4.2 Boosting</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section5">5. Невронни мрежи</a></li>
+                <li><a href="#section6">6. Асоциативни правила</a></li>
+                <li><a href="#section7">7. Сравнение методи</a></li>
+                <li><a href="#flashcards">Флешкарти</a></li>
+                <li><a href="#quick-ref">Бърза справка</a></li>
+                <li><a href="#literature">Литература</a></li>
+            </ul>
+        </div>
+
+        <div class="main">
+            <h1>Тема 11: Методи за машинно самообучение</h1>
+            <p style="font-size: 16px; color: #666; margin-bottom: 20px;"><em>4-часов писмен изпит, PhD ИМИ-БАН • без справочни материали</em></p>
+
+            <div id="overview" class="overview-section">
+                <h4>Преди да започнете</h4>
+                <p><strong>Свързване с други теми:</strong></p>
+                <ul>
+                    <li><strong>Тема 10 (KDD/CRISP-DM):</strong> Тема 11 разширява процеса с конкретни алгоритми и техники за машинно обучение в етапите на моделиране и оценка</li>
+                    <li><strong>Тема 8 (Бази данни):</strong> Источник на тренировъчни данни, хранилища за модели, управление на метаданни</li>
+                    <li><strong>Тема 9 (Big Data):</strong> Обработка на масивни набори данни, разпределени алгоритми (MapReduce за K-Means), scalability</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Цел на темата:</strong> Разбиране на основните алгоритми за машинно обучение, тяхната математическа база, практическо применение и когато кой метод е подходящ.</p>
+            </div>
+
+            <h2 id="section1">1. Supervised Learning — Класификация</h2>
+
+            <h3 id="s1-1">1.1 Decision Trees (Дървета за решение)</h3>
+
+            <p>Дървета за решение са един от най-интерпретируемите алгоритми. Представят последователност от условия (if-then rules) в йерархичен формат.</p>
+
+            <div class="def-box">
+                <strong>Decision Tree:</strong> Дърво, където всеки вътрешен възел представя тест на атрибут, всяка гранка представя резултат на теста, и всеки листов възел представя класов етикет.
+            </div>
+
+            <div class="def-box">
+                <strong>Основни концепции:</strong>
+                <ul>
+                    <li><strong>Root node:</strong> началния възел с целия набор от данни</li>
+                    <li><strong>Internal nodes:</strong> решения (условия) за разделяне</li>
+                    <li><strong>Leaf nodes:</strong> окончателни класове/предсказания</li>
+                    <li><strong>Depth:</strong> число на разделяния от root до листо</li>
+                </ul>
+            </div>
+
+            <h4>Алгоритми за изграждане</h4>
+
+            <p><strong>ID3 (Iterative Dichotomiser 3)</strong> - Quinlan, 1986. Използва Information Gain и Entropy.</p>
+
+            <div class="formula-block">
+                <code>Entropy(S) = -Σ p_i * log₂(p_i)</code><br/>
+                където p_i е пропорцията на клас i в набор S
+            </div>
+
+            <div class="formula-block">
+                <code>Information Gain(A) = Entropy(S) - Σ(|S_v|/|S|) * Entropy(S_v)</code><br/>
+                където A е атрибут, S_v е подмножество на S при стойност v на A
+            </div>
+
+            <p>ID3 избира атрибут с максимален информационен печалба за разделяне.</p>
+
+            <p><strong>C4.5 (Quinlan, 1993)</strong> - Подобрение на ID3: поддържа continuous attributes, missing values, pruning.</p>
+
+            <p><strong>CART (Classification and Regression Trees)</strong> - Breiman et al., 1984. Използва Gini Index.</p>
+
+            <div class="formula-block">
+                <code>Gini(S) = 1 - Σ p_i²</code><br/>
+                Gini Index измерва нечистотата на възел (0 = чист, 0.5 = максимум нечист)
+            </div>
+
+            <h4>Pruning (Съкращаване)</h4>
+
+            <div class="def-box">
+                <strong>Pre-pruning:</strong> Спиране на растеж на дърво по време на изграждане (ранна спирка при малък информационен печалба).
+            </div>
+
+            <div class="def-box">
+                <strong>Post-pruning:</strong> Построяване на полното дърво, после премахване на разделяния, които не подобряват точност на валидационен набор.
+            </div>
+
+            <div class="note-box">
+                <strong>Пример: Weather/Play Tennis Dataset</strong><br/>
+                Дадени примери с атрибути {Outlook, Temperature, Humidity, Wind} и целов клас {Play=Yes/No}.<br/>
+                <strong>Стъпка 1:</strong> Изчислете Entropy(S) за цялия набор.<br/>
+                Ако имаме 9 "Yes" и 5 "No": Entropy = -(9/14)*log₂(9/14) - (5/14)*log₂(5/14) ≈ 0.94<br/>
+                <strong>Стъпка 2:</strong> За всеки атрибут, изчислете Information Gain.<br/>
+                Например за "Outlook" (values: sunny, overcast, rainy):<br/>
+                - Sunny: 2 Yes, 3 No → Entropy ≈ 0.97<br/>
+                - Overcast: 4 Yes, 0 No → Entropy = 0<br/>
+                - Rainy: 3 Yes, 2 No → Entropy ≈ 0.97<br/>
+                IG(Outlook) = 0.94 - (5/14)*0.97 - (4/14)*0 - (5/14)*0.97 ≈ 0.25<br/>
+                <strong>Стъпка 3:</strong> Изберете атрибут с максимално IG (обикновено "Outlook") като root split.
+            </div>
+
+            <h4>Предимства и недостатъци</h4>
+            <div class="def-box">
+                <strong>Предимства:</strong> Интерпретируемост, бързо обучение, справяне с категорични и числови данни, встроена селекция на признаци.<br/>
+                <strong>Недостатъци:</strong> Склонност към overfitting, нестабилност (малки промени в данни → различни дървета), non-linear граници между класове.
+            </div>
+
+            <h3 id="s1-2">1.2 k-Nearest Neighbors (k-NN)</h3>
+
+            <p>Прост, non-parametric алгоритъм основан на инстанции. Предсказва клас на нов пример чрез мнозинство на неговите k най-близки съседи.</p>
+
+            <div class="algo-box">
+                <strong>Алгоритъм k-NN:</strong><br/>
+                1. Изчислете разстоянието от новата точка до всички тренировъчни точки<br/>
+                2. Подредете по разстояние и изберете k най-близките<br/>
+                3. Приемете мнозинството на класа от k съседи (або weighted vote)
+            </div>
+
+            <h4>Мерки за разстояние</h4>
+
+            <div class="formula-block">
+                <code>Euclidean: d(x,y) = √(Σ(x_i - y_i)²)</code><br/>
+                <code>Manhattan: d(x,y) = Σ|x_i - y_i|</code><br/>
+                <code>Minkowski: d(x,y) = (Σ|x_i - y_i|^p)^(1/p)</code>
+            </div>
+
+            <p>Euclidean е най-разпространена, но Manhattan е често по-ефективна в високоразмерни пространства.</p>
+
+            <h4>Избор на k</h4>
+            <ul>
+                <li>k=1: най-близкия съсед, склонен към overfitting</li>
+                <li>k малко (3-5): по-гъвкав модел</li>
+                <li>k голямо (наприм. n/3): по-гладък модел, но риск от underfitting</li>
+                <li>Обикновено се избира чрез cross-validation</li>
+            </ul>
+
+            <h4>Curse of Dimensionality</h4>
+            <p>В високоразмерни пространства всички точки са приблизително еквидистантни, което прави k-NN неефективен. Необходима е намаляне на размерност (feature selection или PCA).</p>
+
+            <div class="theorem-box worked-example">
+                <h4>Пример: Класификация с k=3</h4>
+                <p>Имаме 6 тренировъчни точки (2D):</p>
+                <p>(1,1) Class A, (2,2) Class A, (1,2) Class A, (6,6) Class B, (5,5) Class B, (6,7) Class B</p>
+                <p><strong>Нова точка:</strong> (3,3). k=3.</p>
+                <p><strong>Стъпка 1:</strong> Euclidean разстояния:<br/>
+                d((3,3)-(1,1)) = √8 ≈ 2.83<br/>
+                d((3,3)-(2,2)) = √2 ≈ 1.41<br/>
+                d((3,3)-(1,2)) = √5 ≈ 2.24<br/>
+                d((3,3)-(6,6)) = √18 ≈ 4.24<br/>
+                d((3,3)-(5,5)) = √8 ≈ 2.83<br/>
+                d((3,3)-(6,7)) = √25 = 5<br/>
+                <strong>Стъпка 2:</strong> 3 най-близко: (2,2) A, (1,2) A, (1,1) A<br/>
+                <strong>Решение:</strong> Мнозинство = A, класифицирайте (3,3) като Class A</p>
+            </div>
+
+            <h3 id="s1-3">1.3 Naive Bayes</h3>
+
+            <p>Probabilistic класификатор базиран на Bayes' theorem с "naive" независимост на признаци.</p>
+
+            <div class="formula-block">
+                <code>P(C|X) = P(X|C) * P(C) / P(X)</code><br/>
+                където C е клас, X = {x₁, x₂, ..., x_n} са признаци
+            </div>
+
+            <div class="def-box">
+                <strong>Naive независимост:</strong> Предполагаме, че всички признаци са условно независими при даден клас:<br/>
+                P(X|C) = P(x₁|C) * P(x₂|C) * ... * P(x_n|C)
+            </div>
+
+            <p>Прогнозираният клас е този с максимална posteriori вероятност: argmax_C P(C|X)</p>
+
+            <h4>Оценка на вероятности</h4>
+
+            <p>От тренировъчни данни: P(C) = брой примери клас C / общо примери</p>
+
+            <p>За числови признаци: предположение за гауссова (нормална) разпределение</p>
+
+            <div class="formula-block">
+                <code>P(x_i|C) = (1/√(2π*σ_C²)) * exp(-(x_i - μ_C)² / (2*σ_C²))</code><br/>
+                където μ_C и σ_C² са средна стойност и дисперсия на признак в клас C
+            </div>
+
+            <div class="theorem-box worked-example">
+                <h4>Пример: Spam Classification</h4>
+                <p><strong>Тренировъчни данни (опростено):</strong><br/>
+                Spam примери: 2 (10% на данни) с дума "free": P(free|spam)=0.8, дума "click": P(click|spam)=0.6<br/>
+                Ham примери: 8 (80% на данни) с дума "free": P(free|ham)=0.1, дума "click": P(click|ham)=0.05<br/>
+                <strong>Нов email с думи: "free" и "click".</strong> Класифицирайте.<br/>
+                <strong>Изчисление:</strong><br/>
+                P(spam) = 0.2, P(ham) = 0.8<br/>
+                P(free,click|spam) ≈ P(free|spam)*P(click|spam) = 0.8*0.6 = 0.48<br/>
+                P(free,click|ham) ≈ P(free|ham)*P(click|ham) = 0.1*0.05 = 0.005<br/>
+                P(spam|free,click) ∝ 0.48*0.2 = 0.096<br/>
+                P(ham|free,click) ∝ 0.005*0.8 = 0.004<br/>
+                <strong>Решение:</strong> Spam (0.096 > 0.004)</p>
+            </div>
+
+            <h4>Предимства и недостатъци</h4>
+            <div class="def-box">
+                <strong>Предимства:</strong> Бързо обучение, добро с haute-dimensional данни, вероятностен резултат.<br/>
+                <strong>Недостатъци:</strong> Naive предположение на независимост (често неверно), нулева честота проблем (Laplace smoothing поправяне).
+            </div>
+
+            <h3 id="s1-4">1.4 Support Vector Machines (SVM)</h3>
+
+            <p>Мощен алгоритъм за двоична класификация, който намира optimal разделящ хиперплан.</p>
+
+            <div class="def-box">
+                <strong>Maximum Margin Hyperplane:</strong> SVM търси хиперплан, който максимизира разстоянието (margin) между два класа. Точки на граница на margin се наричат support vectors.
+            </div>
+
+            <h4>Линейна SVM</h4>
+
+            <p>За линейно разделяеми данни, намиращ хиперплан: <code>w·x + b = 0</code></p>
+
+            <div class="formula-block">
+                <code>Целева функция (максимизирай margin):<br/>
+                minimize: (1/2) * ||w||²<br/>
+                subject to: y_i(w·x_i + b) ≥ 1 за всички i</code>
+            </div>
+
+            <p>Решение използва Lagrange multipliers и quadratic programming.</p>
+
+            <h4>Non-linear SVM — Kernel Trick</h4>
+
+            <p>За non-linearly разделяеми данни, използваме kernel функция за трансформира в по-висока размерност.</p>
+
+            <div class="formula-block">
+                <code>Polynomial kernel: K(x,y) = (x·y + c)^d</code><br/>
+                <code>RBF kernel: K(x,y) = exp(-γ*||x-y||²)</code><br/>
+                <code>Sigmoid kernel: K(x,y) = tanh(α*x·y + c)</code>
+            </div>
+
+            <p>RBF е най-разпространеният за non-linear задачи.</p>
+
+            <h4>Soft Margin SVM</h4>
+
+            <p>За реални данни с шум, допускаме някои точки да нарушават margin чрез слак переменни ξ_i.</p>
+
+            <div class="formula-block">
+                <code>minimize: (1/2) * ||w||² + C * Σ ξ_i</code><br/>
+                където C е параметър за контрол на допустимите грешки
+            </div>
+
+            <p>С малко C: по-голям margin, повече грешки. С голямо C: малко margin, по-малко грешки.</p>
+
+            <div class="def-box">
+                <strong>Предимства:</strong> Ефективен в haute-dimensional пространства, гъвкаво с kernel trick, добра генерализация.<br/>
+                <strong>Недостатъци:</strong> Мултиклас разширение е сложно (one-vs-one, one-vs-rest), слаба интерпретируемост, избор на kernel е критичен.
+            </div>
+
+            <h2 id="section2">2. Supervised Learning — Регресия</h2>
+
+            <h3 id="s2-1">2.1 Linear Regression</h3>
+
+            <p>Модел за предсказване на continuous целева променлива.</p>
+
+            <div class="formula-block">
+                <code>y = β₀ + β₁*x + ε</code><br/>
+                където ε е грешка, обикновено нормално разпределена
+            </div>
+
+            <p>За множество признаци: <code>y = β₀ + β₁*x₁ + β₂*x₂ + ... + β_p*x_p</code></p>
+
+            <h4>Least Squares Method</h4>
+
+            <p>Минимизираме сумата на квадратични грешки (SSE):</p>
+
+            <div class="formula-block">
+                <code>minimize: Σ(y_i - ŷ_i)² = Σ(y_i - (β₀ + β₁*x_i))²</code>
+            </div>
+
+            <p>Решение (за един признак):</p>
+
+            <div class="formula-block">
+                <code>β₁ = Σ((x_i - x̄)*(y_i - ȳ)) / Σ(x_i - x̄)²<br/>
+                β₀ = ȳ - β₁*x̄</code>
+            </div>
+
+            <h4>Коефициент на детерминация (R²)</h4>
+
+            <div class="formula-block">
+                <code>R² = 1 - (SSE / SST) = 1 - (Σ(y_i - ŷ_i)² / Σ(y_i - ȳ)²)</code>
+            </div>
+
+            <p>R² ∈ [0,1]: пропорция на вариация обяснена от модел. 1 = перфектно прилагане, 0 = никакво прилагане.</p>
+
+            <div class="theorem-box worked-example">
+                <h4>Пример: Linear Regression с 5 точки</h4>
+                <p><strong>Данни:</strong> (1,2), (2,3), (3,4), (4,5), (5,6)</p>
+                <p><strong>Стъпка 1:</strong> Изчислете средни стойности<br/>
+                x̄ = (1+2+3+4+5)/5 = 3<br/>
+                ȳ = (2+3+4+5+6)/5 = 4<br/>
+                <strong>Стъпка 2:</strong> Σ((x_i - x̄)*(y_i - ȳ)) = (-2)(-2) + (-1)(-1) + 0*0 + 1*1 + 2*2 = 4+1+0+1+4 = 10<br/>
+                Σ(x_i - x̄)² = 4+1+0+1+4 = 10<br/>
+                <strong>Стъпка 3:</strong> β₁ = 10/10 = 1, β₀ = 4 - 1*3 = 1<br/>
+                <strong>Модел:</strong> y = 1 + 1*x (perfect fit, R²=1)</p>
+            </div>
+
+            <h3 id="s2-2">2.2 Logistic Regression</h3>
+
+            <p>За двоична класификация с вероятностен изход. Въпреки името, е класификатор не регресор.</p>
+
+            <div class="formula-block">
+                <code>P(y=1|x) = 1 / (1 + exp(-(β₀ + β₁*x)))</code><br/>
+                Sigmoid функция σ(z) преобразува линейна комбинация в [0,1]
+            </div>
+
+            <p>Решение граница: ако P > 0.5, класифицирай като клас 1.</p>
+
+            <h4>Log-odds (logit)</h4>
+
+            <div class="formula-block">
+                <code>log(P/(1-P)) = β₀ + β₁*x</code><br/>
+                където P/(1-P) е odds на клас 1
+            </div>
+
+            <h4>Обучение</h4>
+
+            <p>Ползва Maximum Likelihood Estimation. Функция на загуба (cost function):</p>
+
+            <div class="formula-block">
+                <code>J(β) = -[1/n * Σ(y_i*log(ŷ_i) + (1-y_i)*log(1-ŷ_i))]</code><br/>
+                Cross-entropy функция на загуба
+            </div>
+
+            <p>Оптимизира се със Gradient Descent.</p>
+
+            <h2 id="section3">3. Unsupervised Learning</h2>
+
+            <h3 id="s3-1">3.1 K-Means Clustering</h3>
+
+            <p>Разделя данни на k кластъра чрез итеративни центроид актуализации.</p>
+
+            <div class="algo-box">
+                <strong>Алгоритъм K-Means:</strong><br/>
+                1. <strong>Инициализация:</strong> Произволен избор на k начални центроиди<br/>
+                2. <strong>Назначение:</strong> Всяка точка принадлежи на най-близкия центроид<br/>
+                3. <strong>Актуализация центроиди:</strong> Центроид = средна стойност на всички точки в кластъра<br/>
+                4. <strong>Повтаряйте</strong> стъпки 2-3 докато центроидите се стабилизират или максимален итерации
+            </div>
+
+            <h4>Цел функция (Within-cluster sum of squares)</h4>
+
+            <div class="formula-block">
+                <code>WCSS = Σ Σ ||x_i - μ_k||²</code><br/>
+                където μ_k е центроид на кластър k
+            </div>
+
+            <p>K-Means минимизира WCSS.</p>
+
+            <h4>Избор на k</h4>
+            <ul>
+                <li><strong>Elbow method:</strong> Plot WCSS vs k, намерете "елбоу" точка</li>
+                <li><strong>Silhouette coefficient:</strong> Измерва колко добре разделени са кластрите</li>
+                <li><strong>Gap statistic:</strong> Сравнява с очаквано разпределение</li>
+            </ul>
+
+            <div class="theorem-box worked-example">
+                <h4>Пример: K-Means с k=2 на 6 точки (2D)</h4>
+                <p><strong>Точки:</strong> (1,1), (2,1), (1,2), (8,8), (8,9), (9,8)</p>
+                <p><strong>Инициализация:</strong> C1=(1,1), C2=(8,8)</p>
+                <p><strong>Итерация 1:</strong><br/>
+                Назначение (разстояние до центроиди):<br/>
+                (1,1) → C1, (2,1) → C1, (1,2) → C1, (8,8) → C2, (8,9) → C2, (9,8) → C2<br/>
+                Актуализация центроиди:<br/>
+                C1_new = ((1+2+1)/3, (1+1+2)/3) = (1.33, 1.33)<br/>
+                C2_new = ((8+8+9)/3, (8+9+8)/3) = (8.33, 8.33)<br/>
+                <strong>Итерация 2:</strong> Центроидите остават стабилни → край</p>
+            </div>
+
+            <div class="note-box">
+                <strong>Недостатъци на K-Means:</strong> Явен k, чувствителност към инициализация, не работи добре с non-convex кластъри, еквивалентна дисперсия предположение.
+            </div>
+
+            <h3 id="s3-2">3.2 Hierarchical Clustering</h3>
+
+            <p>Две подходи: agglomerative (bottom-up) и divisive (top-down).</p>
+
+            <h4>Agglomerative Clustering</h4>
+            <ul>
+                <li>Начало: всяка точка е собствен кластър</li>
+                <li>Итеративно сливане на два най-близки кластъра</li>
+                <li>Резултат: дендрограма показва йерархия</li>
+            </ul>
+
+            <h4>Linkage методи (как да измеря разстояние между кластъри)</h4>
+
+            <div class="formula-block">
+                <code>Single linkage: d(C1,C2) = min(d(x,y)) за x∈C1, y∈C2</code><br/>
+                <code>Complete linkage: d(C1,C2) = max(d(x,y)) за x∈C1, y∈C2</code><br/>
+                <code>Average linkage: d(C1,C2) = avg(d(x,y)) за всички x∈C1, y∈C2</code>
+            </div>
+
+            <p>Single linkage: предимство=чувствителност на chain効ект. Complete linkage: по-компактни кластъри. Average: баланс.</p>
+
+            <div class="def-box">
+                <strong>Дендрограма:</strong> Дърво визуализация на йерархичното сливане. Височина представя разстояние между сливаемите кластъри. Намаляне на дендрограма в височина h дава кластърирането.
+            </div>
+
+            <h3 id="s3-3">3.3 DBSCAN (Density-Based Spatial Clustering)</h3>
+
+            <p>Кластърира точки базирани на локална плътност, без нужда от предварителен брой кластъри.</p>
+
+            <div class="def-box">
+                <strong>ε-neighborhood (Eps-окръжност):</strong> Множество от всички точки в разстояние ≤ε от дадена точка.<br/>
+                <strong>MinPts:</strong> Минимален брой точки в ε-neighborhood за да се счита точката за core point.
+            </div>
+
+            <div class="algo-box">
+                <strong>Алгоритъм DBSCAN:</strong><br/>
+                1. За всяка неклатифицирана точка, ако ε-neighborhood съдържа ≥MinPts точки, стартирайте нов кластър<br/>
+                2. Разширявайте кластър чрез всички достижими точки (преходност)<br/>
+                3. Точки, които не принадлежат на никой кластър, се считат за noise/outliers
+            </div>
+
+            <h4>Предимства спрямо K-Means</h4>
+            <ul>
+                <li>Не е нужно априори знаем брой кластъри</li>
+                <li>Справя се с non-convex форми</li>
+                <li>Идентифицира outliers като noise</li>
+                <li>Независим от порядъка на точки</li>
+            </ul>
+
+            <h3 id="s3-4">3.4 Dimensionality Reduction — PCA</h3>
+
+            <p>Principal Component Analysis трансформира data в нов координатна система с низа дименсионалност, запазвайки максимална вариация.</p>
+
+            <div class="def-box">
+                <strong>Principal Components:</strong> Нови оси в посока на максимална вариация в данни. Първи компонент обяснява най-много, втори обяснява второ място и т.н.
+            </div>
+
+            <h4>Процес</h4>
+            <ul>
+                <li>1. Центрирайте данни (средна = 0)</li>
+                <li>2. Изчислете ковариационна матрица</li>
+                <li>3. Намерете собствени вектори (eigenvectors) и собствени стойности (eigenvalues)</li>
+                <li>4. Сортирайте по eigenvalues (намаляващо)</li>
+                <li>5. Проектирайте данни на първите k собствени вектори</li>
+            </ul>
+
+            <div class="formula-block">
+                <code>Variance explained (PC_i) = λ_i / Σλ_j</code><br/>
+                където λ_i е eigenvalue на principal component i
+            </div>
+
+            <p>Обикновено избираме компоненти, които обясняват 95%+ от вариацията.</p>
+
+            <h2 id="section4">4. Ensemble Methods (Ансамблови методи)</h2>
+
+            <p>Комбиниране на множество слаби модели в един силен модел.</p>
+
+            <h3 id="s4-1">4.1 Bagging (Bootstrap Aggregating)</h3>
+
+            <p>Обучава множество независими модели на различни bootstrap примери.</p>
+
+            <div class="algo-box">
+                <strong>Алгоритъм Bagging:</strong><br/>
+                1. Генерирайте B bootstrap примери (със заместване) от оригиналния набор<br/>
+                2. Обучете модел M_i на всеки bootstrap набор<br/>
+                3. За прогноза: класификация=мнозинство, регресия=средна на M_1...M_B
+            </div>
+
+            <p><strong>Random Forest:</strong> Bagging с Decision Trees, където всеки split тества случайно подмножество от признаци. Намалява вариация и избягва корелирани дървета.</p>
+
+            <h3 id="s4-2">4.2 Boosting</h3>
+
+            <p>Итеративно обучава модели, където всеки модел фокусира на грешки на предишните.</p>
+
+            <h4>AdaBoost (Adaptive Boosting)</h4>
+
+            <div class="algo-box">
+                <strong>Алгоритъм AdaBoost:</strong><br/>
+                1. Инициализирайте тегла w_i = 1/n за всички примери<br/>
+                2. За t=1 до T:<br/>
+                   a. Обучете модел M_t на данни с тегла w_i<br/>
+                   b. Изчислете weighted грешка ε_t<br/>
+                   c. Изчислете α_t = 0.5*ln((1-ε_t)/ε_t)<br/>
+                   d. Актуализирайте тегла: w_i := w_i*exp(-α_t*y_i*M_t(x_i))<br/>
+                3. Финална прогноза: sign(Σ α_t*M_t(x))
+            </div>
+
+            <p>Моделите със ниска грешка получават висок коефициент, а неправилно класифицирани примери получават по-високи тегла.</p>
+
+            <h4>Gradient Boosting</h4>
+
+            <p>Обобщение на boosting. Всеки нов модел се обучава да предсказва остатъци (residuals) на предишния модел.</p>
+
+            <p><strong>XGBoost (Extreme Gradient Boosting):</strong> Оптимизирана реализация с регуляризация, parallel processing, и други подобрения.</p>
+
+            <h4>Bagging vs Boosting</h4>
+
+            <div class="gen-table">
+                <tr>
+                    <th>Свойство</th>
+                    <th>Bagging</th>
+                    <th>Boosting</th>
+                </tr>
+                <tr>
+                    <td>Независимост на модели</td>
+                    <td>Независими</td>
+                    <td>Зависими (последователни)</td>
+                </tr>
+                <tr>
+                    <td>Обучение</td>
+                    <td>Паралелно</td>
+                    <td>Последователно</td>
+                </tr>
+                <tr>
+                    <td>Намаляване на</td>
+                    <td>Вариация</td>
+                    <td>Bias и вариация</td>
+                </tr>
+                <tr>
+                    <td>Чувствителност към outliers</td>
+                    <td>Средна</td>
+                    <td>Висока (boosting дава високи тегла на грешки)</td>
+                </tr>
+                <tr>
+                    <td>Комплексност</td>
+                    <td>По-проста</td>
+                    <td>По-сложна, риск от overfitting</td>
+                </tr>
+            </div>
+
+            <h2 id="section5">5. Невронни мрежи и дълбоко обучение</h2>
+
+            <h3>5.1 Perceptron</h3>
+
+            <p>Най-основният неврон модел. Прилича на биологичен неврон.</p>
+
+            <div class="formula-block">
+                <code>output = activation(w₀ + w₁*x₁ + w₂*x₂ + ... + w_n*x_n)</code><br/>
+                където w_i са тегла, w₀ е bias
+            </div>
+
+            <h4>Функции активирования</h4>
+
+            <div class="formula-block">
+                <code>Sigmoid: σ(z) = 1/(1+e^(-z))  ∈ (0,1)</code><br/>
+                <code>ReLU (Rectified Linear Unit): max(0,z)  ∈ [0,∞)</code><br/>
+                <code>Tanh: tanh(z) = (e^z - e^(-z))/(e^z + e^(-z))  ∈ (-1,1)</code>
+            </div>
+
+            <h3>5.2 Multi-Layer Perceptron (MLP)</h3>
+
+            <p>Невронна мрежа с входен слой, един или повече скрити слоя, и изходен слой.</p>
+
+            <div class="def-box">
+                <strong>Архитектура:</strong> Входни → скрити → изходни неврони. Всеки неврон в слой е свързан със всички неврони в следващия слой (fully connected).
+            </div>
+
+            <h4>Backpropagation (обратна пропаганда)</h4>
+
+            <p>Алгоритъм за обучение на многослойни мрежи.</p>
+
+            <div class="algo-box">
+                <strong>Процес Backpropagation:</strong><br/>
+                1. <strong>Forward pass:</strong> Изчислете изход на мрежата на примера<br/>
+                2. <strong>Изчислете грешка:</strong> Loss функция (MSE за регресия, cross-entropy за класификация)<br/>
+                3. <strong>Backward pass:</strong> Изчислете градиенти на грешката спрямо всяко тегло използвайки chain rule<br/>
+                4. <strong>Актуализирайте тегла:</strong> w := w - α*∇J(w) (gradient descent)
+            </div>
+
+            <h3>5.3 Deep Learning архитектури</h3>
+
+            <p><strong>Convolutional Neural Networks (CNN):</strong> За изображения. Слоеве с филтри (kernels) съкращават параметрите чрез shared weights.</p>
+
+            <p><strong>Recurrent Neural Networks (RNN):</strong> За последователности. LSTM (Long Short-Term Memory) решава проблема на vanishing градиентите.</p>
+
+            <p><strong>Transformers:</strong> За NLP. Attention mechanism позволява един модел да фокусира на различни части на входа.</p>
+
+            <h3>5.4 Обучение</h3>
+
+            <ul>
+                <li><strong>Learning rate (α):</strong> Размер на стъпката в gradient descent. Малко → бавно, голямо → нестабилност</li>
+                <li><strong>Epochs:</strong> Брой пълни преминавания през тренировъчния набор</li>
+                <li><strong>Batch size:</strong> Брой примери използвани за един update на тегла</li>
+                <li><strong>Regularization:</strong> L1 (Lasso) или L2 (Ridge) наказание на големи тегла, Dropout случайно деактивира неврони</li>
+            </ul>
+
+            <h2 id="section6">6. Асоциативни правила (Association Rules)</h2>
+
+            <p>Намиране на правила във формата "ако закупиш A, вероятно закупиш B".</p>
+
+            <h4>Основни мерки</h4>
+
+            <div class="formula-block">
+                <code>Support(A → B) = |A ∪ B| / |транзакции|</code><br/>
+                Пропорция транзакции съдържащи както A, така и B
+            </div>
+
+            <div class="formula-block">
+                <code>Confidence(A → B) = |A ∪ B| / |A|</code><br/>
+                Вероятност B е закупен, дадено че A е закупен
+            </div>
+
+            <div class="formula-block">
+                <code>Lift(A → B) = Confidence(A → B) / Support(B)</code><br/>
+                Lift > 1 означава A и B са положително асоциирани
+            </div>
+
+            <h4>Apriori алгоритъм</h4>
+
+            <div class="algo-box">
+                <strong>Алгоритъм Apriori:</strong><br/>
+                1. Намерете всички frequent itemsets (поддържат ≥ min_support)<br/>
+                2. За всеки frequent itemset L, генерирайте всички подмножества<br/>
+                3. Проверете confidence ≥ min_confidence за правила A → (L-A)
+            </div>
+
+            <div class="theorem-box worked-example">
+                <h4>Пример: Market Basket Association Rules</h4>
+                <p><strong>Транзакции (4 транзакции):</strong><br/>
+                T1: {Bread, Butter, Milk}<br/>
+                T2: {Bread, Diaper}<br/>
+                T3: {Bread, Butter, Diaper}<br/>
+                T4: {Butter, Milk}<br/>
+                <strong>min_support = 50%, min_confidence = 60%</strong><br/>
+                <strong>Frequent itemsets (support ≥ 50%):</strong><br/>
+                {Bread}: 3/4 = 75%<br/>
+                {Butter}: 3/4 = 75%<br/>
+                {Milk}: 2/4 = 50%<br/>
+                {Bread, Butter}: 2/4 = 50%<br/>
+                <strong>Правила:</strong><br/>
+                Bread → Butter: confidence = 2/3 ≈ 66% ✓<br/>
+                Butter → Bread: confidence = 2/3 ≈ 66% ✓<br/>
+                Bread → Milk: confidence = 1/3 ≈ 33% ✗</p>
+            </div>
+
+            <h2 id="section7">7. Сравнение на методите</h2>
+
+            <div class="gen-table">
+                <tr>
+                    <th style="width: 15%;">Алгоритъм</th>
+                    <th style="width: 12%;">Тип</th>
+                    <th style="width: 18%;">Предимства</th>
+                    <th style="width: 18%;">Недостатъци</th>
+                    <th style="width: 15%;">Сложност</th>
+                    <th style="width: 12%;">Интерпретируемост</th>
+                </tr>
+                <tr>
+                    <td><strong>Decision Trees</strong></td>
+                    <td>Clasif.</td>
+                    <td>Интерпретируем, бърз</td>
+                    <td>Overfitting, нестабилен</td>
+                    <td>O(n*d*log n)</td>
+                    <td>Висока</td>
+                </tr>
+                <tr>
+                    <td><strong>k-NN</strong></td>
+                    <td>Clasif.</td>
+                    <td>Прост, non-parametric</td>
+                    <td>Курса на размерност, бавен</td>
+                    <td>O(n*d)</td>
+                    <td>Средна</td>
+                </tr>
+                <tr>
+                    <td><strong>Naive Bayes</strong></td>
+                    <td>Clasif.</td>
+                    <td>Бърз, добър с текст</td>
+                    <td>Naive независимост</td>
+                    <td>O(n*d)</td>
+                    <td>Висока</td>
+                </tr>
+                <tr>
+                    <td><strong>SVM</strong></td>
+                    <td>Clasif.</td>
+                    <td>Мощен, kernel trick</td>
+                    <td>Мултиклас сложност, избор на kernel</td>
+                    <td>O(n²) до O(n³)</td>
+                    <td>Ниска</td>
+                </tr>
+                <tr>
+                    <td><strong>Linear Regression</strong></td>
+                    <td>Regr.</td>
+                    <td>Прост, интерпретируем</td>
+                    <td>Линейно предположение</td>
+                    <td>O(nd²)</td>
+                    <td>Висока</td>
+                </tr>
+                <tr>
+                    <td><strong>Logistic Regression</strong></td>
+                    <td>Clasif.</td>
+                    <td>Вероятностен, бърз</td>
+                    <td>Линейни граници</td>
+                    <td>O(n*d)</td>
+                    <td>Висока</td>
+                </tr>
+                <tr>
+                    <td><strong>K-Means</strong></td>
+                    <td>Cluster.</td>
+                    <td>Прост, бърз</td>
+                    <td>Явен k, локални минимума</td>
+                    <td>O(n*k*i*d)</td>
+                    <td>Средна</td>
+                </tr>
+                <tr>
+                    <td><strong>Hierarchical</strong></td>
+                    <td>Cluster.</td>
+                    <td>Йерархия, без k</td>
+                    <td>Изчислително интензивен</td>
+                    <td>O(n²)</td>
+                    <td>Средна</td>
+                </tr>
+                <tr>
+                    <td><strong>DBSCAN</strong></td>
+                    <td>Cluster.</td>
+                    <td>Находит неправилни форми, без k</td>
+                    <td>Параметрите ε, MinPts</td>
+                    <td>O(n log n)</td>
+                    <td>Средна</td>
+                </tr>
+                <tr>
+                    <td><strong>Random Forest</strong></td>
+                    <td>Clasif.</td>
+                    <td>Мощен, справя с големи набори</td>
+                    <td>Менше интерпретируемост</td>
+                    <td>O(n*d*B*log n)</td>
+                    <td>Средна</td>
+                </tr>
+                <tr>
+                    <td><strong>XGBoost</strong></td>
+                    <td>Clasif.</td>
+                    <td>Много мощен, регуляризация</td>
+                    <td>Сложен, риск от overfitting</td>
+                    <td>O(n*d*T)</td>
+                    <td>Ниска</td>
+                </tr>
+                <tr>
+                    <td><strong>Neural Networks</strong></td>
+                    <td>Обе</td>
+                    <td>Мощен, справя с complex patterns</td>
+                    <td>Много параметри, трудно избягване на overfitting</td>
+                    <td>Variable</td>
+                    <td>Ниска</td>
+                </tr>
+            </div>
+
+            <h4>Когато кой метод да използвам?</h4>
+
+            <div class="def-box">
+                <strong>Избор по проблем:</strong><br/>
+                <strong>Малък набор данни:</strong> Decision Trees, Naive Bayes, SVM (с RBF)<br/>
+                <strong>Голям набор данни:</strong> Logistic Regression, Random Forest, Neural Networks<br/>
+                <strong>Текстови данни:</strong> Naive Bayes, SVM (linear), Neural Networks (embeddings)<br/>
+                <strong>Изображения:</strong> CNN, Transfer Learning<br/>
+                <strong>Време-редове:</strong> LSTM, Transformers, ARIMA<br/>
+                <strong>Интерпретируемост критична:</strong> Decision Trees, Linear/Logistic Regression<br/>
+                <strong>Клъстеризация без k:</strong> Hierarchical, DBSCAN<br/>
+                <strong>Висока размерност:</strong> SVM, Logistic Regression, PCA + altri методи
+            </div>
+
+            <div id="flashcards" class="flashcards">
+                <h2>Флешкарти</h2>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">1. Каква е разликата между entropy и Gini index?</div>
+                    <div class="fc-a"><strong>Entropy:</strong> -Σp_i*log₂(p_i), базирана на теория на информацията. <strong>Gini:</strong> 1-Σp_i², мерка за нечистота. Двете са еквивалентни, Gini е по-бърз за изчисление. Отговор: формула и интерпретация.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">2. Какво е "curse of dimensionality" и как го избягваме?</div>
+                    <div class="fc-a">В haute-dimensional пространства, разстоянията между точки станат еквивалентни, което прави k-NN неефективен. Решения: Feature selection, PCA за намаляне на размерност, избор на качествени признаци.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">3. Какво означава "kernel trick" в SVM?</div>
+                    <div class="fc-a">Kernel функция трансформира данни в по-висока размерност без явен калкулирането на трансформацията. Примери: polynomial, RBF. Позволява SVM да справи със non-linear данни.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">4. Каква е разликата между pre-pruning и post-pruning?</div>
+                    <div class="fc-a"><strong>Pre-pruning:</strong> Спиране на растеж през строителство (ранна спирка). <strong>Post-pruning:</strong> Построяване на пълното дърво, после премахване на подгранки. Post-pruning обикновено дава по-добри резултати.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">5. Каква е основната идея на Naive Bayes?</div>
+                    <div class="fc-a">Ползва Bayes' theorem P(C|X) = P(X|C)*P(C)/P(X) с предположение че всички признаци са условно независими при даден клас. Въпреки че предположението е обикновено неверно, методът работи добре в практика.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">6. Обяснете K-Means итерация.</div>
+                    <div class="fc-a">1. Избор на k случайни центроиди. 2. Назначение: всяка точка към най-близкия центроид. 3. Актуализация: центроид = средна на точки в кластърa. 4. Повтаряне докато конвергенция.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">7. Кой е недостатък на hierarchical clustering?</div>
+                    <div class="fc-a">Изчислително интензивен (O(n²)), не може да обърне предишни решения (greedy), и трудно да избере оптимален брой кластъри от дендрограма.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">8. Какво е DBSCAN и защо е по-добър от K-Means?</div>
+                    <div class="fc-a">Density-based алгоритъм който না изисква к априори. Открива non-convex кластъри и идентифицира outliers. Предимства: без нужда от k, справя се със сложни форми. Недостатъци: параметрите ε и MinPts.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">9. Обяснете R² коефициент.</div>
+                    <div class="fc-a">R² = 1 - SSE/SST измерва пропорция на вариация обяснена от модел. 0-1 диапазон. R²=1 = перфектно прилагане, R²=0 = модел не обяснява вариация.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">10. Обяснете razlika между Bagging и Boosting.</div>
+                    <div class="fc-a"><strong>Bagging:</strong> Независими модели обучени на bootstrap примери, комбинирани чрез голосуване. Намалява вариацията. <strong>Boosting:</strong> Последователни модели, всеки фокусира на грешки предишни. Намалява bias и вариацията.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">11. Какво е backpropagation в невронни мрежи?</div>
+                    <div class="fc-a">Алгоритъм за обучение на многослойни мрежи. Forward pass изчислява изход, after loss изчисление, backward pass изчислява градиенти спрямо всяко тегло. Градиенти се ползват за актуализиране на тегла в посока намаляване на загуба.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">12. Обяснете Support, Confidence и Lift при асоциативни правила.</div>
+                    <div class="fc-a"><strong>Support(A→B):</strong> пропорция транзакции с A и B. <strong>Confidence(A→B):</strong> вероятност B при A. <strong>Lift:</strong> коефициент на асоциируемост. Lift > 1 означава положителна асоциация.</div>
+                </div>
+            </div>
+
+            <div id="quick-ref" class="quick-ref">
+                <h2>Бърза справка</h2>
+
+                <h4>Ключови формули</h4>
+                <ul>
+                    <li><strong>Entropy:</strong> -Σp_i*log₂(p_i)</li>
+                    <li><strong>Information Gain:</strong> Entropy(S) - Σ(|S_v|/|S|)*Entropy(S_v)</li>
+                    <li><strong>Gini Index:</strong> 1 - Σp_i²</li>
+                    <li><strong>Linear Regression:</strong> y = β₀ + β₁*x; β₁ = Σ((x_i-x̄)(y_i-ȳ))/Σ(x_i-x̄)²</li>
+                    <li><strong>R²:</strong> 1 - SSE/SST</li>
+                    <li><strong>Sigmoid:</strong> 1/(1+e^(-z))</li>
+                    <li><strong>Bayes' Theorem:</strong> P(C|X) = P(X|C)*P(C)/P(X)</li>
+                    <li><strong>WCSS (K-Means):</strong> Σ Σ||x_i - μ_k||²</li>
+                    <li><strong>Support:</strong> |A∪B| / |транзакции|</li>
+                    <li><strong>Confidence:</strong> |A∪B| / |A|</li>
+                    <li><strong>Lift:</strong> Confidence(A→B) / Support(B)</li>
+                </ul>
+
+                <h4>Алгоритми — Когато да използвам</h4>
+                <ul>
+                    <li><strong>Decision Trees:</strong> Малки набори, нужна интерпретируемост</li>
+                    <li><strong>k-NN:</strong> Локални шаблони, малък до среден набор</li>
+                    <li><strong>Naive Bayes:</strong> Текст, бързо обучение</li>
+                    <li><strong>SVM:</strong> Двоична класификация, haute-dimensional</li>
+                    <li><strong>Linear Regression:</strong> Линейни връзки, интерпретируемост</li>
+                    <li><strong>K-Means:</strong> Известен k, конвексни кластъри</li>
+                    <li><strong>Hierarchical:</strong> Йерархия на кластъри</li>
+                    <li><strong>DBSCAN:</strong> Неизвестен k, non-convex форми</li>
+                    <li><strong>Random Forest:</strong> Голям набор, висока точност</li>
+                    <li><strong>XGBoost:</strong> Конкурси, максимална точност</li>
+                    <li><strong>Neural Networks:</strong> Complex patterns, изображения, текст</li>
+                </ul>
+
+                <h4>Хиперпараметри</h4>
+                <ul>
+                    <li><strong>k (k-NN):</strong> Обикновено 3-10, тест чрез cross-validation</li>
+                    <li><strong>min_samples_split, max_depth (Trees):</strong> Контрол на pruning</li>
+                    <li><strong>C (SVM):</strong> Контрол на margin vs грешки</li>
+                    <li><strong>ε, MinPts (DBSCAN):</strong> Контрол на плътност и размер</li>
+                    <li><strong>Learning rate (Neural Nets):</strong> Обикновено 0.001-0.1</li>
+                </ul>
+
+                <h4>Регуляризация</h4>
+                <ul>
+                    <li><strong>L1 (Lasso):</strong> Наказание Σ|w_i| (фича селекция)</li>
+                    <li><strong>L2 (Ridge):</strong> Наказание Σw_i² (намалява големи тегла)</li>
+                    <li><strong>Dropout:</strong> За невронни мрежи, случайно деактивира неврони</li>
+                    <li><strong>Early stopping:</strong> Спира обучение при никакво подобрение на валидация</li>
+                </ul>
+            </div>
+
+            <div id="literature" class="literature">
+                <h4>Литература</h4>
+                <ul>
+                    <li><strong>[10]</strong> Han, J., Kamber, M., Pei, J. (2011). <em>Data Mining: Concepts and Techniques</em> (3rd ed.). Morgan Kaufmann. — Фундаментална книга на алгоритмите за машинно обучение и добив на данни.</li>
+                    <li><strong>[26]</strong> Witten, I. H., Frank, E., Hall, M. A. (2011). <em>Data Mining: Practical Machine Learning Tools and Techniques</em> (3rd ed.). Morgan Kaufmann. — Практична ориентирана, със примери в Weka.</li>
+                    <li>Hastie, T., Tibshirani, R., Friedman, J. (2009). <em>The Elements of Statistical Learning</em> (2nd ed.). Springer. — Математически задълбочен.</li>
+                    <li>Bishop, C. M. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer. — Детайлна на невронни мрежи и Bayesian методи.</li>
+                    <li>Goodfellow, I., Bengio, Y., Courville, A. (2016). <em>Deep Learning</em>. MIT Press. — Стандарт за дълбоко обучение.</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <a href="index.html" class="portal-btn">← Портал</a>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.contentLoaded();
+    </script>
+
+</body>
+</html>

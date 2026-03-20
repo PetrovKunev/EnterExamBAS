@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 17: Защита на информационни системи — Firewall, IDS/IPS</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f2744;
+            --blue: #2563a8;
+            --green: #166534;
+            --purple: #5b21b6;
+            --orange: #9a3412;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--cream);
+            color: var(--navy);
+            line-height: 1.6;
+            font-size: 18px;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 270px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--navy) 0%, var(--purple) 100%);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+            z-index: 100;
+        }
+
+        .sidebar h1 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 10px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin: 10px 0;
+        }
+
+        .sidebar-nav a {
+            color: #e8e8e8;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .sidebar-nav a.active {
+            background-color: var(--blue);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Portal link */
+        .portal-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 230px;
+            padding: 12px 16px;
+            background-color: var(--green);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s;
+            z-index: 101;
+        }
+
+        .portal-link:hover {
+            background-color: #15803d;
+            box-shadow: 0 4px 12px rgba(22, 101, 52, 0.3);
+        }
+
+        /* Main content */
+        .content {
+            margin-left: 270px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .content h1 {
+            color: var(--navy);
+            font-size: 28px;
+            margin-bottom: 10px;
+            border-bottom: 3px solid var(--blue);
+            padding-bottom: 10px;
+        }
+
+        .content h2 {
+            color: var(--purple);
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--orange);
+            padding-left: 12px;
+        }
+
+        .content h3 {
+            color: var(--blue);
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        .content p {
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .overview-box {
+            background: linear-gradient(135deg, rgba(37, 99, 168, 0.1) 0%, rgba(91, 33, 182, 0.1) 100%);
+            border-left: 4px solid var(--blue);
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .definition-box {
+            background-color: rgba(22, 101, 52, 0.08);
+            border: 2px solid var(--green);
+            padding: 14px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .example-box {
+            background-color: rgba(154, 52, 18, 0.08);
+            border-left: 4px solid var(--orange);
+            padding: 14px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .example-box strong {
+            color: var(--orange);
+        }
+
+        .warning-box {
+            background-color: rgba(153, 27, 27, 0.08);
+            border: 2px solid var(--red);
+            padding: 14px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        table thead {
+            background: linear-gradient(180deg, var(--navy) 0%, var(--blue) 100%);
+            color: white;
+        }
+
+        table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 12px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Code/Monospace */
+        code, pre {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        pre {
+            padding: 12px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Flashcards */
+        .flashcards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .flashcard {
+            background: white;
+            border: 2px solid var(--blue);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .flashcard:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .flashcard.flipped {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+            color: white;
+        }
+
+        .flashcard-front, .flashcard-back {
+            display: none;
+        }
+
+        .flashcard.front .flashcard-front {
+            display: block;
+        }
+
+        .flashcard.flipped .flashcard-back {
+            display: block;
+        }
+
+        /* Links section */
+        .links-section {
+            background: linear-gradient(135deg, rgba(37, 99, 168, 0.1) 0%, rgba(91, 33, 182, 0.1) 100%);
+            padding: 16px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .links-section a {
+            display: block;
+            color: var(--blue);
+            text-decoration: none;
+            margin: 8px 0;
+            padding: 6px;
+            border-left: 3px solid var(--blue);
+            padding-left: 10px;
+            transition: all 0.3s;
+        }
+
+        .links-section a:hover {
+            color: var(--purple);
+            border-left-color: var(--purple);
+        }
+
+        /* Quick reference */
+        .quick-ref {
+            background-color: white;
+            border: 2px solid var(--green);
+            padding: 16px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .quick-ref dt {
+            font-weight: 600;
+            color: var(--navy);
+            margin-top: 10px;
+        }
+
+        .quick-ref dd {
+            margin-left: 20px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        /* Literature */
+        .literature {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .literature ol {
+            margin-left: 20px;
+        }
+
+        .literature li {
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 1200px) {
+            .content {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .portal-link {
+                position: static;
+                width: 100%;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h1>Тема 17</h1>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="#overview">Обзор</a></li>
+                    <li><a href="#section1">Основи</a></li>
+                    <li><a href="#section2">Firewalls</a></li>
+                    <li><a href="#section3">IDS</a></li>
+                    <li><a href="#section4">IPS</a></li>
+                    <li><a href="#section5">Съвременни подходи</a></li>
+                    <li><a href="#section6">Криптография</a></li>
+                    <li><a href="#section7">Стандарти</a></li>
+                    <li><a href="#examples">Примери</a></li>
+                    <li><a href="#flashcards">Карти</a></li>
+                    <li><a href="#reference">Справка</a></li>
+                    <li><a href="#literature">Литература</a></li>
+                </ul>
+            </nav>
+            <a href="index.html" class="portal-link">← Портал</a>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <h1 id="overview">Тема 17: Защита на информационни системи — Firewall, IDS/IPS</h1>
+
+            <!-- Overview Section -->
+            <section class="overview-box">
+                <h3>Обзор</h3>
+                <p>Тема 17 разглежда <strong>защитните механизми</strong> на информационни системи. Докато <strong>Тема 16</strong> покрива <strong>заплахите</strong> (вредоносен софтуер, атаки), тази тема се фокусира на <strong>ЗАЩИТАТА</strong> — как да открием и предотвратим атаките чрез защитни стени (firewalls), системи за откривање на прониквания (IDS) и системи за предотвратяване на прониквания (IPS).</p>
+                <p><strong>Свързани теми:</strong> Тема 15 (облачна сигурност), Тема 9 (сигурност на разпределени системи)</p>
+            </section>
+
+            <!-- Section 1: Основи на информационната сигурност -->
+            <section id="section1">
+                <h2>Раздел 1: Основи на информационната сигурност</h2>
+
+                <h3>1.1 CIA триада</h3>
+                <p>Триадата <strong>CIA</strong> е фундаментална за информационната сигурност:</p>
+                <ul>
+                    <li><strong>Confidentiality (Конфиденциалност):</strong> Информацията е достъпна само на упълномощени лица. Пример: шифриране на чувствителни данни.</li>
+                    <li><strong>Integrity (Интегритет):</strong> Данните са точни и неизменени по време на предаване/съхранение. Пример: използване на хеш функции за проверка.</li>
+                    <li><strong>Availability (Достъпност):</strong> Услугите са достъпни на упълномощени потребители в необходимото време. Пример: защита от DDoS атаки.</li>
+                </ul>
+
+                <h3>1.2 Допълнителни свойства</h3>
+                <ul>
+                    <li><strong>Authentication (Аутентификация):</strong> Проверка на идентичността на потребителя или система.</li>
+                    <li><strong>Authorization (Авторизация):</strong> Определяне на правата на достъп после от аутентификация.</li>
+                    <li><strong>Non-repudiation (Неотрицаемост):</strong> Доказване, че лицо е извършило действие (дигитален подпис).</li>
+                    <li><strong>Accountability (Отчетност):</strong> Проследяване на действията на потребителите (логове).</li>
+                </ul>
+
+                <h3>1.3 Defense in Depth (Защита в дълбочина)</h3>
+                <p>Принципът на <strong>Defense in Depth</strong> предполага <strong>множество слоеве на защита</strong>. Ако един слой е пробиен, останалите осигуряват допълнителна защита.</p>
+
+                <div class="mermaid">
+                    graph TD
+                        A["🌐 Интернет"] --> B["🔥 Firewall<br/>Packet Filtering"]
+                        B --> C["🔍 IDS/IPS<br/>Behavior Analysis"]
+                        C --> D["🛡️ HIDS<br/>Host-based Detection"]
+                        D --> E["🔐 Encryption<br/>Data Protection"]
+                        E --> F["🔑 Authentication<br/>Access Control"]
+                        F --> G["📊 Logging &<br/>Monitoring"]
+
+                        style A fill:#ff9999
+                        style B fill:#ffcc99
+                        style C fill:#ffff99
+                        style D fill:#99ff99
+                        style E fill:#99ccff
+                        style F fill:#cc99ff
+                        style G fill:#ff99ff
+                </div>
+
+                <h3>1.4 Ландшафтът на заплахите</h3>
+                <ul>
+                    <li><strong>Вътрешни заплахи:</strong> Служители, които изтичат данни; администратори с свръхдостъп.</li>
+                    <li><strong>Външни заплахи:</strong> Хакери, ботни мрежи, киберпространствени войни.</li>
+                    <li><strong>APT (Advanced Persistent Threat):</strong> Дългосрочни, целенасочени атаки; обикновено от държави или организирана престъпност.</li>
+                    <li><strong>Zero-day:</strong> Експлойти за неизвестни уязвимости (никой не знае за тях досега).</li>
+                </ul>
+            </section>
+
+            <!-- Section 2: Защитни стени -->
+            <section id="section2">
+                <h2>Раздел 2: Защитни стени (Firewalls)</h2>
+
+                <h3>2.1 Дефиниция и предназначение</h3>
+                <div class="definition-box">
+                    <strong>Firewall:</strong> Устройство или софтуер, който контролира входящия и изходящия мрежов трафик, базиран на предварително установени правила за сигурност.
+                </div>
+                <p>Firewalls служат като <strong>граница</strong> между вътрешната мрежа и интернета, позволяват легален трафик и блокират заподозрян.</p>
+
+                <h3>2.2 Типове firewalls</h3>
+
+                <h4>2.2.1 Packet Filtering (Stateless)</h4>
+                <p>Анализира всеки пакет независимо, базиран на IP адрес, порт и протокол. Работи на <strong>Layer 3-4</strong> (мрежа/транспорт).</p>
+                <p><strong>Пример правило:</strong> "Разрешите TCP порт 80 (HTTP) от всяка IP"</p>
+
+                <h4>2.2.2 Stateful Inspection</h4>
+                <p>Отслежда състоянието на свързванията. Разбира, че отговорен пакет е свързан с инициирано свързване и позволява неявно.</p>
+
+                <h4>2.2.3 Application-Level Gateway (Proxy)</h4>
+                <p>Работи на <strong>Layer 7</strong> (приложение). Проверява съдържанието на данните, не само адреса и портът. Може да филтрира по URL, съдържание, и т.н.</p>
+
+                <h4>2.2.4 Next-Generation Firewall (NGFW)</h4>
+                <p>Комбинира всички горни методи + осведомленост за приложения, интегрирана IPS, SSL/TLS инспекция, защита от вредоноса софтуер.</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Тип</th>
+                            <th>Слой</th>
+                            <th>Предимства</th>
+                            <th>Недостатъци</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Packet Filtering</strong></td>
+                            <td>3-4</td>
+                            <td>Бързо, преносимо, просто</td>
+                            <td>Не разбира контекст на свързване</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stateful</strong></td>
+                            <td>3-4</td>
+                            <td>По-интелигентно, разбира свързване</td>
+                            <td>Все още не разбира съдържание</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Proxy/Application</strong></td>
+                            <td>7</td>
+                            <td>Разбира приложението, дълбока инспекция</td>
+                            <td>По-бавно, може да е "bottleneck"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NGFW</strong></td>
+                            <td>3-7</td>
+                            <td>Интегрирана защита, множество функции</td>
+                            <td>По-сложно, скъпо</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2.3 DMZ архитектура</h3>
+                <p>DMZ (<strong>Demilitarized Zone</strong>) е подмрежа между две защитни стени — една към интернета, друга към вътрешната мрежа. Тук се поместват публични услуги (уеб сървъри, поща) отделено от чувствителна вътрешна инфраструктура.</p>
+
+                <div class="mermaid">
+                    graph LR
+                        A["🌐 Интернет"]
+                        B["🔥 Външен<br/>Firewall"]
+                        C["🌉 DMZ<br/>Web Server<br/>Mail Server"]
+                        D["🔥 Вътрешен<br/>Firewall"]
+                        E["🏢 Вътрешна<br/>Мрежа<br/>Database<br/>File Server"]
+
+                        A -->|TCP 80/443| B
+                        B -->|Разрешено| C
+                        C -->|Контролирано| D
+                        D -->|Само<br/>вътрешни| E
+
+                        style A fill:#ff9999
+                        style B fill:#ffcc99
+                        style C fill:#ffff99
+                        style D fill:#ffcc99
+                        style E fill:#99ccff
+                </div>
+
+                <h3>2.4 Firewall правила</h3>
+                <p>Firewall правилата са списък от условия и действия: "Ако пакетът отговаря на условие, тогава направи действие".</p>
+                <ul>
+                    <li><strong>Allow (Разрешено):</strong> Позволи пакета да мине.</li>
+                    <li><strong>Deny (Забранено):</strong> Отхвърли пакета.</li>
+                    <li><strong>Default policy:</strong> Обикновено "Deny all" (заложение е забрана, разрешаваме конкретни трафик) или "Allow all" (заложение е разрешение, забраняваме конкретни трафик). "Deny all" е препоръчвано.</li>
+                </ul>
+            </section>
+
+            <!-- Section 3: IDS -->
+            <section id="section3">
+                <h2>Раздел 3: Системи за откриване на прониквания (IDS)</h2>
+
+                <h3>3.1 Дефиниция</h3>
+                <div class="definition-box">
+                    <strong>IDS (Intrusion Detection System):</strong> Система, която следи мрежовия трафик или активност на хост за признаци на вредоносна активност и издава алерти.
+                </div>
+
+                <h3>3.2 NIDS vs HIDS</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Характеристика</th>
+                            <th>NIDS</th>
+                            <th>HIDS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Местоположение</strong></td>
+                            <td>На мрежата (между firewall и хостове)</td>
+                            <td>На отделния хост (компютър)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Мониторирана площ</strong></td>
+                            <td>Целия мрежов трафик</td>
+                            <td>Само локални процеси и файлове</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Предимства</strong></td>
+                            <td>Вижда всички атаки, независимо от хост</td>
+                            <td>Вижда атаки след шифриране (напр. HTTPS)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Недостатъци</strong></td>
+                            <td>Не вижда атаки в шифрирани каналите</td>
+                            <td>Разход на ресурси на хост; множество инсталации</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>3.3 Методи на откривање</h3>
+
+                <h4>3.3.1 Signature-based (На базата на сигнатури)</h4>
+                <p>Сравнява трафика или активност с известни сигнатури на атаки. Както антивирус, който разпознава познати вредоносни софтуери.</p>
+                <p><strong>Пример:</strong> Snort правило за откривање на SQL injection атака.</p>
+
+                <h4>3.3.2 Anomaly-based (На базата на аномалии)</h4>
+                <p>Установява базова линия на нормално поведение, после откривает отклонения. Може да откривает неизвестни атаки.</p>
+                <p><strong>Пример:</strong> Ако служител обикновено изтегля 100MB дневно, но внезапно иска 10GB, това е аномалия.</p>
+
+                <h4>3.3.3 Specification-based (На базата на спецификация)</h4>
+                <p>Дефинира какво е коректно поведение според протокол или приложение, след което откривает нарушения.</p>
+
+                <h3>3.4 Типове алерти</h3>
+                <ul>
+                    <li><strong>True Positive (TP):</strong> Алерт е издан и е прав (е атака).</li>
+                    <li><strong>False Positive (FP):</strong> Алерт е издан, но е неправ (не е атака).</li>
+                    <li><strong>True Negative (TN):</strong> Няма алерт и е прав (няма атака).</li>
+                    <li><strong>False Negative (FN):</strong> Няма алерт, но би трябвало (е атака, не е откривена).</li>
+                </ul>
+                <p><strong>Метрики:</strong> Чувствителност (Sensitivity/Recall) = TP / (TP + FN); Специфичност (Specificity) = TN / (TN + FP)</p>
+
+                <h3>3.5 Snort</h3>
+                <p><strong>Snort</strong> е популярен NIDS/HIDS софтуер с отворен код. Основни компоненти:</p>
+                <ul>
+                    <li><strong>Packet decoder:</strong> Разбира различните мрежови протоколи.</li>
+                    <li><strong>Preprocessor:</strong> Подготвя данни за анализ.</li>
+                    <li><strong>Detection engine:</strong> Сравнява със сигнатури.</li>
+                    <li><strong>Logging &amp; Alerting:</strong> Издава алерти и логва.</li>
+                </ul>
+                <p><strong>Snort правило пример:</strong></p>
+                <pre>alert tcp $HOME_NET any -&gt; $EXTERNAL_NET 80 (msg:"HTTP GET with SQL"; \
+  flow:established,to_server; content:"GET"; \
+  pcre:"/(\bunion\b|\bselect\b)/i"; \
+  sid:1000001;)</pre>
+            </section>
+
+            <!-- Section 4: IPS -->
+            <section id="section4">
+                <h2>Раздел 4: Системи за предотвратяване на прониквания (IPS)</h2>
+
+                <h3>4.1 Дефиниция</h3>
+                <div class="definition-box">
+                    <strong>IPS (Intrusion Prevention System):</strong> Система като IDS, но с <strong>активно действие</strong> — не само откривает, но блокира атаката.
+                </div>
+
+                <h3>4.2 Inline vs Passive</h3>
+                <ul>
+                    <li><strong>Inline deployment:</strong> IPS е в пътя на мрежовия трафик — може да блокира пакети в реално време. Риск: ako IPS се счупи, целия трафик се прекъсва (single point of failure).</li>
+                    <li><strong>Passive monitoring:</strong> IPS слуша трафика, но не е в пътя. По-безопасно, но забавено блокиране.</li>
+                </ul>
+
+                <h3>4.3 Типове IPS</h3>
+                <ul>
+                    <li><strong>NIPS:</strong> Network-based, същото като NIDS но с блокиране.</li>
+                    <li><strong>HIPS:</strong> Host-based, на отделния хост.</li>
+                    <li><strong>WIPS:</strong> Wireless IPS за безжични мрежи.</li>
+                </ul>
+
+                <h3>4.4 Действия при откривање</h3>
+                <ul>
+                    <li><strong>Drop packet:</strong> Просто отхвърли атакуващия пакет.</li>
+                    <li><strong>Reset connection:</strong> Изпрати RST пакет за прекъсване на свързването.</li>
+                    <li><strong>Block IP:</strong> Добави IP адреса на атакуваща в черния списък.</li>
+                    <li><strong>Reconfigure firewall:</strong> Динамично променяй firewall правилата.</li>
+                    <li><strong>Alert admin:</strong> Изпрати известување на администратор.</li>
+                </ul>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Аспект</th>
+                            <th>IDS</th>
+                            <th>IPS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Функция</strong></td>
+                            <td>Откривање + Алерт</td>
+                            <td>Откривање + Блокиране</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Действие</strong></td>
+                            <td>Пасивно (информира)</td>
+                            <td>Активно (прекъсва)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deployment</strong></td>
+                            <td>Обикновено passive</td>
+                            <td>Inline (в пътя)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Risk</strong></td>
+                            <td>Ниък</td>
+                            <td>Висок (false positive блокира легален трафик)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Overhead</strong></td>
+                            <td>Нисък</td>
+                            <td>По-висок (вътрешна обработка)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 5: Съвременни подходи -->
+            <section id="section5">
+                <h2>Раздел 5: Съвременни подходи</h2>
+
+                <h3>5.1 SIEM (Security Information and Event Management)</h3>
+                <p>SIEM събира логове от всички системи (firewalls, IDS, servers, приложения) в централизирано място, анализира и корелира событията за откривање на нарушения.</p>
+                <p><strong>Примери:</strong> Splunk, IBM QRadar, Elastic SIEM</p>
+
+                <h3>5.2 SOC (Security Operations Center)</h3>
+                <p>Централизирана команда от специалисти, които мониторират, откриват и реагират на инцидентите 24/7. Имат нива на експертиза:</p>
+                <ul>
+                    <li><strong>Tier 1 (L1):</strong> Анализ на алертите, първична реакция.</li>
+                    <li><strong>Tier 2 (L2):</strong> Дълбок анализ, углубени истаги.</li>
+                    <li><strong>Tier 3 (L3):</strong> Експерти, които разбират вътрешната архитектура, разработват нови сигнатури.</li>
+                </ul>
+
+                <h3>5.3 Machine Learning в IDS</h3>
+                <ul>
+                    <li><strong>Supervised Learning:</strong> Обучаване на модел с известни атаки и нормално поведение, след това класификация на нови данни.</li>
+                    <li><strong>Unsupervised Learning:</strong> Открива аномалии без предварително етикетиране на данни (clustering).</li>
+                </ul>
+
+                <h3>5.4 Zero Trust Architecture</h3>
+                <p>"Никога не вярвай, винаги верифицирай". Всяко свързване трябва да бъде аутентифицирано и авторизирано, дори вътрешни връзки. Предполага изоляция на микро-сегменти на мрежата.</p>
+
+                <h3>5.5 NIST Cybersecurity Framework</h3>
+                <p>Национален рамков стандарт за защита на кибер заплахи, с 5 функции:</p>
+                <ol>
+                    <li><strong>Identify (Идентификувай):</strong> Разбери активите и заплахите.</li>
+                    <li><strong>Protect (Защити):</strong> Внедри контроли.</li>
+                    <li><strong>Detect (Открий):</strong> Откривай инцидентите (IDS/IPS).</li>
+                    <li><strong>Respond (Реагирай):</strong> Планирай инцидентни отговори.</li>
+                    <li><strong>Recover (Възстанови):</strong> Възстанови функциите.</li>
+                </ol>
+            </section>
+
+            <!-- Section 6: Криптография -->
+            <section id="section6">
+                <h2>Раздел 6: Криптография (основи)</h2>
+
+                <h3>6.1 Симетрична криптография</h3>
+                <p>Един ключ се използва за шифриране и дешифриране. Пример: AES (Advanced Encryption Standard), DES (Data Encryption Standard — сега морално остарял).</p>
+                <p><strong>Проблем:</strong> Как да разпределим ключа безопасно?</p>
+
+                <h3>6.2 Асиметрична криптография</h3>
+                <p>Два ключа: публичен (за всички) и приватен (само за мен). Ако някой ми шифрира с публичния, само аз мога да дешифрирам с приватния.</p>
+                <p><strong>Пример:</strong> RSA (Rivest-Shamir-Adleman)</p>
+
+                <h3>6.3 Хеш функции</h3>
+                <p>Функция, която преобразува всякакъв вход в фиксирана дължина хеш (отпечатък). Разширяване: един малко входен промени цялото хеша.</p>
+                <p><strong>Примери:</strong> SHA-256 (препоръчан), MD5 (остарял)</p>
+                <p><strong>Приложение:</strong> Проверка на интегритета — ако файла е променен, хешът е различен.</p>
+
+                <h3>6.4 PKI (Public Key Infrastructure)</h3>
+                <p>Система за управление на публични ключове:</p>
+                <ul>
+                    <li><strong>CA (Certificate Authority):</strong> Издава и подписва цифрови сертификати.</li>
+                    <li><strong>Digital Certificate:</strong> Документ, който свързва публичен ключ с личност/организация.</li>
+                    <li><strong>SSL/TLS:</strong> Протокол, който използва PKI за криптирање на уеб трафик.</li>
+                </ul>
+
+                <h3>6.5 VPN (Virtual Private Network)</h3>
+                <p>Технология за криптиране на цялия трафик и пускане през защитен тунел.</p>
+                <ul>
+                    <li><strong>IPSec:</strong> Криптира на слой 3 (IP).</li>
+                    <li><strong>SSL VPN:</strong> Криптира на слой 7 (приложение) — често използвана за отдалечен достъп.</li>
+                </ul>
+            </section>
+
+            <!-- Section 7: Стандарти и регулации -->
+            <section id="section7">
+                <h2>Раздел 7: Стандарти и регулации</h2>
+
+                <h3>7.1 ISO 27001 / 27002</h3>
+                <p><strong>ISO 27001</strong> е стандарт за информационна сигурност, който определя изискванията за ISMS (Information Security Management System). <strong>ISO 27002</strong> предоставя препоръки за контролите.</p>
+
+                <h3>7.2 NIST SP 800-53</h3>
+                <p>Каталог на контролите за федерални информационни системи в САЩ. Широко използван в целия свят.</p>
+
+                <h3>7.3 GDPR (General Data Protection Regulation)</h3>
+                <p>Европейска регулация за защита на данни. Изисква "privacy by design" и сигурност на персоналните данни. Санкции: до 4% от глобалния годишен приход.</p>
+
+                <h3>7.4 PCI DSS (Payment Card Industry Data Security Standard)</h3>
+                <p>Стандарт за безопасност на платежните карти. Всеки, който работи с кредитни карти, трябва да го съответства.</p>
+            </section>
+
+            <!-- Section 8: Примери и практика -->
+            <section id="examples">
+                <h2>Примери и практика</h2>
+
+                <h3>Пример 1: Firewall правила за уеб сървър</h3>
+                <div class="example-box">
+                    <strong>Сценарий:</strong> Малка компания има уеб сървър (IP 192.168.1.10) на DMZ. Администраторите са в подмрежа 10.0.1.0/24. Потребителите на интернета имат достъп до уеб.
+                    <br><br>
+                    <strong>Firewall правила:</strong><br>
+                    <pre>Правило 1: Allow TCP 192.168.1.10:80 от ANY
+Правило 2: Allow TCP 192.168.1.10:443 от ANY
+Правило 3: Allow TCP 192.168.1.10:22 от 10.0.1.0/24 само
+Правило 4: Allow TCP 192.168.1.10:3306 от 192.168.1.0/24 само (Database сървър на DMZ)
+Правило 5: Deny all else (Default policy)</pre>
+                </div>
+
+                <h3>Пример 2: IDS откривање на SQL injection</h3>
+                <div class="example-box">
+                    <strong>Снорт сигнатура за SQL injection:</strong>
+                    <pre>alert http $EXTERNAL_NET any -> $HTTP_SERVERS any (
+  msg:"SQL Injection Attempt - UNION SELECT";
+  flow:established,to_server;
+  content:"GET";
+  http_method;
+  content:"|3f|";
+  http_client_body;
+  pcre:"/(\bunion\b|\bselect\b|\bfrom\b)/i";
+  classtype:web-application-attack;
+  sid:1000123;
+  rev:1;
+)</pre>
+                    <strong>Обяснение:</strong> Правилото търси HTTP GET заявки, които съдържат SQL ключови думи ("UNION", "SELECT", "FROM"). Ако се открие, издава алерт "SQL Injection Attempt".
+                </div>
+
+                <h3>Пример 3: Мрежова архитектура с многослойна защита</h3>
+                <div class="example-box">
+                    <strong>Сценарий:</strong> Средна компания с 500 служители желае защита на информационна система със множество слоеве.
+                    <br><br>
+                    <strong>Архитектура:</strong>
+                    <pre>1. Външен Firewall (Stateful) от ISP граница
+                    ↓
+2. NIDS на DMZ (Snort) — следи входящ трафик
+                    ↓
+3. Вътрешен Firewall (NGFW с IPS)
+                    ↓
+4. HIDS на всеки хост (осimix Agent)
+                    ↓
+5. Криптография: SSL/TLS за всички сървъри
+                    ↓
+6. SIEM (ELK Stack) събира логове и алерти
+                    ↓
+7. SOC следи инцидентите 24/7</pre>
+                    <strong>Предимства:</strong> Ако един слой е пробиен, други още защищават. SIEM комбинира всички алерти за по-добра видимост.
+                </div>
+
+                <div class="mermaid">
+                    graph TD
+                        Internet["🌐 Интернет"]
+                        FW1["🔥 Външен<br/>Stateful Firewall"]
+                        NIDS["🔍 NIDS<br/>Snort"]
+                        DMZ["🌉 DMZ<br/>Web+Mail"]
+                        FW2["🔥 Вътрешен<br/>NGFW + IPS"]
+                        LAN["🏢 Вътрешна LAN"]
+                        HIDS["🛡️ HIDS"]
+                        SIEM["📊 SIEM<br/>Log Collection"]
+                        SOC["👥 SOC<br/>24/7 Monitoring"]
+
+                        Internet --> FW1
+                        FW1 --> NIDS
+                        NIDS --> DMZ
+                        DMZ --> FW2
+                        FW2 --> LAN
+                        LAN --> HIDS
+                        NIDS --> SIEM
+                        FW2 --> SIEM
+                        HIDS --> SIEM
+                        SIEM --> SOC
+
+                        style Internet fill:#ff9999
+                        style FW1 fill:#ffcc99
+                        style NIDS fill:#ffff99
+                        style DMZ fill:#ffffcc
+                        style FW2 fill:#ffcc99
+                        style LAN fill:#99ff99
+                        style HIDS fill:#99ff99
+                        style SIEM fill:#99ccff
+                        style SOC fill:#cc99ff
+                </div>
+            </section>
+
+            <!-- Flashcards -->
+            <section id="flashcards">
+                <h2>Карти за учене (Flashcards)</h2>
+                <p>Кликни на карта за обръщане:</p>
+                <div class="flashcards-container">
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Какво е CIA триада?</strong></div>
+                        <div class="flashcard-back">Confidentiality (Конфиденциалност), Integrity (Интегритет), Availability (Достъпност) — три основни стълба на информационната сигурност.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Разлика между Firewall и IDS?</strong></div>
+                        <div class="flashcard-back">Firewall контролира входящ/изходящ трафик по правила (профилактика). IDS следи трафика и издава алерти за заподозрена активност (откривање).</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>NIDS vs HIDS — кой е кой?</strong></div>
+                        <div class="flashcard-back">NIDS (Network-based) следи мрежовия трафик. HIDS (Host-based) следи активност на отделния хост (процеси, файлове).</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Какво е IPS?</strong></div>
+                        <div class="flashcard-back">Intrusion Prevention System — като IDS, но с активно действие: не само откривает, но блокира атаките (drop, reset, block IP).</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Какво е DMZ?</strong></div>
+                        <div class="flashcard-back">Demilitarized Zone — подмрежа между две защитни стени, където се поместват публични услуги (web, mail) отделено от вътрешната мрежа.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Defense in Depth?</strong></div>
+                        <div class="flashcard-back">Принцип: множество слоеве на защита. Ако един е пробиен, останалите продължават да защищават. Примери: Firewall + IDS + HIDS + Encryption.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Signature-based vs Anomaly-based IDS?</strong></div>
+                        <div class="flashcard-back">Signature-based: Сравнява със известни атаки (като антивирус). Anomaly-based: Откривает отклонения от нормално поведение (по-добро за новите атаки).</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Какво е False Positive?</strong></div>
+                        <div class="flashcard-back">Алерт, издан за заподозрена активност, която се оказва обаче легална. Пример: IDS издава алерт за SQL query, но е валидна админ операция.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Что такое SIEM?</strong></div>
+                        <div class="flashcard-back">Security Information and Event Management — система, която събира логове от всички системи (firewalls, IDS, servers), анализира и корелира за откривање на нарушения.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Zero Trust Architecture?</strong></div>
+                        <div class="flashcard-back">"Никога не вярвай, винаги верифицирай". Всяко свързване трябва да е аутентифицирано и авторизирано, дори вътрешни връзки.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Snort пример?</strong></div>
+                        <div class="flashcard-back">Популярен NIDS софтуер. Правила сравняват трафика със сигнатури. Пример правило откривает SQL injection атаки.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>NIST CSF — 5-те функции?</strong></div>
+                        <div class="flashcard-back">Identify (идентифицирай активи), Protect (защити с контроли), Detect (откривай инцидентите), Respond (реагирай), Recover (възстанови).</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Симетрична vs Асиметрична криптография?</strong></div>
+                        <div class="flashcard-back">Симетрична: един ключ за всички. Асиметрична: два ключа (публичен и приватен). Асиметрична е по-безопасна за ключ разпространение.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>PKI и SSL/TLS?</strong></div>
+                        <div class="flashcard-back">PKI управлява публични ключове и цифрови сертификати. SSL/TLS използва PKI за криптиране на уеб трафик (HTTPS).</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Reference -->
+            <section id="reference">
+                <h2>Бърза справка</h2>
+                <div class="quick-ref">
+                    <dl>
+                        <dt>ACL (Access Control List)</dt>
+                        <dd>Списък от разрешения/забрани за определен ресурс.</dd>
+
+                        <dt>APT (Advanced Persistent Threat)</dt>
+                        <dd>Дългосрочна целенасочена атака, обикновено от държава или организирана престъпност.</dd>
+
+                        <dt>Availability</dt>
+                        <dd>Услугите са достъпни на упълномощени потребители в необходимото време.</dd>
+
+                        <dt>Baseline</dt>
+                        <dd>Установена норма на поведение или производителност.</dd>
+
+                        <dt>Confidentiality</dt>
+                        <dd>Информацията е достъпна само на упълномощени лица.</dd>
+
+                        <dt>DMZ</dt>
+                        <dd>Демилитаризирана зона — подмрежа между две защитни стени.</dd>
+
+                        <dt>False Negative</dt>
+                        <dd>Атака, която не е откривена (алерт не е издан).</dd>
+
+                        <dt>False Positive</dt>
+                        <dd>Алерт за неатака (легална активност).</dd>
+
+                        <dt>Firewall</dt>
+                        <dd>Устройство/софтуер, който контролира входящ/изходящ трафик.</dd>
+
+                        <dt>Hash</dt>
+                        <dd>Функция, която преобразува вход в фиксирана дължина отпечатък.</dd>
+
+                        <dt>HIDS</dt>
+                        <dd>Host-based Intrusion Detection System — на отделния хост.</dd>
+
+                        <dt>IDS</dt>
+                        <dd>Intrusion Detection System — откривает атаки.</dd>
+
+                        <dt>Inline</dt>
+                        <dd>В пътя на мрежовия трафик (IPS deployment).</dd>
+
+                        <dt>Integrity</dt>
+                        <dd>Данните са точни и неизменени.</dd>
+
+                        <dt>IPS</dt>
+                        <dd>Intrusion Prevention System — откривает и блокира атаки.</dd>
+
+                        <dt>NIDS</dt>
+                        <dd>Network-based Intrusion Detection System — на мрежата.</dd>
+
+                        <dt>PKI</dt>
+                        <dd>Public Key Infrastructure — управление на публични ключове.</dd>
+
+                        <dt>RSA</dt>
+                        <dd>Асиметричен криптографски алгоритъм.</dd>
+
+                        <dt>SHA-256</dt>
+                        <dd>Криптографска хеш функция.</dd>
+
+                        <dt>SIEM</dt>
+                        <dd>Security Information and Event Management — събира логове и анализира.</dd>
+
+                        <dt>Snort</dt>
+                        <dd>Популярен NIDS софтуер с отворен код.</dd>
+
+                        <dt>SOC</dt>
+                        <dd>Security Operations Center — 24/7 мониторирај команда.</dd>
+
+                        <dt>SQL Injection</dt>
+                        <dd>Атака, при която враг вмъква SQL код в приложение.</dd>
+
+                        <dt>Stateful</dt>
+                        <dd>Firewall, който проследява състоянието на свързванията.</dd>
+
+                        <dt>SSL/TLS</dt>
+                        <dd>Протокол за криптиране на уеб трафик.</dd>
+
+                        <dt>True Negative</dt>
+                        <dd>Няма алерт и няма атака (правилно).</dd>
+
+                        <dt>True Positive</dt>
+                        <dd>Алерт е издан и е прав (е атака).</dd>
+
+                        <dt>VPN</dt>
+                        <dd>Virtual Private Network — криптиране и тунелиране на трафик.</dd>
+
+                        <dt>Zero-day</dt>
+                        <dd>Експлойт за неизвестна уязвимост.</dd>
+
+                        <dt>Zero Trust</dt>
+                        <dd>"Никога не вярвай, винаги верифицирай" архитектура.</dd>
+                    </dl>
+                </div>
+            </section>
+
+            <!-- Links to related topics -->
+            <section class="links-section">
+                <h3>Свързани теми</h3>
+                <a href="../16-Вредоносен-софтуер/Tema-16.html">← Тема 16: Вредоносен софтуер (Malware)</a>
+                <a href="../15-Облачна-сигурност/Tema-15.html">← Тема 15: Облачна сигурност</a>
+                <a href="../9-Сигурност-на-разпределени-системи/Tema-9.html">← Тема 9: Сигурност на разпределени системи</a>
+            </section>
+
+            <!-- Literature -->
+            <section id="literature">
+                <h2>Литература</h2>
+                <div class="literature">
+                    <ol>
+                        <li>Al-Ateeq, A. (2021). <em>Cybersecurity Fundamentals: Firewalls, IDS/IPS, and Network Defense</em>. Technical Publications.</li>
+                        <li>Coulibaly, K. (2020). <em>Intrusion Detection and Prevention Systems: Practical Guide</em>. Security Press International.</li>
+                        <li>Stallings, W., &amp; Brown, L. (2018). <em>Computer Security: Principles and Practice</em> (4th ed.). Pearson.</li>
+                        <li>Stallings, W. (2017). <em>Cryptography and Network Security: Principles and Practice</em> (7th ed.). Pearson.</li>
+                        <li>NIST. (2023). <em>Cybersecurity Framework Version 2.0</em>. National Institute of Standards and Technology.</li>
+                        <li>NIST. (2013). <em>Security and Privacy Controls for Federal Information and Information Systems (SP 800-53 Rev. 4)</em>.</li>
+                        <li>ISO. (2022). <em>ISO/IEC 27001:2022 Information security management systems</em>.</li>
+                        <li>ISO. (2022). <em>ISO/IEC 27002:2022 Information security, cybersecurity and privacy protection — Code of practice</em>.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd; font-size: 14px; color: #666;">
+                <p><strong>Изготвено за:</strong> PhD Exam, IMI-BAN, 4-часова писмена екзаменационна работа, ~2 часа за тема</p>
+                <p><strong>Дата:</strong> 2026-03-20 | <strong>Статус:</strong> Полна версия</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Sidebar active link highlighting
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Mermaid initialization
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.contentLoaded();
+    </script>
+</body>
+</html>

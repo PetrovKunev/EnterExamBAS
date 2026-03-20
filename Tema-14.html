@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 14: LMS и LCMS системи - Подготовка за изпит</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #fdfaf5;
+            color: #1f2937;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 270px;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f2744 0%, #1a3a5c 100%);
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .sidebar h2 {
+            color: #fdfaf5;
+            font-size: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2563a8;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar nav ul li a {
+            color: #cff0f9;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .sidebar nav ul li a:hover {
+            background: rgba(37, 99, 168, 0.3);
+            color: #fff;
+            padding-left: 16px;
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 270px;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 90;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .navbar a {
+            color: #2563a8;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #0f2744;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 270px;
+            margin-top: 60px;
+            flex: 1;
+            max-width: calc(100% - 270px);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            background: #fdfaf5;
+        }
+
+        /* Typography */
+        h1 {
+            color: #0f2744;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #2563a8;
+        }
+
+        h2 {
+            color: #2563a8;
+            font-size: 24px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            border-left: 4px solid #166534;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #1a3a5c;
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        h4 {
+            color: #374151;
+            font-size: 16px;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #374151;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        strong {
+            color: #0f2744;
+            font-weight: 600;
+        }
+
+        em {
+            color: #2563a8;
+            font-style: italic;
+        }
+
+        /* Boxes and Highlights */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(37, 99, 168, 0.08), rgba(22, 101, 52, 0.08));
+            border-left: 4px solid #2563a8;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .definition-box strong {
+            color: #0f2744;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .key-point {
+            background: linear-gradient(135deg, rgba(91, 33, 182, 0.08), rgba(153, 27, 27, 0.08));
+            border-left: 4px solid #5b21b6;
+            padding: 14px;
+            margin: 16px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .example-box {
+            background: rgba(156, 163, 175, 0.05);
+            border: 1px dashed #9ca3af;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .example-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        /* Code/Monospace */
+        code {
+            background: rgba(15, 39, 68, 0.08);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 13px;
+            color: #0f2744;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        thead {
+            background: linear-gradient(135deg, #0f2744 0%, #1a3a5c 100%);
+            color: white;
+        }
+
+        th {
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #2563a8;
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: rgba(253, 250, 245, 0.5);
+        }
+
+        tbody tr:hover {
+            background: rgba(37, 99, 168, 0.05);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 24px;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            background: #2563a8;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px #2563a8;
+        }
+
+        .timeline-content h4 {
+            margin-top: 0;
+            color: #0f2744;
+        }
+
+        .timeline-content p {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 16px;
+            transition: all 0.3s;
+        }
+
+        .comparison-card:hover {
+            border-color: #2563a8;
+            box-shadow: 0 4px 12px rgba(37, 99, 168, 0.15);
+        }
+
+        .comparison-card h4 {
+            color: #2563a8;
+            margin-top: 0;
+            border-bottom: 2px solid #166534;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .comparison-card ul {
+            margin-left: 15px;
+        }
+
+        .comparison-card li {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        /* Flashcard Styles */
+        .flashcards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .flashcard {
+            background: white;
+            border: 2px solid #2563a8;
+            border-radius: 6px;
+            padding: 20px;
+            min-height: 200px;
+            cursor: pointer;
+            transition: all 0.4s;
+            perspective: 1000px;
+        }
+
+        .flashcard:hover {
+            box-shadow: 0 8px 24px rgba(37, 99, 168, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .flashcard-question {
+            color: #0f2744;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 12px;
+            min-height: 40px;
+        }
+
+        .flashcard-answer {
+            color: #166534;
+            font-size: 13px;
+            line-height: 1.5;
+            max-height: 130px;
+            overflow-y: auto;
+        }
+
+        /* Reference Table */
+        .reference-table {
+            background: linear-gradient(135deg, rgba(15, 39, 68, 0.05), rgba(37, 99, 168, 0.05));
+            border-left: 4px solid #0f2744;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .reference-table strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #0f2744;
+        }
+
+        /* SVG/Diagram Container */
+        .diagram {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        /* Mermaid Styles */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            background: white;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid #2563a8;
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #fdfaf5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2563a8;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0f2744;
+        }
+
+        /* Print Styles */
+        @media print {
+            .sidebar, .navbar {
+                display: none;
+            }
+            .main {
+                margin-left: 0;
+                margin-top: 0;
+            }
+            h2 {
+                page-break-after: avoid;
+            }
+            table, .key-point, .definition-box {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .navbar {
+                left: 240px;
+            }
+            .main {
+                margin-left: 240px;
+            }
+            .container {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                padding: 15px;
+            }
+            .navbar {
+                left: 200px;
+            }
+            .main {
+                margin-left: 200px;
+            }
+            .container {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <h2>📚 Съдържание</h2>
+        <nav>
+            <ul>
+                <li><a href="#overview">Обзор</a></li>
+                <li><a href="#section1">1. Електронно обучение</a></li>
+                <li><a href="#section2">2. LMS</a></li>
+                <li><a href="#section3">3. LCMS</a></li>
+                <li><a href="#section4">4. Стандарти</a></li>
+                <li><a href="#section5">5. Learning Objects</a></li>
+                <li><a href="#section6">6. ITS и адаптивно</a></li>
+                <li><a href="#section7">7. Тенденции</a></li>
+                <li><a href="#worked">Работен пример</a></li>
+                <li><a href="#flashcards">Flashcards</a></li>
+                <li><a href="#reference">Бърза справка</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Top Navigation -->
+    <nav class="navbar">
+        <a href="../../index.html">← Портал</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <h1>Тема 14: LMS и LCMS системи</h1>
+            <div class="subtitle">Подготовка за 4-часов писмен PhD изпит на ИМИ-БАН | Съответствие с дисертацията (ITS)</div>
+
+            <!-- OVERVIEW -->
+            <section id="overview">
+                <h2>Обзор и контекст</h2>
+
+                <p>Тема 14 е <strong>критична за вашата дисертация</strong> по Intelligent Tutoring Systems. LMS (Learning Management Systems) и LCMS (Learning Content Management Systems) са основната инфраструктура, на която работят всички интелигентни системи за обучение. Изпитната комисия ще очаква дълбоко разбиране на:</p>
+
+                <ul>
+                    <li>Как LMS управляват обучаващите се и процеса на обучение</li>
+                    <li>Как LCMS организират и управляват учебното съдържание</li>
+                    <li>Как ITS (вашата специалност) се интегрирани в LMS/LCMS екосистемата</li>
+                    <li>Стандартите (SCORM, xAPI, LTI) които позволяват интеграция</li>
+                </ul>
+
+                <div class="key-point">
+                    <strong>🔗 Връзки с други теми:</strong><br>
+                    • Тема 10-11: Machine Learning в образованието - аналитика и прогнози на основата на LMS данни<br>
+                    • Тема 13: Цифрови библиотеки - források на учебно съдържание за LCMS<br>
+                    • Тема 15: Облачни технологии - хостване и масштабируемост на LMS/LCMS
+                </div>
+            </section>
+
+            <!-- SECTION 1: e-Learning -->
+            <section id="section1">
+                <h2>Раздел 1: Електронно обучение (e-Learning)</h2>
+
+                <h3>1.1 Определение и еволюция</h3>
+
+                <p>Електронното обучение е <strong>процес на придобиване на знания и умения с помощта на цифрови технологии</strong>. Еволюцията показва развитието на технологиите и педагогическите подходи:</p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>CBT (Computer-Based Training) | 1980-1990-е</h4>
+                            <p>Обучение на персонални компютри, линеен поток, обикновено CD-ROM. Без интернет комуникация.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>WBT (Web-Based Training) | 1990-е - 2000-е</h4>
+                            <p>Обучение през браузър, централизирано хранилище, първите LMS системи.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>e-Learning | 2000-е - 2010-е</h4>
+                            <p>Интернет-базирано обучение, интерактивно съдържание, синхронна и асинхронна комуникация, LMS като стандарт.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>m-Learning | 2010-е - 2020-е</h4>
+                            <p>Мобилно обучение, адаптирано съдържание, микроучене,响应式дизайн.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>Adaptive Learning | 2015-е</h4>
+                            <p>AI-управлявано адаптивно обучение, персонализирани пътища, интелигентни препоръки.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>1.2 Модалности на електронното обучение</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Тип</th>
+                            <th>Характеристики</th>
+                            <th>Примери</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Синхронно (Synchronous)</strong></td>
+                            <td>Едновременна участие, реално време, директна интерция</td>
+                            <td>Видео конференция, Webinar, Live чат</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Асинхронно (Asynchronous)</strong></td>
+                            <td>Независимо време, преиграване, самостоятелен темп</td>
+                            <td>Записани видеа, форуми, самостоятелни модули</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Blended Learning</strong></td>
+                            <td>Комбинация от лице-в-лице и онлайн елементи</td>
+                            <td>Лекции в кампус + онлайн задачи</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hybrid Learning</strong></td>
+                            <td>Някои студенти онлайн, някои в класната стая</td>
+                            <td>COVID-era обучение, едновременна класна стая и Zoom</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>1.3 Педагогични подходи в дигиталния контекст</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>Конструктивизъм</h4>
+                        <p>Студентите конструират своето собствено разбиране чрез активна участия. LMS поддържа чрез интерактивни дейности, форуми, проекти.</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>Конективизъм</h4>
+                        <p>Обучението като навигиране на мреж от информация и хора. Възлиза от социални мрежи, блогове, колаборативни инструменти.</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>Bloom's Taxonomy</h4>
+                        <p>6 нива: Remember → Understand → Apply → Analyze → Evaluate → Create. Дигиталните инструменти позволяват последователна оценка.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: LMS -->
+            <section id="section2">
+                <h2>Раздел 2: LMS (Learning Management System)</h2>
+
+                <h3>2.1 Определение</h3>
+
+                <div class="definition-box">
+                    <strong>LMS (Learning Management System)</strong><br>
+                    Software system за управление на процеса на обучение: доставка на съдържание, проследяване на прогреса, администрация на учебници, оценяване и докладване. Централна платформа за управление на обучаващите се и техния учебен процес.
+                </div>
+
+                <h3>2.2 Основни функции на LMS</h3>
+
+                <ul>
+                    <li><strong>Course Management:</strong> Създаване, организиране, редактиране на курсове. Структура: модули → уроци → дейности.</li>
+                    <li><strong>User Enrollment:</strong> Регистрация на студенти, администратори, преподаватели. Управление на роли и права.</li>
+                    <li><strong>Content Delivery:</strong> Доставка на различни типове съдържание: документи, видеа, тестове, интерактивни модули.</li>
+                    <li><strong>Communication Tools:</strong> Форуми, съобщения, видео конференция, обратна връзка.</li>
+                    <li><strong>Assessment & Testing:</strong> Тестове, куизи, задачи, портфолио. Автоматично оценяване и маркиране.</li>
+                    <li><strong>Grading & Reporting:</strong> Електронна книга на оценки, докладване на прогреса, аналитика на обучение.</li>
+                    <li><strong>Progress Tracking:</strong> Проследяване на завършване на дейности, време на учене, достъп до ресурси.</li>
+                    <li><strong>Integration:</strong> Връзка със външни инструменти (e-mail, видео платформи, библиотеки).</li>
+                </ul>
+
+                <h3>2.3 Архитектура на LMS</h3>
+
+                <p><strong>Web-Based Architecture:</strong> Обикновено трислойна архитектура (3-tier):</p>
+                <ul>
+                    <li><strong>Presentation Layer:</strong> Браузър-базиран интерфейс (HTML, CSS, JavaScript). Лесна достъп, без инсталация.</li>
+                    <li><strong>Application Layer:</strong> Бизнес логика, управление на потребители, обработка на дейности. Языки: PHP, Python, Java, C#.</li>
+                    <li><strong>Data Layer:</strong> База данни за съхранение на потребители, курсове, резултати, съдържание. SQL бази (MySQL, PostgreSQL).</li>
+                </ul>
+
+                <p><strong>Модулна архитектура:</strong> LMS системи са разработени с модули (plugins), които могат да се добавят или премахват:</p>
+                <ul>
+                    <li>Quiz Module</li>
+                    <li>Assignment Module</li>
+                    <li>Forum Module</li>
+                    <li>Chat Module</li>
+                    <li>Gradebook Module</li>
+                    <li>Video Streaming Module</li>
+                </ul>
+
+                <h3>2.4 Популярни LMS платформи</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>LMS</th>
+                            <th>Тип</th>
+                            <th>Основни характеристики</th>
+                            <th>Приложение</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Moodle</strong></td>
+                            <td>Open Source</td>
+                            <td>Свободен, лесно разширяем, силна общност, хост на собствения сървър</td>
+                            <td>Университети, както развиващи се, така и развити страни</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Blackboard</strong></td>
+                            <td>Proprietary</td>
+                            <td>Корпоративен, отличен поддръжка, интегрирана аналитика, скъп</td>
+                            <td>Голям амерински университети</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Canvas</strong></td>
+                            <td>Proprietary (Open API)</td>
+                            <td>Облачен, приложение-ориентиран, добра UX, модерна архитектура</td>
+                            <td>K-12 и университети, растящо използване</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Google Classroom</strong></td>
+                            <td>Cloud-Based</td>
+                            <td>Прост, интегриран с Google Suite, безплатен, ограничена функционалност</td>
+                            <td>K-12 образование, базови потребности</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Microsoft Teams for Education</strong></td>
+                            <td>Cloud-Based</td>
+                            <td>Интегриран с Office 365, синхронна и асинхронна комуникация, разширения</td>
+                            <td>Корпоративни обучения, университети</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Brightspace (D2L)</strong></td>
+                            <td>Proprietary</td>
+                            <td>Мощна аналитика, адаптивни инструменти, облачен, полнофункционален</td>
+                            <td>Университети по cвета</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2.5 Moodle: Дълбока анализ</h3>
+
+                <p><strong>Moodle (Modular Object-Oriented Dynamic Learning Environment)</strong> е най-използваният open-source LMS в света.</p>
+
+                <h4>Архитектура на Moodle:</h4>
+                <ul>
+                    <li><strong>Core System:</strong> PHP приложение, работи на всеки сървър с PHP и SQL.</li>
+                    <li><strong>Course Structure:</strong> Курс → Раздели (Topics/Weeks) → Дейности и ресурси.</li>
+                    <li><strong>Activity Types:</strong> Assignment, Forum, Quiz, Lesson, Scorm, Choice, Chat, Database, Feedback, Glossary, Wiki, Workshop.</li>
+                    <li><strong>Roles System:</strong> Administrator, Course creator, Teacher, Non-editing teacher, Student, Guest.</li>
+                    <li><strong>Gradebook:</strong> Централизирана оценка, категории, тежести, скали.</li>
+                    <li><strong>Plugin System:</strong> Content banks, question types, auth plugins, export formats.</li>
+                </ul>
+
+                <h4>Quiz Engine в Moodle:</h4>
+                <ul>
+                    <li>Множество типове въпроси: Multiple choice, True/False, Matching, Short answer, Essay, Numerical, Drag-drop, Calculated</li>
+                    <li>Резултати с обратна връзка</li>
+                    <li>Условен достъп - куиз отключва следващ ресурс при постигане на определена оценка</li>
+                    <li>SCORM и QTI интеграция</li>
+                </ul>
+
+                <div class="example-box">
+                    <strong>Пример: Создание на курс в Moodle</strong><br>
+                    1. Администратор создава курс "Python за начинаещи"<br>
+                    2. Преподавател добавя 5 раздела (седмиците)<br>
+                    3. Всеки раздел с: видео лекция (ресурс), форум за дискусия, задача за писане на код, куиз с 10 въпроса<br>
+                    4. Студентите се регистрират, видят съдържанието по сферата, отговарят на куиз<br>
+                    5. Система автоматично оценява куизи, преподавателят оценява задачите<br>
+                    6. Gradebook показва прогрес на всеки студент
+                </div>
+            </section>
+
+            <!-- SECTION 3: LCMS -->
+            <section id="section3">
+                <h2>Раздел 3: LCMS (Learning Content Management System)</h2>
+
+                <h3>3.1 Определение</h3>
+
+                <div class="definition-box">
+                    <strong>LCMS (Learning Content Management System)</strong><br>
+                    Software system за управление на учебното СЪДЪРЖАНИЕ: создаване, съхранение, версионирането, преиспользване и дистрибуция на учебни обекти. Фокусира се на съдържанието, не на обучаващите се.
+                </div>
+
+                <h3>3.2 Основна разлика: LMS срещу LCMS</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Аспект</th>
+                            <th>LMS</th>
+                            <th>LCMS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Фокус</strong></td>
+                            <td>Управление на ОБУЧАВАЩИТЕ СЕ</td>
+                            <td>Управление на СЪДЪРЖАНИЕТО</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Основна функция</strong></td>
+                            <td>Доставка на курсове, проследяване на обучение</td>
+                            <td>Создаване, съхранение, преиспользване на съдържание</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Потребители</strong></td>
+                            <td>Студенти, преподаватели, администратори</td>
+                            <td>Автори на съдържание, редактори, дизайнери</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Основни инструменти</strong></td>
+                            <td>Enrollment, tracking, assessment, communication</td>
+                            <td>Authoring, versioning, workflow, metadata</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Съхранилище</strong></td>
+                            <td>Информация за студенти и резултати</td>
+                            <td>Информация за съдържание и учебни обекти</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Вход</strong></td>
+                            <td>LMS → Брауър → Студент</td>
+                            <td>LCMS → Отговорен на съдържание → LMS → Студент</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>3.3 Функции на LCMS</h3>
+
+                <ul>
+                    <li><strong>Content Authoring:</strong> Инструменти за създаване на интерактивно съдържание (видеа, квизи, слайдове, симулации) без кодиране.</li>
+                    <li><strong>Content Repository:</strong> Централизирано хранилище на всички учебни материали, един версии, интегрирана търсене.</li>
+                    <li><strong>Reusable Learning Objects (RLOs):</strong> Модулни елементи, които могат да се използват в множество курсове.</li>
+                    <li><strong>Versioning & Control:</strong> Контрол на верзиите, отмяна на промени, управление на历史.</li>
+                    <li><strong>Workflow Management:</strong> Одобрение преди публикуване, сортирки чернови, рецензия.</li>
+                    <li><strong>Metadata Management:</strong> Етикетиране на съдържание с описание, ключови думи, IEEE LOM метаданни.</li>
+                    <li><strong>Multi-format Support:</strong> Експорт в различни формати (SCORM, xAPI, PPTX, PDF).</li>
+                    <li><strong>Collaboration Tools:</strong> Възможност на множество автори да работят на едно съдържание.</li>
+                </ul>
+
+                <h3>3.4 Примери на LCMS системи</h3>
+
+                <ul>
+                    <li><strong>Adobe Captivate Prime:</strong> Proprietary, мощна за интерактивен контент, силна интеграция със Adobe Suite.</li>
+                    <li><strong>Xyleme:</strong> Облачен LCMS, фокус на оперативни и технически съдържание, висока автоматизация.</li>
+                    <li><strong>eXact Learning LCMS:</strong> Акцент на управление на версии и workflow, използвано в голямом корпоративи.</li>
+                    <li><strong>Trivantis Lectora Inspire:</strong> Authoring tool + LCMS функции, популярен за eLearning разработчици.</li>
+                </ul>
+
+                <h3>3.5 Сравнение: LMS vs LCMS vs CMS</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Критерий</th>
+                            <th>LMS</th>
+                            <th>LCMS</th>
+                            <th>CMS (общо)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Основна цел</strong></td>
+                            <td>Управление на обучение</td>
+                            <td>Управление на учебно съдържание</td>
+                            <td>Управление на всякакво съдържание</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Целева аудитория</strong></td>
+                            <td>Образователни институции</td>
+                            <td>Корпоративни обучения</td>
+                            <td>Публикуване на вебсайтове</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fokus на оценка</strong></td>
+                            <td>Да, обширна оценка</td>
+                            <td>Ограничена, фокус на създаване</td>
+                            <td>Не, акцент на публикуване</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fokus на сотрудничество</strong></td>
+                            <td>Студент-преподавател</td>
+                            <td>Автор-редактор-рецензент</td>
+                            <td>Редактор-издавател</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Versioning</strong></td>
+                            <td>Базична</td>
+                            <td>Продвинута с workflow</td>
+                            <td>Средна</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Metadata</strong></td>
+                            <td>Базична (LOM-подобна)</td>
+                            <td>Продвинута (IEEE LOM)</td>
+                            <td>Минимална</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reusability</strong></td>
+                            <td>На ниво курс</td>
+                            <td>На ниво микро-обект</td>
+                            <td>Ограничена</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SCORM/xAPI support</strong></td>
+                            <td>Да</td>
+                            <td>Да, често като експорт</td>
+                            <td>Не</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Примери</strong></td>
+                            <td>Moodle, Canvas, Blackboard</td>
+                            <td>Xyleme, Captivate Prime</td>
+                            <td>WordPress, Drupal, Joomla</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SECTION 4: Standards -->
+            <section id="section4">
+                <h2>Раздел 4: Стандарти за електронно обучение</h2>
+
+                <p>Стандартите позволяват интероперативност между различните LMS и LCMS системи, както и преносимост на съдържание и резултатите от обучение.</p>
+
+                <h3>4.1 SCORM (Sharable Content Object Reference Model)</h3>
+
+                <div class="definition-box">
+                    <strong>SCORM</strong><br>
+                    Стандартен набор от спецификации за упълномощаване на съдържанието взаимодействаи между учебни обекти и обучаващите системи. SCORM дефинира как съдържанието трябва да бъде структурирано, пакетирано и как да се върви комуникация между LMS и съдържанието.
+                </div>
+
+                <h4>Версии на SCORM:</h4>
+                <ul>
+                    <li><strong>SCORM 1.2:</strong> Стара верзия (2001), но все още използвана. RTE (Run-Time Environment) използва древ на взаимност.</li>
+                    <li><strong>SCORM 2004:</strong> Модерна верзия (2004, обновена 2009). Подобрена RTE, поддръжка на отношения между SCO, навигация.</li>
+                </ul>
+
+                <h4>Ключови компоненти SCORM:</h4>
+                <ul>
+                    <li><strong>SCO (Sharable Content Object):</strong> Единица на обучение, която може да се доставяло в различни LMS. Обикновено HTML файл със JavaScript.</li>
+                    <li><strong>Content Aggregation Model (CAM):</strong> Как съдържанието е организирано, маниест.xml файл описва структурата.</li>
+                    <li><strong>Run-Time Environment (RTE):</strong> Комуникация между SCO и LMS през JavaScript API. LMS следи прогреса, SCORM обект отправя "закрепени" данни.</li>
+                    <li><strong>Sequencing and Navigation (SN):</strong> Дефиниране на как обучаващия се преминава между SCO.</li>
+                </ul>
+
+                <h4>Пример: SCORM пакет</h4>
+                <pre><code>course.zip
+├── imsmanifest.xml (описание на структура)
+├── index.html (SCO 1)
+├── lesson2.html (SCO 2)
+├── assets/
+│   ├── video.mp4
+│   ├── images/
+│   └── css/
+└── metadata/</code></pre>
+
+                <h3>4.2 xAPI (Experience API / Tin Can)</h3>
+
+                <div class="definition-box">
+                    <strong>xAPI (Experience API)</strong><br>
+                    Модерен стандарт, който превосходи SCORM ограничения. Позволява записване на всякакъв вид учебни преживявания (не само курс завершимост), както в интернет, така и вън от интернет среди. Данните се съхранява в LRS (Learning Record Store).
+                </div>
+
+                <h4>Actor-Verb-Object (xAPI изявления):</h4>
+                <p>xAPI базира се на просто, мощно изявление:</p>
+                <ul>
+                    <li><strong>Actor:</strong> Кой? (Студент ID, профил)</li>
+                    <li><strong>Verb:</strong> Какво? (attempted, completed, passed, commented, shared)</li>
+                    <li><strong>Object:</strong> На какво? (курс, видео, форум, игра, работата реално обект)</li>
+                </ul>
+
+                <p><strong>Пример на xAPI изявление (JSON):</strong></p>
+                <code>{ "actor": { "mbox": "mailto:student@example.com" }, "verb": { "id": "http://adlnet.gov/expapi/verbs/completed" }, "object": { "id": "http://example.com/course/python101" } }</code>
+
+                <h4>LRS (Learning Record Store):</h4>
+                <ul>
+                    <li>Централна база за съхранение на xAPI изявления</li>
+                    <li>Может да бъде част от LMS или на отделен сървър</li>
+                    <li>Позволява аналитика на цялото обучение, дори извън LMS</li>
+                </ul>
+
+                <h4>Предимства на xAPI спрямо SCORM:</h4>
+                <ul>
+                    <li>Записва всякакви действия, не само "завершено" или "не завършено"</li>
+                    <li>Работи с мобилни приложения и вън от интернет среди</li>
+                    <li>Подобрена аналитика и персонализация</li>
+                    <li>Лесна интеграция с външни инструменти</li>
+                </ul>
+
+                <h3>4.3 IMS Стандарти</h3>
+
+                <h4>LTI (Learning Tools Interoperability):</h4>
+                <p>Стандард на IMS Global за интеграция на външни инструменти в LMS.</p>
+                <ul>
+                    <li><strong>LTI 1.0/1.1:</strong> Старо, требучок за OAuth</li>
+                    <li><strong>LTI 1.3/Advantage:</strong> Модерно, с LTI Names and Roles Provisioning Service (NRPS), деност преминаване на граци</li>
+                    <li><strong>Приложение:</strong> Съединяване на Google Drive в Canvas, или внешен куиз инструмент в Moodle</li>
+                </ul>
+
+                <h4>Common Cartridge:</h4>
+                <p>Стандартен формат за пакетирането на курсове. Позволява експорт на курс от един LMS и импорт в друг без загуба на структура.</p>
+
+                <h4>QTI (Question and Test Interoperability):</h4>
+                <p>Стандард за описание на тестове и въпроси, независимо от LMS.</p>
+
+                <h3>4.4 IEEE LOM (Learning Object Metadata)</h3>
+
+                <p>Стандард за описание на учебните обекти с метаданни. Позволява търсене и открийване на учебни ресурси.</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Категория</th>
+                            <th>Примери на елементи</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>General</strong></td>
+                            <td>Identifier, Title, Language, Description</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lifecycle</strong></td>
+                            <td>Version, Status, Contribute (автор, дата)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Meta-Metadata</strong></td>
+                            <td>Metadata identifier, contributioned (кой е правил метаданни)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Technical</strong></td>
+                            <td>Format, Size, Location (URL), Requirements</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Educational</strong></td>
+                            <td>Interactivity type, Learning resource type, Context, Age range</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rights</strong></td>
+                            <td>Cost, Copyright, Terms of use</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Relation</strong></td>
+                            <td>Resource relation (e.g., "this is a chapter of" something)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Annotation</strong></td>
+                            <td>Entity (quien anotó), Date (cuándo), Description</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Classification</strong></td>
+                            <td>Purpose (discipline, idea level), Taxon path (categoría)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>4.5 Сравнение: SCORM vs xAPI vs LTI</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Аспект</th>
+                            <th>SCORM</th>
+                            <th>xAPI</th>
+                            <th>LTI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Тип</strong></td>
+                            <td>Content packaging + tracking</td>
+                            <td>Learning record format</td>
+                            <td>Tool integration</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fokus</strong></td>
+                            <td>Завършване на курс</td>
+                            <td>Всякакви учебни преживявания</td>
+                            <td>Съединяване на външни инструменти</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Работи вън линия</strong></td>
+                            <td>Не, синхронизира при връщане</td>
+                            <td>Да, LRS за синхронизацию при връщане</td>
+                            <td>Не</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Мобилни приложение</strong></td>
+                            <td>Ограничена</td>
+                            <td>Пълна подръжка</td>
+                            <td>Ограничена</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Аналитика</strong></td>
+                            <td>Базична (pass/fail)</td>
+                            <td>Продвинута (всякакви действия)</td>
+                            <td>Ограничена (за инструмента)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Усложненост</strong></td>
+                            <td>Средна</td>
+                            <td>Висока</td>
+                            <td>Средна</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Възраст</strong></td>
+                            <td>Стара (2004)</td>
+                            <td>Нова (2013)</td>
+                            <td>Средна (2008)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SECTION 5: Learning Objects -->
+            <section id="section5">
+                <h2>Раздел 5: Learning Objects (Учебни обекти)</h2>
+
+                <h3>5.1 Определение</h3>
+
+                <div class="definition-box">
+                    <strong>Learning Object (Учебен обект)</strong><br>
+                    Преиспользваем, самостоятелен елемент на обучение, които може да се използва в множество контексти и курсове. LO е гранулирана единица на обучение със ясна образователна цел.
+                </div>
+
+                <h3>5.2 Характеристики на Learning Objects</h3>
+
+                <ul>
+                    <li><strong>Reusability:</strong> Един LO може да се използва в различни курсове и контексти без модификация.</li>
+                    <li><strong>Interoperability:</strong> LO е независим от LMS, за да работи в разных системи.</li>
+                    <li><strong>Accessibility:</strong> LO е достъпен чрез интернет или всякакъв тип медиа, без географически限制.</li>
+                    <li><strong>Durability:</strong> LO остава полезен дълго време, въпреки технологични промени.</li>
+                    <li><strong>Granularity:</strong> LO е на нивото на минути до часове обучение, не цял курс. Типично, LO е един видеоклип (5-15 мин), един куиз, един артикул.</li>
+                </ul>
+
+                <h3>5.3 Структура на Learning Object</h3>
+
+                <p>Един LO обикновено включва:</p>
+                <ul>
+                    <li><strong>Метаданни (Metadata):</strong> Описание, автор, дата, ключови думи, целева аудитория (IEEE LOM)</li>
+                    <li><strong>Съдържание (Content):</strong> Видео, текст, интерактивен елемент, анимация</li>
+                    <li><strong>Оценка (Assessment):</strong> Куиз или задача за проверка на разбиране</li>
+                    <li><strong>Навигация (Navigation):</strong> Връзки към други LO, последователност</li>
+                </ul>
+
+                <h3>5.4 Learning Object Repositories</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Хранилище</th>
+                            <th>URL</th>
+                            <th>Характеристики</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>MERLOT</strong></td>
+                            <td>www.merlot.org</td>
+                            <td>Куриран каталог на учебни материали, оценяване от користвики, безплатна</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OER Commons</strong></td>
+                            <td>www.oercommons.org</td>
+                            <td>Open Educational Resources, търсене по предмет, лиценз филтъра</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MIT OpenCourseWare</strong></td>
+                            <td>ocw.mit.edu</td>
+                            <td>Пълни курсове от MIT, лекции, проблемни набори, като се изпробват</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Khan Academy</strong></td>
+                            <td>www.khanacademy.org</td>
+                            <td>Къси видео лекции по математика, наука, история - не е чисто LO, но това е концепция</td>
+                        </tr>
+                        <tr>
+                            <td><strong>YouTube EDU</strong></td>
+                            <td>www.youtube.com/education</td>
+                            <td>Селекция на образователни канали, не е организирана като LO хранилище</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SECTION 6: ITS and Adaptive Learning -->
+            <section id="section6">
+                <h2>Раздел 6: ITS и адаптивно обучение в LMS</h2>
+
+                <p>Това е <strong>критичен раздел за вашата дисертация</strong>. Тази тема показва как ITS работи с LMS инфраструктура.</p>
+
+                <h3>6.1 Intelligent Tutoring Systems (ITS) архитектура</h3>
+
+                <div class="diagram">
+                    <svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Domain Model Box -->
+                        <rect x="20" y="20" width="150" height="100" fill="#e5e7eb" stroke="#0f2744" stroke-width="2" rx="5"/>
+                        <text x="95" y="50" text-anchor="middle" font-weight="bold" font-size="14">Domain Model</text>
+                        <text x="95" y="75" text-anchor="middle" font-size="12">Knowledge base</text>
+                        <text x="95" y="95" text-anchor="middle" font-size="12">Concept hierarchy</text>
+
+                        <!-- Student Model Box -->
+                        <rect x="220" y="20" width="150" height="100" fill="#e5e7eb" stroke="#2563a8" stroke-width="2" rx="5"/>
+                        <text x="295" y="50" text-anchor="middle" font-weight="bold" font-size="14">Student Model</text>
+                        <text x="295" y="75" text-anchor="middle" font-size="12">Knowledge state</text>
+                        <text x="295" y="95" text-anchor="middle" font-size="12">Learning style</text>
+
+                        <!-- Tutoring Model Box -->
+                        <rect x="420" y="20" width="150" height="100" fill="#e5e7eb" stroke="#166534" stroke-width="2" rx="5"/>
+                        <text x="495" y="50" text-anchor="middle" font-weight="bold" font-size="14">Tutoring Model</text>
+                        <text x="495" y="75" text-anchor="middle" font-size="12">Strategies</text>
+                        <text x="495" y="95" text-anchor="middle" font-size="12">Feedback rules</text>
+
+                        <!-- Interface Box -->
+                        <rect x="220" y="180" width="150" height="80" fill="#e5e7eb" stroke="#5b21b6" stroke-width="2" rx="5"/>
+                        <text x="295" y="210" text-anchor="middle" font-weight="bold" font-size="14">Interface</text>
+                        <text x="295" y="235" text-anchor="middle" font-size="12">Student interaction</text>
+
+                        <!-- Arrows -->
+                        <path d="M 95 120 L 95 160 L 295 160 L 295 180" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                        <path d="M 295 120 L 295 160" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                        <path d="M 495 120 L 495 160 L 370 160 L 370 180" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+                        <!-- Central controller -->
+                        <circle cx="295" cy="310" r="40" fill="#fdfaf5" stroke="#0f2744" stroke-width="2"/>
+                        <text x="295" y="315" text-anchor="middle" font-weight="bold" font-size="12">Control</text>
+
+                        <!-- Connections from interface to control -->
+                        <path d="M 295 260 L 295 270" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+                        <!-- Arrow marker definition -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                            </marker>
+                        </defs>
+
+                        <!-- Labels -->
+                        <text x="300" y="370" text-anchor="middle" font-size="12" font-weight="bold">ITS Architecture</text>
+                    </svg>
+                </div>
+
+                <h4>Четирите компонента на ITS:</h4>
+
+                <ul>
+                    <li><strong>Domain Model:</strong> Представата на знаниями, която трябва да се научи. Структурирана като граф на понятия и връзки между тях.</li>
+                    <li><strong>Student Model:</strong> Представата на текущите знания и способности на студента. Включва: knowledge state (какво знае), learning style (как учи), motivation, affective state.</li>
+                    <li><strong>Tutoring Model (Pedagogical Model):</strong> Стратегиите за преподаване, правилата за обратна връзка, адаптивни пътища. Как ITS решава какъв материал да покаже следващия.</li>
+                    <li><strong>Interface (Interaction Module):</strong> Начин на взаимодействие със студента: GUI, речев интерфейс, аватар, текст.</li>
+                </ul>
+
+                <h3>6.2 Адаптивно обучение</h3>
+
+                <div class="definition-box">
+                    <strong>Адаптивно обучение</strong><br>
+                    Технология, която динамично приспособява съдържанието, въпроси и брой на основата на индивидуалния студент модел. Целта е оптимизиране на учебните резултати и ангажираност.
+                </div>
+
+                <h4>Компоненти на адаптивното обучение:</h4>
+
+                <ul>
+                    <li><strong>Learner Profiling:</strong> Събиране на информация о студента: входност тест, предпочитания стил, темп на обучение, предшественик знаш, демография.</li>
+                    <li><strong>Content Adaptation:</strong> На основата на профила, система показва различно съдържание, различен ред, различна сложност. (Примери: ако студент познава базовата концепция, пропуснете въвода, покажете напредналата)</li>
+                    <li><strong>Assessment Adaptation:</strong> Въпросите се адаптират дийнамично базирано на отговорите. (Примери: IRT - Item Response Theory, при правилен отговор показа по-трудна задача)</li>
+                    <li><strong>Learning Path Adaptation:</strong> Редът на моделите се приспособява. Ако студент не овладее концепция A, покажу повторяемо съдържание преди преминаване към B.</li>
+                </ul>
+
+                <h3>6.3 Machine Learning в LMS</h3>
+
+                <h4>Learning Analytics:</h4>
+                <p>Събиране и анализ на данни от LMS за разбиране на процес на обучение.</p>
+                <ul>
+                    <li><strong>Данни събирани:</strong> Време на учене, брой посещения, оценки, темп на решаване на задачи, форум активност.</li>
+                    <li><strong>Аналитика:</strong> Какво знае студентът? Как учи? Когато той в риск да падне?</li>
+                    <li><strong>Приложение:</strong> Персонализирани препоръки за студента, диагностика за преподавател.</li>
+                </ul>
+
+                <h4>Early Warning Systems:</h4>
+                <p>ML модели, които предвизвайте студенти в риск да падат в курс, въз основата на историята на действие.</p>
+                <ul>
+                    <li>Признаци: Ниска активност в форум, пропуснати крайни срокове, ниски тестови оценки</li>
+                    <li>Система алергирует преподавател да вземе мери</li>
+                </ul>
+
+                <h4>Recommendation Engines:</h4>
+                <p>Препоръча на следващия ресурс за да посети студента базирано на историята.</p>
+                <ul>
+                    <li><strong>Collaborative Filtering:</strong> Препоръча ресурси, които други студенти със подобен профил намерен полезни</li>
+                    <li><strong>Content-Based Filtering:</strong> Препоръча ресурси, които са подобни на тих вече видели</li>
+                    <li><strong>Knowledge-Based:</strong> Препоръча въз основата на знанията студента - ако нов т знае, показа материал че това ще му помогне</li>
+                </ul>
+
+                <h3>6.4 Примеры интеграције ITS в LMS</h3>
+
+                <ul>
+                    <li><strong>ALEKS (Assessment and Learning in Knowledge Spaces):</strong> Адаптивна LMS за математика. Базирана на KSA (Knowledge Space Analysis). Динамично адаптирам задачи на студент.</li>
+                    <li><strong>SMART Sparrow:</strong> Платформа за адаптивно обучение. Позволява автори да създават интерактивни лесон със вградена ITS логика.</li>
+                    <li><strong>Knewton:</strong> AI платформа, която анализира студент данни и препоръчава персонализирани пътища.</li>
+                    <li><strong>Moodle + AI plugins:</strong> Moodle може да се разширява с AI модули за аналитика и препоръки.</li>
+                </ul>
+            </section>
+
+            <!-- SECTION 7: Trends -->
+            <section id="section7">
+                <h2>Раздел 7: Съвременни тенденции в LMS и LCMS</h2>
+
+                <h3>7.1 AI-powered LMS</h3>
+                <ul>
+                    <li>Автоматична оценка на задачи с NLP и ML</li>
+                    <li>Интелигентни помощници (chatbots) за отговор на студент въпроси 24/7</li>
+                    <li>Предиктивна аналитика за раннотни предупреждения</li>
+                    <li>Персонализирани пътища на обучение базирано на AI</li>
+                </ul>
+
+                <h3>7.2 Microlearning и Gamification</h3>
+                <ul>
+                    <li><strong>Microlearning:</strong> Къси, фокусирани единици на обучение (5-15 мин видеа, куизи), оптимизирано за мобилен</li>
+                    <li><strong>Gamification:</strong> Точки, значки, лидерборди за мотивация. Превръщане на обучение в игра.</li>
+                </ul>
+
+                <h3>7.3 VR/AR в образованието</h3>
+                <ul>
+                    <li>Виртуална реалност за имерсивно обучение (медицина, инженерство)</li>
+                    <li>Разширена реалност за интерактивни иснаучни демонстрации</li>
+                    <li>LMS интеграция със VR платформи</li>
+                </ul>
+
+                <h3>7.4 Learning Analytics и Educational Data Mining</h3>
+                <ul>
+                    <li>Събиране и анализ на масивни данни от LMS за разбиране на тенденции</li>
+                    <li>Прогнозиране на студент успех, идентифициране на фактори, които влияят на обучение</li>
+                    <li>Непредсказани откритие на паттерни в данни</li>
+                </ul>
+
+                <h3>7.5 Облачен и мобилен LMS</h3>
+                <ul>
+                    <li>SaaS модел: LMS като услуга, без собствен сървър</li>
+                    <li>Мобилни приложения за iOS/Android</li>
+                    <li>Функциониране вън линия с синхронизация при връщане на мрежа</li>
+                </ul>
+            </section>
+
+            <!-- WORKED EXAMPLE -->
+            <section id="worked">
+                <h2>Работен пример: Дизайн на LMS функция със SCORM</h2>
+
+                <h3>Сценарий</h3>
+                <p>Вие дизайнирате нов курс в Moodle за "Python программиране за начинаещи". Трябва да създадете един модул със SCORM пакет, който съдържа видеолекция на 15 мин, последвана от интерактивен куиз. Как това функционира?</p>
+
+                <h3>Стъпка 1: Създаване на SCORM пакета</h3>
+                <p>Разработчик на съдържание създава SCORM пакет със следната структура:</p>
+                <pre><code>python_lesson1.zip
+├── imsmanifest.xml (маниест файл, описва структура)
+├── index.html (главно съдържание - SCO 1)
+├── quiz.html (куиз - SCO 2)
+├── assets/
+│   ├── video_lecture.mp4
+│   ├── python_intro.pdf
+│   └── scormdriver.js (SCORM API комуникация)
+└── metadata.xml (IEEE LOM метаданни)</code></pre>
+
+                <h4>imsmanifest.xml (опростено):</h4>
+                <code>&lt;manifest&gt;&lt;organizations&gt;&lt;organization&gt;&lt;item identifier="python_lesson"&gt;&lt;item identifier="video_sco" identifierref="sco1"&gt;&lt;item identifier="quiz_sco" identifierref="sco2"&gt;&lt;/organization&gt;&lt;/organizations&gt;&lt;resources&gt;&lt;resource identifier="sco1" type="webcontent" href="index.html"&gt;&lt;resource identifier="sco2" type="webcontent" href="quiz.html"&gt;&lt;/resources&gt;&lt;/manifest&gt;</code>
+
+                <h3>Стъпка 2: Качване на SCORM пакета в Moodle</h3>
+                <p>Преподавател влиза в Moodle > Курс > Добавяне на дейност > SCORM > Качване на python_lesson1.zip</p>
+                <p>Moodle разпаковава пакета, заверява маниеста, регистрира структурата.</p>
+
+                <h3>Стъпка 3: Студент отваря SCORM дейност</h3>
+                <p>Студент кликва на "Python Lesson 1" в курса. Мoodle открива index.html (SCO 1) в iframe.</p>
+                <p>JavaScript код в index.html вика SCORM API функции на Moodle:</p>
+                <code>var api = window.API; api.LMSInitialize(""); api.LMSSetValue("cmi.core.score.raw", 85);</code>
+
+                <h3>Стъпка 4: Проследяване на съдържанието</h3>
+                <p>Докато студент гледа видеото, JavaScript изпраща пулсациони события на Moodle:</p>
+                <ul>
+                    <li>cmi.core.lessons_status = "started"</li>
+                    <li>cmi.core.session_time = 00:15:30 (студент гледа за 15 мин 30 сек)</li>
+                    <li>cmi.core.exit = "logout" (как съм излезъл)</li>
+                </ul>
+
+                <h3>Стъпка 5: Студент отговаря на куиза</h3>
+                <p>Студент натиска "Next" (Следващи), преминава към quiz.html (SCO 2).</p>
+                <p>Куизът има 5 въпроса, студент получава 4 верни от 5 = 80%.</p>
+                <p>JavaScript отправи към Moodle SCORM API:</p>
+                <code>api.LMSSetValue("cmi.core.score.raw", 80); api.LMSSetValue("cmi.core.lessons_status", "completed");</code>
+
+                <h3>Стъпка 6: Докладване на резултатите</h3>
+                <p>Moodle Gradebook автоматично регистрира:</p>
+                <ul>
+                    <li>Студент: John Smith</li>
+                    <li>Дейност: Python Lesson 1 (SCORM)</li>
+                    <li>Оценка: 80/100</li>
+                    <li>Времетраене: 20 мин (15 мин видео + 5 мин куиз)</li>
+                    <li>Статус: Completed</li>
+                </ul>
+
+                <p>Преподавател вижда това всички резултати в Gradebook и може да видя подробности за това колко студента завършиха SCO 1, колко завършиха SCO 2, какви оценки на куиза получиха.</p>
+
+                <h3>Стъпка 7: Адаптивна интеграция (ITS разширение)</h3>
+                <p>Ако ние интегрирам ITS функциониност:</p>
+                <ul>
+                    <li>При оценка &lt; 75%, система препоръчва преповторяемо видео</li>
+                    <li>При оценка > 90%, система препоръчва напредналия модул следващ</li>
+                    <li>xAPI разширение заопис о всеки отговор ("John attempted Question 3, answered 'variables', received feedback")</li>
+                </ul>
+
+                <div class="key-point">
+                    <strong>Отнеми:</strong> SCORM позволи самостоятелност на съдържанието и повторна използ във всеки LMS. Пакетът е изпратен един път, но може да се използва безброй време. Moodle следи всяка студент интерация през SCORM API.
+                </div>
+            </section>
+
+            <!-- FLASHCARDS -->
+            <section id="flashcards">
+                <h2>Flashcards за бърза подготовка</h2>
+
+                <div class="flashcards-container">
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q1: Какво е LMS?</div>
+                        <div class="flashcard-answer">Learning Management System - система за управление на обучението, управлява обучаващите се, достъпа до съдържание, оценяване, комуникация, проследяване на прогреса.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q2: Какво е LCMS?</div>
+                        <div class="flashcard-answer">Learning Content Management System - система за управление на учебното съдържание, управлява създаването, съхранението, версионирането и преиспользването на учебни обекти.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q3: Основна разлика между LMS и LCMS?</div>
+                        <div class="flashcard-answer">LMS управлява ОБУЧАВАЩИТЕ СЕ, LCMS управлява СЪДЪРЖАНИЕТО. LMS е за преподавател и студент, LCMS е за автор и дизайнер на съдържание.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q4: Какво е SCORM?</div>
+                        <div class="flashcard-answer">Sharable Content Object Reference Model - стандарт за пакетиране на учебно съдържание и комуникация между LMS и съдържанието чрез RTE API.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q5: Какво е xAPI?</div>
+                        <div class="flashcard-answer">Experience API (Tin Can) - модерен стандарт за запис на учебни преживявания като Actor-Verb-Object изявления в LRS (Learning Record Store).</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q6: Версии на SCORM?</div>
+                        <div class="flashcard-answer">SCORM 1.2 (стара, 2001) и SCORM 2004 (модерна). 2004 е препоръчана версия с подобрена RTE и навигация.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q7: Какво е SCO в SCORM?</div>
+                        <div class="flashcard-answer">Sharable Content Object - единица на обучение в SCORM пакета, обикновено HTML файл със JavaScript, който комуникира със SCORM API на LMS.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q8: Какво е IEEE LOM?</div>
+                        <div class="flashcard-answer">Learning Object Metadata - стандарт за описание на учебни обекти в 9 категории: General, Lifecycle, Technical, Educational, Rights, Relation, Annotation, Classification, Meta-Metadata.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q9: Четирите компонента на ITS?</div>
+                        <div class="flashcard-answer">Domain Model (знанията за обучение), Student Model (текущо знание на студента), Tutoring Model (стратегии за преподаване), Interface (интерфейс за взаимодействие).</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q10: Какво е адаптивно обучение?</div>
+                        <div class="flashcard-answer">Технология, която динамично приспособява съдържанието, въпросите и брой въз основата на студента модел за оптимизиране на учебните резултати.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q11: Learning Objects - характеристики?</div>
+                        <div class="flashcard-answer">Reusability (преиспользване), Interoperability (съвместимост), Accessibility (достъпност), Durability (траене), Granularity (фини единици).</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Q12: Популярни LMS платформи?</div>
+                        <div class="flashcard-answer">Moodle (open source), Blackboard (proprietary), Canvas (cloud), Google Classroom (безплатен), Microsoft Teams for Education, Brightspace (D2L).</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUICK REFERENCE -->
+            <section id="reference">
+                <h2>Бърза справка - Ключови дефиниции</h2>
+
+                <div class="reference-table">
+                    <strong>LMS (Learning Management System)</strong><br>
+                    Софтуер за управление на процеса на обучение: доставка, проследяване, администрация, оценяване, общуване.
+                </div>
+
+                <div class="reference-table">
+                    <strong>LCMS (Learning Content Management System)</strong><br>
+                    Софтуер за управление на учебното съдържание: създаване, съхранение, версионирането, преиспользване.
+                </div>
+
+                <div class="reference-table">
+                    <strong>SCORM (Sharable Content Object Reference Model)</strong><br>
+                    Стандарт за пакетиране и комуникация на учебно съдържание в LMS.
+                </div>
+
+                <div class="reference-table">
+                    <strong>xAPI (Experience API)</strong><br>
+                    Модерен стандарт за запис на всякакви учебни преживявания като Actor-Verb-Object.
+                </div>
+
+                <div class="reference-table">
+                    <strong>LTI (Learning Tools Interoperability)</strong><br>
+                    Стандарт на IMS Global за интеграция на външни инструменти в LMS.
+                </div>
+
+                <div class="reference-table">
+                    <strong>Learning Object (Учебен обект)</strong><br>
+                    Преиспользваем, самостоятелен елемент на обучение със ясна образователна цел.
+                </div>
+
+                <div class="reference-table">
+                    <strong>IEEE LOM (Learning Object Metadata)</strong><br>
+                    Стандарт за описание на учебни обекти в 9 категории.
+                </div>
+
+                <div class="reference-table">
+                    <strong>ITS (Intelligent Tutoring System)</strong><br>
+                    Система за обучение с AI, която моделира студент и приспособява преподаването.
+                </div>
+
+                <div class="reference-table">
+                    <strong>Adaptive Learning</strong><br>
+                    Технология, която динамично приспособява съдържание и въпроси на студента модел.
+                </div>
+
+                <div class="reference-table">
+                    <strong>Learning Analytics</strong><br>
+                    Събиране и анализ на данни от LMS за разбиране на процес на обучение.
+                </div>
+
+                <div class="reference-table">
+                    <strong>Moodle</strong><br>
+                    Най-използваният open-source LMS, PHP-базиран, модулна архитектура, силна общност.
+                </div>
+
+                <div class="reference-table">
+                    <strong>RTE (Run-Time Environment)</strong><br>
+                    Механизъм на SCORM за комуникация между SCO и LMS чрез JavaScript API.
+                </div>
+
+                <div class="reference-table">
+                    <strong>LRS (Learning Record Store)</strong><br>
+                    База за съхранение на xAPI изявления, позволява аналитика на обучение.
+                </div>
+
+                <div class="reference-table">
+                    <strong>e-Learning модалности</strong><br>
+                    Синхронно (live), Асинхронно (преиграване), Blended (комбинирано), Hybrid (някои лице-в-лице).
+                </div>
+
+                <div class="reference-table">
+                    <strong>Moodle Activity Types</strong><br>
+                    Assignment, Forum, Quiz, Lesson, SCORM, Choice, Chat, Database, Feedback, Glossary, Wiki, Workshop.
+                </div>
+            </section>
+
+            <footer>
+                <p><strong>Литература:</strong> [34] Попов В. "Learning Management Systems" | IEEE LOM Standard | SCORM Specification | xAPI Documentation</p>
+                <p>Документ подготовен за PhD изпит, ИМИ-БАН, Тема 14: LMS и LCMS системи</p>
+                <p><em>Преглед за дисертация на тема "Intelligent Tutoring Systems" (2026)</em></p>
+            </footer>
+        </div>
+    </main>
+</body>
+</html>

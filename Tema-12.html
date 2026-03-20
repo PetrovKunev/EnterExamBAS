@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 12: Жизнен цикъл на програмен продукт. Софтуерни процеси</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #1f2937;
+            background-color: #fdfaf5;
+            display: flex;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 270px;
+            height: 100vh;
+            background-color: #0f2744;
+            color: #fdfaf5;
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            border-right: 3px solid #2563a8;
+            z-index: 100;
+        }
+
+        .sidebar h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 14px;
+            font-weight: 600;
+            color: #60a5fa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.4rem;
+            color: #e5e7eb;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(37, 99, 168, 0.3);
+            border-left-color: #60a5fa;
+            padding-left: 1.2rem;
+        }
+
+        .portal-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: inline-block;
+            padding: 0.8rem 1.2rem;
+            background-color: #2563a8;
+            color: #fdfaf5;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            z-index: 101;
+        }
+
+        .portal-link:hover {
+            background-color: #5b21b6;
+            transform: translateX(-4px);
+        }
+
+        .main-content {
+            margin-left: 270px;
+            padding: 3rem 2rem;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f2744 0%, #2563a8 100%);
+            color: #fdfaf5;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 6px solid #9a3412;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .exam-context {
+            background-color: #f0fdf4;
+            border-left: 4px solid #166534;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 6px;
+        }
+
+        .exam-context h4 {
+            color: #166534;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        section {
+            margin-bottom: 2.5rem;
+        }
+
+        section h2 {
+            color: #0f2744;
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid #2563a8;
+        }
+
+        section h3 {
+            color: #2563a8;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .overview-box {
+            background-color: #eff6ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #2563a8;
+            margin-bottom: 1.5rem;
+        }
+
+        .definition {
+            background-color: #fef3c7;
+            padding: 1.2rem;
+            border-left: 4px solid #9a3412;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+            font-style: italic;
+        }
+
+        .stakeholder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stakeholder-card {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 3px solid #5b21b6;
+        }
+
+        .stakeholder-card h4 {
+            color: #5b21b6;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .stakeholder-card p {
+            font-size: 15px;
+            color: #4b5563;
+        }
+
+        .model-card {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .model-card:hover {
+            border-color: #2563a8;
+            box-shadow: 0 4px 12px rgba(37, 99, 168, 0.15);
+        }
+
+        .model-card h4 {
+            color: #0f2744;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .advantages {
+            background-color: #f0fdf4;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 3px solid #166534;
+        }
+
+        .advantages strong {
+            color: #166534;
+        }
+
+        .disadvantages {
+            background-color: #fef2f2;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 3px solid #991b1b;
+        }
+
+        .disadvantages strong {
+            color: #991b1b;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: #fff;
+        }
+
+        .comparison-table th {
+            background-color: #0f2744;
+            color: #fdfaf5;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .comparison-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 15px;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #f3f4f6;
+        }
+
+        .mermaid-container {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 2px solid #e5e7eb;
+            overflow-x: auto;
+        }
+
+        .worked-example {
+            background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #9a3412;
+            margin: 1.5rem 0;
+        }
+
+        .worked-example h4 {
+            color: #9a3412;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .flashcard {
+            background-color: #fff;
+            padding: 1.2rem;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .flashcard:hover {
+            border-color: #5b21b6;
+            box-shadow: 0 6px 16px rgba(91, 33, 182, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .flashcard-question {
+            color: #5b21b6;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            font-size: 15px;
+        }
+
+        .flashcard-answer {
+            color: #1f2937;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .quick-ref {
+            background-color: #fef3c7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #9a3412;
+            margin: 1.5rem 0;
+        }
+
+        .quick-ref h4 {
+            color: #9a3412;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .quick-ref ul {
+            list-style-position: inside;
+            margin-left: 1rem;
+        }
+
+        .quick-ref li {
+            margin-bottom: 0.5rem;
+            font-size: 15px;
+        }
+
+        code {
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #9a3412;
+        }
+
+        .code-block {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 1.2rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .phase-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            padding: 1rem;
+            background-color: #f9fafb;
+            border-radius: 6px;
+            border-left: 3px solid #2563a8;
+        }
+
+        .phase-row strong {
+            color: #0f2744;
+            font-weight: 600;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                max-width: 100%;
+            }
+            .flashcard-grid, .stakeholder-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 3px solid #2563a8;
+                max-height: 400px;
+                overflow-y: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 2rem 1rem;
+            }
+            .portal-link {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin-top: 1rem;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <h3>Навигация</h3>
+        <a href="#overview">Обзор</a>
+        <a href="#basics">1. Основни понятия</a>
+        <a href="#classical">2. Класически модели</a>
+        <a href="#agile">3. Agile методологии</a>
+        <a href="#phases">4. Фази на SDLC</a>
+        <a href="#quality">5. Управление на качеството</a>
+        <a href="#modern">6. Съвременни практики</a>
+        <a href="#example">7. Работен пример</a>
+        <a href="#flashcards">8. Флашкарти</a>
+        <a href="#quick-ref">9. Бърза справка</a>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <h1>Тема 12: Жизнен цикъл на програмен продукт</h1>
+            <p>Софтуерни процеси и моделите на разработката</p>
+        </header>
+
+        <div class="exam-context">
+            <h4>📋 Контекст на изпита</h4>
+            <p><strong>Формат:</strong> 4-часов писмен докторантски изпит | <strong>Очаквани позиции:</strong> 3-5 писани страници | <strong>Темпо:</strong> ~2 часа на тема</p>
+            <p><strong>Съотношение:</strong> Обяснение (60%) + Диаграми и примери (40%)</p>
+        </div>
+
+        <!-- OVERVIEW -->
+        <section id="overview">
+            <h2>📌 Обзор</h2>
+            <div class="overview-box">
+                <p><strong>Тема 12</strong> свързва всички останали теми от програмата. Софтуерните процеси определят как се разработва софтуер в практика:</p>
+                <ul>
+                    <li><strong>Тема 7 (Езици за програмиране)</strong> — кои инструменти се използват при реализацията</li>
+                    <li><strong>Тема 8 (Проектиране на БД)</strong> — как се интегрира проектирането в цикъла на разработката</li>
+                    <li><strong>Останалите теми</strong> — всички попадат в различни фази на SDLC</li>
+                </ul>
+            </div>
+            <p>Познаването на различните софтуерни процеси и моделите на разработката е критично за всеки инженер. То позволява адекватен избор на методология въз основа на характеристиките на проекта.</p>
+        </section>
+
+        <!-- РАЗДЕЛ 1: ОСНОВНИ ПОНЯТИЯ -->
+        <section id="basics">
+            <h2>1. Основни понятия</h2>
+
+            <h3>1.1 Software Development Life Cycle (SDLC)</h3>
+            <div class="definition">
+                <strong>SDLC</strong> е структурираният процес, който включва всички етапи от концепцията до поддръжката на софтуерния продукт. Той дефинира как идея се превръща в работещ, поддържан софтуер.
+            </div>
+            <p>SDLC включва планиране, анализ, проектиране, разработка, тестване, внедряване и поддръжка. Различните модели на SDLC (Waterfall, Agile, Spiral и т.н.) определят порядъка и начина на работа в тези етапи.</p>
+
+            <h3>1.2 Software Process (Софтуерен процес)</h3>
+            <div class="definition">
+                <strong>Софтуерният процес</strong> е набор от действия, входни данни и изходни резултати, организирани да реализират развитието на софтуер. То е практическата реализация на избрания модел на SDLC.
+            </div>
+            <p><strong>Защо процесът е важен:</strong></p>
+            <ul>
+                <li><strong>Прогнозируемост</strong> — установяват се яснивходове, изходи и вехи</li>
+                <li><strong>Качество</strong> — дефинирани са критерии за входът и изхода на всеки етап</li>
+                <li><strong>Управляемост</strong> — по-лесна координация между екипа</li>
+                <li><strong>Научаване</strong> — можат да се събират метрики и да се подобрява процесът</li>
+            </ul>
+
+            <h3>1.3 Stakeholders (Заинтересовани страни)</h3>
+            <p>Всеки софтуерен процес трябва да удовлетвори различни типове заинтересовани страни:</p>
+            <div class="stakeholder-grid">
+                <div class="stakeholder-card">
+                    <h4>👨‍💻 Разработчици</h4>
+                    <p>Интерес: ясни спецификации, добри инструменти, достатъчно време за качествена работа</p>
+                </div>
+                <div class="stakeholder-card">
+                    <h4>👥 Клиенти</h4>
+                    <p>Интерес: полезност на функциите, качество, спазване на бюджета и сроковете</p>
+                </div>
+                <div class="stakeholder-card">
+                    <h4>👨‍ Потребители</h4>
+                    <p>Интерес: удобство, стабилност, производителност</p>
+                </div>
+                <div class="stakeholder-card">
+                    <h4>👔 Мениджъри</h4>
+                    <p>Интерес: контрол над риска, спазване на график, ясна комуникация</p>
+                </div>
+                <div class="stakeholder-card">
+                    <h4>🧪 Тестери</h4>
+                    <p>Интерес: ясни изисквания, достатъчно време за тестване, добри инструменти</p>
+                </div>
+                <div class="stakeholder-card">
+                    <h4>⚙️ Поддръжки</h4>
+                    <p>Интерес: добра документация, чиста архитектура, логични логове</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- РАЗДЕЛ 2: КЛАСИЧЕСКИ МОДЕЛИ -->
+        <section id="classical">
+            <h2>2. Класически модели на SDLC</h2>
+
+            <h3>2.1 Waterfall Model (Каскаден модел)</h3>
+            <div class="model-card">
+                <h4>Фази на Waterfall модела</h4>
+                <div class="mermaid-container">
+                    <div class="mermaid">
+                        graph LR
+                        A["📋 Изисквания"] -->B["🎨 Проектиране"]
+                        B -->C["💻 Реализация"]
+                        C -->D["🧪 Тестване"]
+                        D -->E["🚀 Внедряване"]
+                        E -->F["🔧 Поддръжка"]
+                        style A fill:#2563a8,color:#fff
+                        style B fill:#5b21b6,color:#fff
+                        style C fill:#166534,color:#fff
+                        style D fill:#9a3412,color:#fff
+                        style E fill:#0f2744,color:#fff
+                        style F fill:#991b1b,color:#fff
+                    </div>
+                </div>
+                <p><strong>Характеристики:</strong> Линейна последователност. Всеки етап трябва да бъде завършен преди следващия да почне. Всеки етап произвежда артефакт (документация, код и т.н.).</p>
+                <div class="advantages">
+                    <strong>✓ Предимства:</strong>
+                    <ul>
+                        <li>Прост и лесен за разбиране</li>
+                        <li>Подходящ за проекти с добре дефинирани изисквания</li>
+                        <li>Лесен за планиране и контролиране на разход</li>
+                        <li>Документацията е окончателна на всеки етап</li>
+                    </ul>
+                </div>
+                <div class="disadvantages">
+                    <strong>✗ Недостатъци:</strong>
+                    <ul>
+                        <li>Нито един фаза не може да връща назад</li>
+                        <li>Потребителят вижда функционалния софтуер едва в края</li>
+                        <li>Поправките на изисквания са скъпи и бавни</li>
+                        <li>Рискове не се намаляват активно</li>
+                    </ul>
+                </div>
+                <p><strong>Кога е подходящ:</strong> Проекти с ясни, неизменни изисквания (например, системи с регулаторни изисквания, вградени системи).</p>
+            </div>
+
+            <h3>2.2 V-Model (V-образен модел)</h3>
+            <div class="model-card">
+                <h4>Верификация и валидация</h4>
+                <div class="mermaid-container">
+                    <div class="mermaid">
+                        graph TB
+                        A["Изисквания"] -->B["Архитектура"]
+                        B -->C["Детайлен дизайн"]
+                        C -->D["Имплементация"]
+                        D -->E["Единични тестове"]
+                        E -->F["Интеграционни тестове"]
+                        F -->G["Системни тестове"]
+                        G -->H["Приемни тестове"]
+                        A -.->|Верификация| H
+                        B -.->|Верификация| G
+                        C -.->|Верификация| F
+                        style A fill:#2563a8,color:#fff
+                        style D fill:#166534,color:#fff
+                        style H fill:#991b1b,color:#fff
+                    </div>
+                </div>
+                <p><strong>Ключови концепции:</strong></p>
+                <ul>
+                    <li><strong>Верификация</strong> — правим ли софтуера правилно? (нашите спецификации отговарят ли на дизайна?)</li>
+                    <li><strong>Валидация</strong> — правилният ли софтуер правим? (отговаря ли на изискванията на клиента?)</li>
+                </ul>
+                <div class="advantages">
+                    <strong>✓ Предимства:</strong>
+                    <ul>
+                        <li>Тестването е интегрирано от началото</li>
+                        <li>Ясна връзка между разработка и тестване</li>
+                        <li>Намаляване на дефектите</li>
+                    </ul>
+                </div>
+                <div class="disadvantages">
+                    <strong>✗ Недостатъци:</strong>
+                    <ul>
+                        <li>Строго следва фазите на Waterfall</li>
+                        <li>Мало място за промени</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>2.3 Incremental Model (Инкрементален модел)</h3>
+            <div class="model-card">
+                <p><strong>Идея:</strong> Софтуерът се разработва в малки инкременти. Всеки инкремент носи работещ софтуер с нова функциониалност.</p>
+                <p><strong>Пример:</strong> Версия 1.0 — базови функции; Версия 1.1 — нови отчети; Версия 1.2 — интеграция с трети страни.</p>
+                <div class="advantages">
+                    <strong>✓ Предимства:</strong>
+                    <ul>
+                        <li>Потребителят получава функциониране софтуер бързо</li>
+                        <li>Обратна връзка рано в разработката</li>
+                        <li>Риск е равномерно разпределен</li>
+                        <li>По-добра адаптация на изисквания</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>2.4 Spiral Model (Спирален модел — Boehm, 1988)</h3>
+            <div class="model-card">
+                <h4>4 квадранта на спиралата</h4>
+                <div class="mermaid-container">
+                    <div class="mermaid">
+                        graph TB
+                        A["Квадрант 1: Планиране<br/>• Определи цели<br/>• Определи ограничения"]
+                        B["Квадрант 2: Анализ на риска<br/>• Идентифицирай рискове<br/>• Планирай смекчаване"]
+                        C["Квадрант 3: Инженерство<br/>• Разработи софтуер<br/>• Тестирай"]
+                        D["Квадрант 4: Оценка<br/>• Оцени резултатите<br/>• План за следващата спирала"]
+                        A --> B
+                        B --> C
+                        C --> D
+                        D --> A
+                        style A fill:#2563a8,color:#fff
+                        style B fill:#9a3412,color:#fff
+                        style C fill:#166534,color:#fff
+                        style D fill:#5b21b6,color:#fff
+                    </div>
+                </div>
+                <p><strong>Ключова характеристика:</strong> Управление на рисковете е центърът на спиралата. Всяка спирала произвежда прототип.</p>
+                <div class="advantages">
+                    <strong>✓ Предимства:</strong>
+                    <ul>
+                        <li>Активно управление на риска</li>
+                        <li>Подходящ за сложни, нови проекти</li>
+                        <li>Гъвкавост при промените</li>
+                    </ul>
+                </div>
+                <div class="disadvantages">
+                    <strong>✗ Недостатъци:</strong>
+                    <ul>
+                        <li>Сложен за управление и контролиране</li>
+                        <li>Изисква опитни мениджъри</li>
+                        <li>По-скъп процес</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>2.5 Prototyping Model (Модел на прототипирането)</h3>
+            <div class="model-card">
+                <p><strong>Двата вида прототипи:</strong></p>
+                <ul>
+                    <li><strong>Throwaway Prototyping</strong> — прототипът се изхвърля, задачата е да се уточнят изисквания. Реалният софтуер се разработва от нула.</li>
+                    <li><strong>Evolutionary Prototyping</strong> — прототипът се развива в окончателния продукт. По-интенсивна комуникация с потребителя.</li>
+                </ul>
+                <div class="advantages">
+                    <strong>✓ Предимства:</strong>
+                    <ul>
+                        <li>Рано изясняване на неясните изисквания</li>
+                        <li>Повишен контакт с потребителя</li>
+                        <li>Намаляване на риска от неправилни изисквания</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- РАЗДЕЛ 3: AGILE МЕТОДОЛОГИИ -->
+        <section id="agile">
+            <h2>3. Agile методологии</h2>
+
+            <h3>3.1 Agile Manifesto (Манифестът на Agile, 2001)</h3>
+            <div class="definition">
+                <p><strong>Четирите ценности на Agile:</strong></p>
+                <ol>
+                    <li><strong>Индивиди и взаимодействие</strong> пред процеси и инструменти</li>
+                    <li><strong>Работещ софтуер</strong> пред всеобхватна документация</li>
+                    <li><strong>Сътрудничество с клиента</strong> пред договарянето на договор</li>
+                    <li><strong>Отговор на промени</strong> пред придържане към план</li>
+                </ol>
+            </div>
+            <p><strong>12 принципа на Agile включват:</strong> рано и често доставяне на софтуер, приемане на промени, сътрудничество ежедневно, еквип от мотивирани индивиди, лице в лице общуване и т.н.</p>
+
+            <h3>3.2 Scrum</h3>
+            <div class="model-card">
+                <h4>Ролите в Scrum</h4>
+                <ul>
+                    <li><strong>Product Owner</strong> — отговара за Product Backlog, приоритети, изисквания</li>
+                    <li><strong>Scrum Master</strong> — отстранява препятствия, защитава процеса, фасилитира ceremонии</li>
+                    <li><strong>Development Team</strong> — разработва софтуера, самоорганизиран, обичайно 5-9 членове</li>
+                </ul>
+
+                <h4>Артефактите на Scrum</h4>
+                <ul>
+                    <li><strong>Product Backlog</strong> — списък с всички желани функции, подредени по приоритет</li>
+                    <li><strong>Sprint Backlog</strong> — артикулите от Product Backlog, избрани за текущия спринт</li>
+                    <li><strong>Increment</strong> — функционираният софтуер, готов за доставка на всеки спринт</li>
+                </ul>
+
+                <h4>Ceremониите на Scrum</h4>
+                <div class="phase-row">
+                    <strong>Sprint Planning</strong>
+                    <p>Команда избира артикули от Product Backlog за спринта (обичайно 1-2 часа за 2-седмичен спринт)</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Daily Standup</strong>
+                    <p>Всяка сутрин, максимум 15 минути. Всеки казва какво е направил, какво ще направи, и каква препятствия има</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Sprint Review</strong>
+                    <p>В края на спринта, команда показва готовите артикули на stakeholders</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Retro Съберание</strong>
+                    <p>Командата обсъжда как да подобри процеса за следващия спринт</p>
+                </div>
+
+                <div class="mermaid-container">
+                    <div class="mermaid">
+                        graph LR
+                        A["Планиране<br/>на спринта"] -->B["Разработка<br/>2 седмици"]
+                        B -->C["Daily Standup<br/>всеки ден"]
+                        B -->D["Sprint Review<br/>& Retro"]
+                        D -->E["Нов спринт"]
+                        E -->A
+                        style A fill:#2563a8,color:#fff
+                        style B fill:#166534,color:#fff
+                        style C fill:#5b21b6,color:#fff
+                        style D fill:#9a3412,color:#fff
+                        style E fill:#0f2744,color:#fff
+                    </div>
+                </div>
+            </div>
+
+            <h3>3.3 Kanban</h3>
+            <div class="model-card">
+                <p><strong>Визуална управление на потока:</strong> Дъска с колони (To Do, In Progress, Done). Всеки артикул е карта, която се премества по дъската.</p>
+                <ul>
+                    <li><strong>WIP Limit (Work In Progress)</strong> — максимален брой артикули във всяка колона, за да се избегне претоварване</li>
+                    <li><strong>Continuous Delivery</strong> — софтуерът се доставя непрекъснато, не по спринтове</li>
+                    <li><strong>Metrics</strong> — времетраене (lead time), цикъл (cycle time), пропускателната способност (throughput)</li>
+                </ul>
+                <div class="advantages">
+                    <strong>✓ Предимства:</strong>
+                    <ul>
+                        <li>Гъвкав и адаптивен</li>
+                        <li>Намаляване на отпадъците</li>
+                        <li>Непрекъсната доставка на софтуер</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3.4 Extreme Programming (XP)</h3>
+            <div class="model-card">
+                <p><strong>Инженерни практики за качество:</strong></p>
+                <ul>
+                    <li><strong>Pair Programming</strong> — двама програмиста работят на едно място, един кодира, един преглежда</li>
+                    <li><strong>Test-Driven Development (TDD)</strong> — първо пиши теста, после пиши кода</li>
+                    <li><strong>Continuous Integration</strong> — кодът се интегрира множество пъти дневно, всеки път с автоматични тестове</li>
+                    <li><strong>Refactoring</strong> — постоянно подобрение на кода без промяна на функциониране</li>
+                    <li><strong>Code Standards</strong> — едентични правила за кодиране във всички програмисти</li>
+                </ul>
+            </div>
+
+            <h3>3.5 Сравнение на методологиите</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Характеристика</th>
+                        <th>Waterfall</th>
+                        <th>Scrum</th>
+                        <th>Kanban</th>
+                        <th>XP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Итерация</strong></td>
+                        <td>Няма</td>
+                        <td>2-4 седмици</td>
+                        <td>Непрекъсна</td>
+                        <td>1 дневни итерации</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Промяни</strong></td>
+                        <td>Скъпи и бавни</td>
+                        <td>През спринтове</td>
+                        <td>В момента</td>
+                        <td>Отворени за промени</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Тестване</strong></td>
+                        <td>На края</td>
+                        <td>През спринта</td>
+                        <td>Непрекъсно</td>
+                        <td>TDD (преди кода)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Документация</strong></td>
+                        <td>Всеобхватна</td>
+                        <td>Минимална</td>
+                        <td>Минимална</td>
+                        <td>Минимална</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Подходящ за</strong></td>
+                        <td>Ясни изисквания</td>
+                        <td>Променливи изисквания</td>
+                        <td>Поддръжка и поправки</td>
+                        <td>Качество и скорост</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Рисък</strong></td>
+                        <td>Висок в края</td>
+                        <td>Разпределен</td>
+                        <td>Нисък</td>
+                        <td>Нисък</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- РАЗДЕЛ 4: ФАЗИ НА SDLC ПОДРОБНО -->
+        <section id="phases">
+            <h2>4. Фази на SDLC в детайл</h2>
+
+            <h3>4.1 Requirements Engineering (Инженерство на изисквания)</h3>
+            <div class="model-card">
+                <p><strong>Процес от 4 стъпки:</strong></p>
+                <div class="phase-row">
+                    <strong>Elicitation</strong>
+                    <p>Събирането на информация от stakeholders (интервюта, фокус групи, наблюдение)</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Analysis</strong>
+                    <p>Систематизиране, класифицирането и разрешаването на противоречия в събраната информация</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Specification</strong>
+                    <p>Документиране на изискванията в формален документ (SRS — Software Requirements Specification)</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Validation</strong>
+                    <p>Проверка дали документиран изискванията са точни, полни и осъществими</p>
+                </div>
+
+                <h4>Функционални vs Нефункционални изисквания</h4>
+                <ul>
+                    <li><strong>Функционални</strong> — какво трябва софтуерът да прави (пример: "Системата трябва да позволи на потребителя да влезе с потребителско име и парола")</li>
+                    <li><strong>Нефункционални</strong> — как трябва да работи софтуерът (пример: "Системата трябва да отговори на заявка в по-малко от 2 секунди")</li>
+                </ul>
+            </div>
+
+            <h3>4.2 Software Design (Проектиране на софтуер)</h3>
+            <div class="model-card">
+                <h4>Архитектурни модели</h4>
+                <ul>
+                    <li><strong>MVC (Model-View-Controller)</strong> — разделяне между данни, представяне и логика</li>
+                    <li><strong>Microservices</strong> — малки, независими услуги, всяка с отговорност</li>
+                    <li><strong>Layered Architecture</strong> — слойни системи (Presentation, Business Logic, Data Access)</li>
+                    <li><strong>Event-Driven</strong> — компоненти комуникират преди събития</li>
+                </ul>
+
+                <h4>UML диаграми</h4>
+                <ul>
+                    <li><strong>Class Diagram</strong> — класове и връзки между тях</li>
+                    <li><strong>Sequence Diagram</strong> — взаимодействие между обекти във времето</li>
+                    <li><strong>Use Case Diagram</strong> — функциониране на системата от потребителската перспектива</li>
+                </ul>
+            </div>
+
+            <h3>4.3 Implementation (Реализация)</h3>
+            <div class="model-card">
+                <ul>
+                    <li><strong>Кодни стандарти</strong> — еднообразен стил, именуване, структура</li>
+                    <li><strong>Version Control</strong> — Git, SVN, отслеждане на промени</li>
+                    <li><strong>Code Review</strong> — преглед на кода преди интеграция</li>
+                    <li><strong>Documentation</strong> — вътрешни коментари, API документация</li>
+                </ul>
+            </div>
+
+            <h3>4.4 Testing (Тестване)</h3>
+            <div class="model-card">
+                <h4>Нива на тестване (Test Levels)</h4>
+                <div class="phase-row">
+                    <strong>Unit Testing</strong>
+                    <p>Тестване на отделни функции/класи. Пишат ги разработчиците</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Integration Testing</strong>
+                    <p>Тестване на взаимодействието между модули</p>
+                </div>
+                <div class="phase-row">
+                    <strong>System Testing</strong>
+                    <p>Тестване на цялата система спрямо спецификациите</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Acceptance Testing</strong>
+                    <p>Тестване от клиента, дали системата отговаря на изискванията</p>
+                </div>
+
+                <h4>Методи на тестване</h4>
+                <ul>
+                    <li><strong>White-Box Testing</strong> — тестещ знае интериора на системата</li>
+                    <li><strong>Black-Box Testing</strong> — тестещ не знае вътрешната структура</li>
+                </ul>
+
+                <h4>Test Coverage</h4>
+                <p>Процент на кода, който е покрит от тестове. Цел: 70-80% покритие е добро.</p>
+            </div>
+
+            <h3>4.5 Deployment (Внедряване)</h3>
+            <div class="model-card">
+                <ul>
+                    <li><strong>CI/CD (Continuous Integration/Continuous Deployment)</strong> — кодът се интегрира и внедрява автоматично</li>
+                    <li><strong>Blue-Green Deployment</strong> — две идентични продуктни среди, превключване между тях</li>
+                    <li><strong>Canary Release</strong> — внедрување на нова версия за малка група потребители първо</li>
+                    <li><strong>Rollback Strategy</strong> — план за връщане на предишната версия при проблеми</li>
+                </ul>
+            </div>
+
+            <h3>4.6 Maintenance (Поддръжка) — Lientz & Swanson</h3>
+            <div class="model-card">
+                <div class="phase-row">
+                    <strong>Corrective</strong>
+                    <p>Поправка на грешки, открити в продуктната среда</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Adaptive</strong>
+                    <p>Адаптиране на софтуера на нова хардуер или среда</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Perfective</strong>
+                    <p>Добавяне на нови функции, подобрение на производителност</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Preventive</strong>
+                    <p>Рефакторинг, документиране за предотвратяване на проблеми в бъдещето</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- РАЗДЕЛ 5: УПРАВЛЕНИЕ НА КАЧЕСТВОТО -->
+        <section id="quality">
+            <h2>5. Управление на качеството</h2>
+
+            <h3>5.1 Software Quality Attributes (ISO 9126 / ISO 25010)</h3>
+            <div class="model-card">
+                <ul>
+                    <li><strong>Reliability</strong> — способност да работи без отказ</li>
+                    <li><strong>Usability</strong> — лекота на използване</li>
+                    <li><strong>Efficiency</strong> — производителност, потребление на ресурси</li>
+                    <li><strong>Maintainability</strong> — лекота на промени и поправки</li>
+                    <li><strong>Portability</strong> — способност да работи в различни среди</li>
+                    <li><strong>Security</strong> — защита от неоторизиран достъп</li>
+                </ul>
+            </div>
+
+            <h3>5.2 CMM/CMMI Maturity Levels</h3>
+            <div class="model-card">
+                <p><strong>Capability Maturity Model Integration</strong> — рамка за оценка на зрелостта на софтуерния процес:</p>
+                <div class="phase-row">
+                    <strong>Ниво 1: Initial</strong>
+                    <p>Процесите са непредсказуеми, лошо контролирани</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Ниво 2: Managed</strong>
+                    <p>Повтаряемост, основно управление на требемите, процесите и процесорите са установени</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Ниво 3: Defined</strong>
+                    <p>Процесите са документирани и комуникирани, стандартизирани</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Ниво 4: Quantitively Managed</strong>
+                    <p>Процесите се измерват и контролират, статистически методи</p>
+                </div>
+                <div class="phase-row">
+                    <strong>Ниво 5: Optimizing</strong>
+                    <p>Постоянно подобрение, фокус на иновация</p>
+                </div>
+            </div>
+
+            <h3>5.3 Technical Debt (Технически дълг)</h3>
+            <div class="definition">
+                <strong>Technical Debt</strong> е концепцията, че бързо решение днес води до по-скъпи проблеми утре. Метафора за заемане при лошо качество, което трябва да се "изплати" по-късно чрез рефакторинг.
+            </div>
+            <p><strong>Примери:</strong> Дублиран код, липсващи тестове, лошо документирани модули, архитектурни проблеми.</p>
+        </section>
+
+        <!-- РАЗДЕЛ 6: СЪВРЕМЕННИ ПРАКТИКИ -->
+        <section id="modern">
+            <h2>6. Съвременни практики в разработката</h2>
+
+            <h3>6.1 DevOps</h3>
+            <div class="definition">
+                <strong>DevOps</strong> е культура и набор от практики, която объединява разработката (Development) и операциите (Operations) за по-бързо доставяне на софтуер.
+            </div>
+            <p><strong>Четирите стълба на DevOps:</strong></p>
+            <ul>
+                <li><strong>Culture</strong> — сътрудничество, отговорност, учене</li>
+                <li><strong>Automation</strong> — автоматизиране на тестване, внедряване, инфраструктура</li>
+                <li><strong>Measurement</strong> — метрики, мониторинг, логове</li>
+                <li><strong>Sharing</strong> — споделяне на знание и отговорност</li>
+            </ul>
+
+            <h3>6.2 Microservices Architecture</h3>
+            <div class="model-card">
+                <p>Архитектура, където приложението се разлага на малки, независими услуги, всяка отговорна за един бизнес процес.</p>
+                <div class="advantages">
+                    <strong>✓ Предимства:</strong>
+                    <ul>
+                        <li>Независимо развиване на различни услуги</li>
+                        <li>По-лесна скалируемост</li>
+                        <li>По-лесна поддръжка</li>
+                    </ul>
+                </div>
+                <div class="disadvantages">
+                    <strong>✗ Недостатъци:</strong>
+                    <ul>
+                        <li>Сложност в комуникацията между услугите</li>
+                        <li>Разпределена система — по-трудна за отстраняване на грешки</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>6.3 Containerization (Docker, Kubernetes)</h3>
+            <div class="model-card">
+                <p><strong>Docker</strong> — инструмент за пакетиране на приложението с всички зависимости в контейнер, който може да се изпълнява навсякъде.</p>
+                <p><strong>Kubernetes</strong> — оркестрирането на контейнери, управление на скалиране, мониторинг и поправки.</p>
+            </div>
+
+            <h3>6.4 Cloud-Native Development</h3>
+            <div class="model-card">
+                <p>Разработка, предназначена за облачна среда (AWS, Azure, Google Cloud). Приложенията са:</p>
+                <ul>
+                    <li>Микросервиси</li>
+                    <li>Контейнеризирани</li>
+                    <li>Динамично управувани</li>
+                    <li>Без състояние (stateless)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- РАЗДЕЛ 7: РАБОТЕН ПРИМЕР -->
+        <section id="example">
+            <h2>7. Работен пример: Избор на процесен модел</h2>
+            <div class="worked-example">
+                <h4>📚 Сценарий: Разработка на система за управление на университетския LMS</h4>
+                <p><strong>Изисквания:</strong></p>
+                <ul>
+                    <li>Студентите трябва да могат да си запишат курсове</li>
+                    <li>Преподаватели да качват материали и задания</li>
+                    <li>Автоматично оценяване на тестови въпроси</li>
+                    <li>Комуникация между студенти и преподаватели</li>
+                    <li>Интеграция с другите университетски системи</li>
+                    <li>Скалируемост за 10 000+ студенти</li>
+                </ul>
+
+                <h4>🔍 Анализ</h4>
+                <p><strong>Характеристики на проекта:</strong></p>
+                <ul>
+                    <li>Изисквания са парциално ясни, но ще се развиват</li>
+                    <li>Потребителската обратна връзка е критична</li>
+                    <li>Проектът е дългосрочен и ще има постоянни подобрения</li>
+                    <li>Технологията е позната</li>
+                    <li>Скалируемостта е важна</li>
+                </ul>
+
+                <h4>⚖️ Сравнение на моделите</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Аспект</th>
+                            <th>Waterfall</th>
+                            <th>Agile (Scrum)</th>
+                            <th>Spiral</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Адаптация на изисквания</strong></td>
+                            <td>⚠️ Лоша</td>
+                            <td>✓ Отлична</td>
+                            <td>✓ Добра</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ранна обратна връзка</strong></td>
+                            <td>✗ Няма</td>
+                            <td>✓ Ежедневна</td>
+                            <td>✓ През спирали</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Управление на риска</strong></td>
+                            <td>⚠️ На края</td>
+                            <td>✓ Разпределено</td>
+                            <td>✓ Активно</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Скалируемост</strong></td>
+                            <td>✓ Добра</td>
+                            <td>⚠️ Средна</td>
+                            <td>✓ Добра</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Сложност на управление</strong></td>
+                            <td>✓ Проста</td>
+                            <td>✓ Средна</td>
+                            <td>✗ Висока</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>✅ Препоръка: Hybrid Agile-Waterfall подход</h4>
+                <ul>
+                    <li><strong>Фаза 1 (Waterfall):</strong> Спецификация на архитектурата, анализ на изискванията, планиране на интеграции (1-2 месеца)</li>
+                    <li><strong>Фаза 2 (Agile/Scrum):</strong> Разработка в 2-седмични спринтове с постоянна обратна връзка от потребителите (6-9 месеца)</li>
+                    <li><strong>Фаза 3 (Agile Maintenance):</strong> После доставка, постоянни подобрения в Kanban стил</li>
+                </ul>
+                <p><strong>Аргументация:</strong> Водопадното начало позволява стабилна архитектура, а Agile разработката позволява адаптация на функциите въз основа на потребителската обратна връзка.</p>
+            </div>
+        </section>
+
+        <!-- РАЗДЕЛ 8: ФЛАШКАРТИ -->
+        <section id="flashcards">
+            <h2>8. Флашкарти за изпита</h2>
+            <div class="flashcard-grid">
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е SDLC?</div>
+                    <div class="flashcard-answer">Software Development Life Cycle — структурираният процес, който включва всички етапи от концепцията до поддръжката на софтуера.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Главното различие между Waterfall и Agile?</div>
+                    <div class="flashcard-answer">Waterfall е линейна последователност без връщане, Agile е итеративна с постоянна обратна връзка и промени.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е Sprintът в Scrum?</div>
+                    <div class="flashcard-answer">Фиксиран период (обичайно 2 седмици) в който командата разработва избрани функции от Product Backlog.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Кои са 4 квадрантите на спиралата (Boehm)?</div>
+                    <div class="flashcard-answer">Планиране, Анализ на риска, Инженерство, Оценка.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е верификация vs валидация?</div>
+                    <div class="flashcard-answer">Верификация — правим ли софтуера правилно; Валидация — правилният ли софтуер правим.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е Technical Debt?</div>
+                    <div class="flashcard-answer">Концепцията, че бързо решение днес води до по-скъпи проблеми утре; метафора за заемане при лошо качество.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Четирите ценности на Agile Manifesto?</div>
+                    <div class="flashcard-answer">Индивиди и взаимодействие; Работещ софтуер; Сътрудничество с клиента; Отговор на промени.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е TDD (Test-Driven Development)?</div>
+                    <div class="flashcard-answer">Първо пиши теста, после пиши кода, който го прави да преминава теста.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е CI/CD?</div>
+                    <div class="flashcard-answer">Continuous Integration (кодът се интегрира автоматично) и Continuous Deployment (софтуерът се внедрява автоматично).</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Четирите вида поддръжка (Lientz & Swanson)?</div>
+                    <div class="flashcard-answer">Corrective (поправка), Adaptive (адаптиране), Perfective (подобрение), Preventive (превенция).</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е Kanban?</div>
+                    <div class="flashcard-answer">Визуална управление на потока с дъска, колони, карти и WIP лимити; непрекъсна доставка.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е microservices архитектура?</div>
+                    <div class="flashcard-answer">Архитектура където приложението се разлага на малки, независими услуги, всяка отговорна за един бизнес процес.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- РАЗДЕЛ 9: БЪРЗА СПРАВКА -->
+        <section id="quick-ref">
+            <h2>9. Бърза справка (Шпаргалка)</h2>
+
+            <div class="quick-ref">
+                <h4>🎯 Ключови термини и определения</h4>
+                <ul>
+                    <li><strong>SDLC</strong> — Software Development Life Cycle, структуриран процес</li>
+                    <li><strong>Водопад</strong> — линейна последователност (Req → Design → Code → Test → Deploy)</li>
+                    <li><strong>Agile</strong> — итеративна разработка с спринтове и постоянна обратна връзка</li>
+                    <li><strong>Scrum</strong> — Agile метод с ролите, артефактите и церемониите</li>
+                    <li><strong>Kanban</strong> — визуален метод с лимити на незавършена работа</li>
+                    <li><strong>Spiral</strong> — модел фокусиран на управление на риска в четири квадранта</li>
+                    <li><strong>V-Model</strong> — верификация от лявата страна, валидация от дясната</li>
+                    <li><strong>XP</strong> — Extreme Programming, инженерни практики (TDD, pair programming)</li>
+                    <li><strong>DevOps</strong> — культура и практики, което объединява Development и Operations</li>
+                    <li><strong>Technical Debt</strong> — трудности в бъдещето поради бързи решения днес</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>📊 Когато какво да се използва</h4>
+                <ul>
+                    <li><strong>Waterfall:</strong> Ясни изисквания, регулаторни системи, вградени системи</li>
+                    <li><strong>Agile:</strong> Променливи изисквания, стартъпи, разработка на потребителски приложения</li>
+                    <li><strong>Kanban:</strong> Поддръжка, постоянни поправки, гъвкави процеси</li>
+                    <li><strong>Spiral:</strong> Сложни проекти с висок риск</li>
+                    <li><strong>Prototyping:</strong> Уточняване на изисквания, нови технологии</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>🧪 Нива на тестване</h4>
+                <ul>
+                    <li><strong>Unit:</strong> Отделни функции/класи</li>
+                    <li><strong>Integration:</strong> Взаимодействие между модули</li>
+                    <li><strong>System:</strong> Цяла система спрямо спецификациите</li>
+                    <li><strong>Acceptance:</strong> От клиента, спрямо изискванията</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>🎓 CMMI нива на зрелост</h4>
+                <ul>
+                    <li><strong>1 (Initial):</strong> Непредсказуеми процеси</li>
+                    <li><strong>2 (Managed):</strong> Повтаряемост, управление на прякати</li>
+                    <li><strong>3 (Defined):</strong> Документирани и стандартизирани</li>
+                    <li><strong>4 (Quantitively Managed):</strong> Измерения и статистика</li>
+                    <li><strong>5 (Optimizing):</strong> Постоянно подобрение и иновация</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>💾 Атрибути на качеството (ISO 25010)</h4>
+                <ul>
+                    <li><strong>Reliability:</strong> Работа без отказ</li>
+                    <li><strong>Usability:</strong> Лекота на използване</li>
+                    <li><strong>Efficiency:</strong> Производителност</li>
+                    <li><strong>Maintainability:</strong> Лекота на промени</li>
+                    <li><strong>Portability:</strong> Работа в различни среди</li>
+                    <li><strong>Security:</strong> Защита от неоторизиран достъп</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>🔀 Сравнение на роли в Scrum</h4>
+                <ul>
+                    <li><strong>Product Owner:</strong> Управление на приоритети, Product Backlog</li>
+                    <li><strong>Scrum Master:</strong> Отстранен на препятствия, защита на процеса</li>
+                    <li><strong>Development Team:</strong> Разработка на софтуера, самоорганизиран</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p><strong>Литература:</strong> [2] Ashmore & Runyan — Introduction to Agile Methods | [30] Ескенази & Манева — Software Engineering</p>
+            <p>Подготовка за докторантски изпит по информатика, ИМИ-БАН, март 2026</p>
+        </footer>
+    </main>
+
+    <a href="index.html" class="portal-link">← Портал</a>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.contentLoaded();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 10: Машинно самообучение и извличане на знания - CRISP-DM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --navy: #0f2744;
+            --navy2: #1a3a5c;
+            --blue: #2563a8;
+            --lblue: #dbeafe;
+            --green: #166534;
+            --lgreen: #dcfce7;
+            --purple: #5b21b6;
+            --lpurple: #ede9fe;
+            --orange: #9a3412;
+            --lorange: #ffedd5;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+            --text: #1a1a2e;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--text);
+            font-size: 18px;
+            line-height: 1.75;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 270px;
+            height: 100vh;
+            background-color: var(--navy);
+            color: white;
+            padding: 30px 15px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar h2 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar a {
+            color: #e0e7ff;
+            text-decoration: none;
+            font-size: 15px;
+            display: block;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--navy2);
+            color: #fbbf24;
+        }
+
+        .sidebar a.active {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        /* Portal button */
+        .portal-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--blue);
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 101;
+            transition: background-color 0.2s ease;
+        }
+
+        .portal-btn:hover {
+            background-color: var(--navy2);
+        }
+
+        /* Main content */
+        .container {
+            margin-left: 270px;
+            flex: 1;
+            padding: 60px 40px 40px 40px;
+            max-width: 100%;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--navy);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--muted);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 40px 0 20px 0;
+            color: var(--navy);
+            border-bottom: 3px solid var(--blue);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 28px 0 15px 0;
+            color: var(--blue);
+        }
+
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        /* Boxes */
+        .overview-box, .def-box, .theorem-box, .note-box, .green-box {
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+        }
+
+        .overview-box {
+            border-left-color: var(--navy);
+            background-color: #f0f4f8;
+        }
+
+        .def-box {
+            border-left-color: var(--blue);
+            background-color: var(--lblue);
+        }
+
+        .theorem-box {
+            border-left-color: var(--purple);
+            background-color: var(--lpurple);
+        }
+
+        .note-box {
+            border-left-color: var(--orange);
+            background-color: var(--lorange);
+        }
+
+        .green-box {
+            border-left-color: var(--green);
+            background-color: var(--lgreen);
+        }
+
+        .box-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        /* Formula block */
+        .formula-block {
+            background-color: #0f172a;
+            color: #e0e7ff;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            margin: 16px 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: var(--navy);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 16px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        /* Proof steps */
+        .proof-steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .proof-steps li {
+            margin-bottom: 12px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .proof-steps li:before {
+            content: counter(step);
+            counter-increment: step;
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background-color: var(--blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .proof-steps {
+            counter-reset: step;
+        }
+
+        /* Flashcards */
+        .flashcards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 30px 0;
+        }
+
+        .fc {
+            background-color: white;
+            border: 2px solid var(--navy);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .fc:hover {
+            box-shadow: 0 8px 16px rgba(15, 39, 68, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .fc-q {
+            color: var(--navy);
+            font-weight: 600;
+            font-size: 15px;
+            display: block;
+        }
+
+        .fc-a {
+            color: var(--green);
+            font-size: 14px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .fc.open .fc-q {
+            display: none;
+        }
+
+        .fc.open .fc-a {
+            display: block;
+        }
+
+        /* Mermaid */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            background-color: white;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        /* Code/formula references */
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: var(--orange);
+        }
+
+        em {
+            color: var(--blue);
+            font-style: italic;
+        }
+
+        strong {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--blue);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--navy);
+        }
+
+        /* Exam strategy */
+        .strategy-box {
+            background-color: white;
+            border-left: 5px solid var(--purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .exam-tip {
+            background-color: #fff9e6;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        /* Reference section */
+        .references {
+            background-color: #f0fdf4;
+            border: 1px solid var(--green);
+            padding: 20px;
+            border-radius: 6px;
+            margin: 30px 0;
+        }
+
+        .references h3 {
+            color: var(--green);
+            margin-top: 0;
+        }
+
+        .references ol {
+            margin-left: 20px;
+        }
+
+        .references li {
+            margin-bottom: 8px;
+            font-size: 15px;
+            text-align: left;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .container {
+                margin-left: 240px;
+                padding: 50px 30px 30px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            .container {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+            .content {
+                max-width: 100%;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="portal-btn">← Портал</a>
+
+    <div class="sidebar">
+        <h2>📚 Навигация</h2>
+        <ul>
+            <li><a href="#overview">Обзор</a></li>
+            <li><a href="#section1">1. KDD процес</a></li>
+            <li><a href="#section2">2. CRISP-DM</a></li>
+            <li><a href="#section3">3. ML основи</a></li>
+            <li><a href="#section4">4. Оценка на модели</a></li>
+            <li><a href="#section5">5. Предизвикателства</a></li>
+            <li><a href="#section6">6. Приложения</a></li>
+            <li><a href="#flashcards">📇 Флашкарти</a></li>
+            <li><a href="#reference">Бърза справка</a></li>
+            <li><a href="#strategy">💡 Стратегия за изпита</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <h1>Тема 10: Машинно самообучение и извличане на знания от данни</h1>
+            <p class="subtitle">CRISP-DM методология, процес на Knowledge Discovery, alapни концепции и оценка</p>
+
+            <!-- Overview -->
+            <div id="overview" class="overview-box">
+                <div class="box-title">⭐ Критично значение за вашата дисертация</div>
+                <p>
+                    Това е <strong>фундаментална тема</strong> за цялата AI и Data Science. За вас като кандидат на дисертация на тема „Интелигентни системи за обучение" (ITS) и машинното обучение в образованието, този материал е <em>особено критичен</em>. Комисията ще очаква дълбоки познания здравослужение.
+                </p>
+                <p>
+                    <strong>Свързани теми:</strong> Тема 9 (Big Data) се фокусира върху инфраструктурата за събиране и съхранение на данни, Тема 11 разглежда конкретни ML методи (дърветата, SVM, неврални мрежи), Тема 8 третира базите данни, които са източникът на данни.
+                </p>
+                <p>
+                    Трябва да владеете CRISP-DM като процес (не само като теория) и да разбирате как КМ алгоритмите се прилагат в реалния свят, особено в образователния контекст.
+                </p>
+            </div>
+
+            <!-- Section 1: KDD -->
+            <h2 id="section1">Раздел 1: Извличане на знания от данни (KDD)</h2>
+
+            <h3>1.1 Определение на Knowledge Discovery in Databases (KDD)</h3>
+            <p>
+                Най-авторитетното определение дава Fayyad et al. (1996):
+            </p>
+            <div class="def-box">
+                <div class="box-title">📌 Определение на KDD</div>
+                <p>
+                    <strong>KDD (Knowledge Discovery in Databases)</strong> е <em>нетривиалният процес на идентифициране на валидни, нови, потенциално полезни и разбираеми шаблони в данни</em>.
+                </p>
+                <p>
+                    Ключови слова:
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Нетривиален</strong> — не е просто директно четене на данни, а търсене на скрити връзки</li>
+                    <li><strong>Валидни</strong> — шаблоните трябва да бъдат истинити в нови данни, не само в тренировката</li>
+                    <li><strong>Нови</strong> — не са известни преди това</li>
+                    <li><strong>Полезни</strong> — имат практическа стойност за бизнеса/приложението</li>
+                    <li><strong>Разбираеми</strong> — експертът трябва да може да ги интерпретира</li>
+                </ul>
+            </div>
+
+            <h3>1.2 Етапи на KDD процеса (по Fayyad)</h3>
+            <p>
+                KDD е многоетапен процес, който преди всичко включва много повече от просто прилагането на алгоритмите (Data Mining):
+            </p>
+
+            <div class="mermaid">
+                graph LR
+                    A["1️⃣ Selection<br/>(Избор на данни)"] -->
+                    B["2️⃣ Pre-processing<br/>(Почистване)"] -->
+                    C["3️⃣ Transformation<br/>(Трансформация)"] -->
+                    D["4️⃣ Data Mining<br/>(Екстракция на шаблони)"] -->
+                    E["5️⃣ Interpretation/<br/>Evaluation<br/>(Интерпретация)"]
+
+                    E -.Feedback.-> A
+
+                    style A fill:#dbeafe
+                    style B fill:#dbeafe
+                    style C fill:#dbeafe
+                    style D fill:#fbbf24
+                    style E fill:#dcfce7
+            </div>
+
+            <h3>Детайлен преглед на етапите:</h3>
+
+            <ol style="margin-left: 20px; margin-bottom: 20px;">
+                <li>
+                    <strong>Selection (Избор на данни)</strong><br/>
+                    Събиране на съответните данни от различни източници. Определяне на целеви променливи, цензуриране на записите с липсващи стойности при необходимост.
+                </li>
+                <li>
+                    <strong>Pre-processing (Предварителна обработка)</strong><br/>
+                    Почистване на данни: премахване на шум, справяне с дублирани записи, обработка на аномалии. Анализ на качеството на данните.
+                </li>
+                <li>
+                    <strong>Transformation (Трансформация)</strong><br/>
+                    Конструиране на нови признаци (feature engineering), намаляване на размерност, нормализация/стандартизация. Подготовка на данните в подходящ формат за алгоритъма.
+                </li>
+                <li>
+                    <strong>Data Mining (Екстракция на шаблони)</strong><br/>
+                    Приложение на машинни алгоритми. Това е етапът, по който се говори най-много, но е само ~15-20% от работата!
+                </li>
+                <li>
+                    <strong>Interpretation & Evaluation (Интерпретация)</strong><br/>
+                    Анализ на резултатите, валидиране срещу бизнес целите, вземане на решения. Цикълът може да се повтори с други алгоритми или параметри.
+                </li>
+            </ol>
+
+            <h3>1.3 Data Mining vs. KDD</h3>
+            <p>
+                Често се смесват тези два термина. Важно е да разберете разликата:
+            </p>
+            <table>
+                <tr>
+                    <th>Аспект</th>
+                    <th>Data Mining (DM)</th>
+                    <th>KDD</th>
+                </tr>
+                <tr>
+                    <td>Дефиниция</td>
+                    <td>Етап на екстракция на шаблони чрез алгоритми</td>
+                    <td>Цял процес от данни до нови знания</td>
+                </tr>
+                <tr>
+                    <td>Обхват</td>
+                    <td>Подетап на KDD</td>
+                    <td>Включва DM + подготовка + интерпретация</td>
+                </tr>
+                <tr>
+                    <td>Инструменти</td>
+                    <td>Алгоритми: дърветата, SVM, неврални мрежи</td>
+                    <td>DM инструменти + обработка + валидиране</td>
+                </tr>
+                <tr>
+                    <td>% от работата</td>
+                    <td>~15-20%</td>
+                    <td>100%</td>
+                </tr>
+            </table>
+
+            <h3>1.4 Задачи на Data Mining</h3>
+            <p>
+                В зависимост от проблема, Data Mining решава различни типове задачи:
+            </p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Класификация:</strong> Предсказване на категорична променлива (например: спам/не спам, одобрен/отклонен кредит)</li>
+                <li><strong>Регресия:</strong> Предсказване на числена стойност (например: прогноза на цена, прогноза на успеваемост в курс)</li>
+                <li><strong>Клъстеризация:</strong> Групиране на подобни обекти без предварително определени етикети</li>
+                <li><strong>Асоциативни правила:</strong> Намиране на връзки между променливи (например: „ako студент посещава лекции редовно И решава задачи, то вероятност да положи изпита е висока")</li>
+                <li><strong>Откриване на аномалии:</strong> Идентифициране на необичайни записи в данни</li>
+                <li><strong>Анализ на последователности:</strong> Намиране на шаблони в последователни данни (например: това се случи, след това това)</li>
+            </ul>
+
+            <!-- Section 2: CRISP-DM -->
+            <h2 id="section2">Раздел 2: CRISP-DM методология</h2>
+
+            <h3>2.1 Произход и контекст</h3>
+            <p>
+                <strong>CRISP-DM</strong> означава <em>Cross-Industry Standard Process for Data Mining</em>. Развита е около 1999-2000 г. от консорциум от компании (SPSS, NCR, DaimlerChrysler и други) като отговор на необходимостта от стандартизиран процес. Въпреки че е стара, остава <strong>най-разпространена методология</strong> в индустрията днес.
+            </p>
+
+            <h3>2.2 Шест фази на CRISP-DM</h3>
+
+            <div class="mermaid">
+                graph TB
+                    A["1️⃣ Business<br/>Understanding"] -->|Разбиране| B["2️⃣ Data<br/>Understanding"]
+                    B -->|Исследване| C["3️⃣ Data<br/>Preparation"]
+                    C -->|Готовност| D["4️⃣ Modeling"]
+                    D -->|Модел| E["5️⃣ Evaluation"]
+                    E -->|Валидиране| F["6️⃣ Deployment"]
+
+                    F -.Обратна връзка.-> A
+                    E -.Повтор.-> C
+                    D -.Усъвършенстване.-> B
+
+                    style A fill:#dcfce7
+                    style B fill:#dbeafe
+                    style C fill:#ffedd5
+                    style D fill:#ede9fe
+                    style E fill:#dbeafe
+                    style F fill:#dcfce7
+            </div>
+
+            <h3>Phase 1️⃣: Business Understanding (Разбиране на бизнеса)</h3>
+            <div class="green-box">
+                <div class="box-title">Цели на фазата</div>
+                <ul style="margin-left: 20px;">
+                    <li>Определяне на <strong>бизнес целите</strong> — какво искаме да постигнем?</li>
+                    <li>Оценка на <strong>текущата ситуация</strong> — какви ресурси имаме?</li>
+                    <li>Формулиране на <strong>DM задачата</strong> — как да трансформираме бизнес целите в техническа задача?</li>
+                    <li>Разработване на <strong>план на проекта</strong></li>
+                </ul>
+            </div>
+
+            <p>
+                <strong>Пример за образование (ITS):</strong> Бизнес цел — „Подобрить персонализирано обучение". Техническа задача — „Предсказване на обучавания стил на студент въз основа на тестови резултати и взаимодействие".
+            </p>
+
+            <h3>Phase 2️⃣: Data Understanding (Разбиране на данните)</h3>
+            <div class="green-box">
+                <div class="box-title">Цели на фазата</div>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Събиране</strong> на достъпни данни</li>
+                    <li><strong>Описание</strong> — какво имаме? Какъв формат?</li>
+                    <li><strong>Проучване</strong> — статистически анализ, визуализация</li>
+                    <li><strong>Проверка за качество</strong> — липсващи стойности, аномалии</li>
+                </ul>
+            </div>
+
+            <p>
+                <strong>Ключови въпроси:</strong> Колко записа имаме? Какви са променливите? Има ли липсващи данни? Как е разпределена целевата променлива? Има ли дисбаланс на класовете?
+            </p>
+
+            <h3>Phase 3️⃣: Data Preparation (Подготовка на данни)</h3>
+            <div class="note-box">
+                <div class="box-title">⚠️ Най-времеемкият етап: 60-80% от дела времето!</div>
+                <p>
+                    Експертите често казват, че успехът на ML проекта зависи главно от качеството на подготовката на данни, не от избора на алгоритъма.
+                </p>
+            </div>
+
+            <p><strong>Дейности:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Селекция:</strong> Избор на релевантни признаци и записи</li>
+                <li><strong>Почистване:</strong> Справяне с липсващи стойности (deletion, imputation), премахване на дублирани записи</li>
+                <li><strong>Трансформация:</strong> Нормализация/стандартизация на числови признаци, кодиране на категорични</li>
+                <li><strong>Feature Engineering:</strong> Конструиране на нови признаци въз основа на домейн знания</li>
+                <li><strong>Интеграция:</strong> Комбиниране на данни от множество источники</li>
+                <li><strong>Балансиране:</strong> Справяне с дисбаланс на класовете (SMOTE, oversampling, undersampling)</li>
+            </ul>
+
+            <h3>Phase 4️⃣: Modeling (Моделиране)</h3>
+            <div class="green-box">
+                <div class="box-title">Цели на фазата</div>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Избор на техника</strong> — кой алгоритъм е подходящ?</li>
+                    <li><strong>Дизайн на тестове</strong> — как ще оценим модела?</li>
+                    <li><strong>Построяване</strong> — обучение на модела</li>
+                    <li><strong>Оценка</strong> — измерване на перфоманса</li>
+                </ul>
+            </div>
+
+            <p>
+                Обикновено се тестват <strong>няколко алгоритма</strong> (Occam's razor: по-простите са по-добри). За класификация часто се пробват Decision Trees, Random Forests, SVM, Logistic Regression. За регресия — Linear Regression, SVM, Gradient Boosting.
+            </p>
+
+            <h3>Phase 5️⃣: Evaluation (Оценка)</h3>
+            <div class="green-box">
+                <div class="box-title">Цели на фазата</div>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Оценка на резултатите</strong> спрямо бизнес целите</li>
+                    <li><strong>Преглед на процеса</strong> — всичко ли е вярно направено?</li>
+                    <li><strong>Решение</strong> — готови ли сме за deployment, или трябва коригирования?</li>
+                </ul>
+            </div>
+
+            <p>
+                Може да се върнем към предходни фази ако резултатите не са задоволителни. Например, ако модельт е лош, може да е нужна по-добра подготовка на данни или други признаци.
+            </p>
+
+            <h3>Phase 6️⃣: Deployment (Внедряване)</h3>
+            <div class="green-box">
+                <div class="box-title">Цели на фазата</div>
+                <ul style="margin-left: 20px;">
+                    <li>Разработване на <strong>план за внедряване</strong></li>
+                    <li><strong>Интеграция</strong> с производствената среда</li>
+                    <li>Установяване на <strong>мониторинг и поддръжка</strong></li>
+                    <li>Подготовка на <strong>финален доклад</strong></li>
+                </ul>
+            </div>
+
+            <p>
+                Не е конец! Моделите деградират с времето (data drift). Трябва редовно преучаване и мониторинг.
+            </p>
+
+            <h3>2.3 Ключни характеристики на CRISP-DM</h3>
+            <div class="theorem-box">
+                <div class="box-title">🔑 Итеративност</div>
+                <p>
+                    CRISP-DM е <strong>цикличен процес</strong>, не последователен. Можем да се връщаме между фазите. Например:
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li>От Evaluation → Data Preparation (ако модельт не е добър)</li>
+                    <li>От Modeling → Data Understanding (ако нямаме доста признаци)</li>
+                    <li>От Deployment → Business Understanding (нов проблем открит)</li>
+                </ul>
+            </div>
+
+            <h3>2.4 CRISP-DM vs. KDD vs. SEMMA</h3>
+            <table>
+                <tr>
+                    <th>Критерий</th>
+                    <th>CRISP-DM</th>
+                    <th>KDD</th>
+                    <th>SEMMA</th>
+                </tr>
+                <tr>
+                    <td>Произход</td>
+                    <td>Консорциум (1999)</td>
+                    <td>Fayyad et al. (1996)</td>
+                    <td>SAS Institute</td>
+                </tr>
+                <tr>
+                    <td>Фази</td>
+                    <td>6 фази (бизнес-центрирана)</td>
+                    <td>5 технически етапа</td>
+                    <td>5 фази (SEMMA)</td>
+                </tr>
+                <tr>
+                    <td>Фокус</td>
+                    <td>Целия цикъл + бизнес цели</td>
+                    <td>Технически процес</td>
+                    <td>Алгоритмични</td>
+                </tr>
+                <tr>
+                    <td>Популярност</td>
+                    <td>⭐⭐⭐⭐⭐ Най-разпространена</td>
+                    <td>⭐⭐⭐ Теоретична</td>
+                    <td>⭐⭐ Редко използвана</td>
+                </tr>
+                <tr>
+                    <td>Примемост</td>
+                    <td>Универсална</td>
+                    <td>Специфична за DM</td>
+                    <td>За SAS софтуер</td>
+                </tr>
+            </table>
+
+            <!-- Section 3: ML Fundamentals -->
+            <h2 id="section3">Раздел 3: Основни понятия на машинното самообучение</h2>
+
+            <h3>3.1 Формална дефиниция на машинното обучение</h3>
+            <div class="def-box">
+                <div class="box-title">📌 Mitchell (1997)</div>
+                <p>
+                    <strong>„A computer program learns from experience E with respect to task T and performance measure P, if its performance at T, as measured by P, improves with experience E"</strong>
+                </p>
+                <p>
+                    Превод: Компютърна програма се обучава от опит E по отношение на задача T и мярка P, ако нейната перфоманса при T, измерена с P, се подобрява с опит E.
+                </p>
+                <p>
+                    <strong>Пример:</strong> Система за препоръчване във висше образование:
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li>E = исторически данни на студенти (техни действия, резултати)</li>
+                    <li>T = препоръчване на подходящ курс за студент</li>
+                    <li>P = процент студенти, които са благодарни за препоръката</li>
+                </ul>
+            </div>
+
+            <h3>3.2 Три главни типа машинно обучение</h3>
+
+            <div class="green-box">
+                <div class="box-title">1️⃣ Supervised Learning (Надзорно обучение)</div>
+                <p>
+                    <strong>Дефиниция:</strong> Обучение със „етикети" — за всеки пример имаме входна променлива X и желаното изходе Y.
+                </p>
+                <p>
+                    <strong>Подзадачи:</strong>
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Класификация:</strong> Y е категорична (дискретна) — спам/не спам, одобрен/отклонен</li>
+                    <li><strong>Регресия:</strong> Y е числена (непрекъсната) — прогноза на цена, прогноза на оценка</li>
+                </ul>
+                <p>
+                    <strong>Алгоритми:</strong> Decision Trees, Random Forest, SVM, Neural Networks, Logistic Regression, K-NN
+                </p>
+                <p>
+                    <strong>Приложение в ITS:</strong> Предсказване на дали студент ще положи курс въз основа на техния профил.
+                </p>
+            </div>
+
+            <div class="green-box">
+                <div class="box-title">2️⃣ Unsupervised Learning (Неконтролирано обучение)</div>
+                <p>
+                    <strong>Дефиниция:</strong> Обучение без етикети — имаме само входни данни X, нямаме целева Y.
+                </p>
+                <p>
+                    <strong>Подзадачи:</strong>
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Клъстеризация:</strong> Групиране на подобни обекти</li>
+                    <li><strong>Dimensionality Reduction:</strong> Намаляване на брой признаци (PCA, t-SNE)</li>
+                    <li><strong>Assoziative Rule Learning:</strong> Намиране на връзки</li>
+                </ul>
+                <p>
+                    <strong>Алгоритми:</strong> K-means, DBSCAN, Hierarchical Clustering, PCA
+                </p>
+                <p>
+                    <strong>Приложение в ITS:</strong> Групиране на студенти в различни категории въз основа на техния стил на учене.
+                </p>
+            </div>
+
+            <div class="green-box">
+                <div class="box-title">3️⃣ Reinforcement Learning (Укрепвающее обучение)</div>
+                <p>
+                    <strong>Дефиниция:</strong> Агент учи чрез взаимодействие със среда, получавайки награди за добрите действия и наказания за лошите.
+                </p>
+                <p>
+                    <strong>Елементи:</strong>
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li>Agent — действащия ентитет</li>
+                    <li>Environment — средата, с която агентът взаимодейства</li>
+                    <li>State — текущото състояние</li>
+                    <li>Action — действието на агента</li>
+                    <li>Reward — обратна връзка (награда/наказание)</li>
+                </ul>
+                <p>
+                    <strong>Алгоритми:</strong> Q-Learning, Policy Gradient, Deep Q-Network (DQN)
+                </p>
+                <p>
+                    <strong>Приложение в ITS:</strong> Учена система динамично достъпква серията уроци базирано на това как студентът отговаря.
+                </p>
+            </div>
+
+            <h3>3.3 Сравнителна таблица</h3>
+            <table>
+                <tr>
+                    <th>Тип</th>
+                    <th>Етикети</th>
+                    <th>Задача</th>
+                    <th>Примери</th>
+                </tr>
+                <tr>
+                    <td>Supervised</td>
+                    <td>✅ Да, имаме Y</td>
+                    <td>Класификация, Регресия</td>
+                    <td>Спам филтър, предсказване на цена</td>
+                </tr>
+                <tr>
+                    <td>Unsupervised</td>
+                    <td>❌ Не, само X</td>
+                    <td>Клъстеризация, Намаляване размерност</td>
+                    <td>Групиране потребители, компресиране данни</td>
+                </tr>
+                <tr>
+                    <td>Reinforcement</td>
+                    <td>⚡ Награди/наказания</td>
+                    <td>Оптимизация политика</td>
+                    <td>AlphaGo, роботика, адаптивно обучение</td>
+                </tr>
+            </table>
+
+            <h3>3.4 Ключни концепции при надзорно обучение</h3>
+
+            <p><strong>Training, Validation, Test наборите</strong></p>
+            <p>
+                Данните се разделят на три части за справедлива оценка:
+            </p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Training set (60-70%):</strong> За обучение на модела</li>
+                <li><strong>Validation set (10-15%):</strong> За тунинг на параметри (hyperparameter tuning)</li>
+                <li><strong>Test set (15-20%):</strong> За финална оценка на генерализация</li>
+            </ul>
+
+            <p><strong>Bias-Variance Tradeoff</strong></p>
+            <div class="formula-block">
+Total Error = Bias² + Variance + Irreducible Error
+
+Bias = E[Ŷ] - Y          (опростен)
+Variance = E[Ŷ²] - E[Ŷ]² (опростен)
+            </div>
+
+            <ul style="margin-left: 20px;">
+                <li><strong>High Bias, Low Variance:</strong> Модель е твърде прост (недостатъчен) → Underfitting</li>
+                <li><strong>Low Bias, High Variance:</strong> Модель е твърде сложен → Overfitting</li>
+                <li><strong>Целта:</strong> Балансиран модел в средата</li>
+            </ul>
+
+            <p><strong>Overfitting и Underfitting</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Overfitting:</strong> Модель „научи" даде — много добра точност на training, лоша на test</li>
+                <li><strong>Underfitting:</strong> Модель е твърде прост — лоша точност на training и test</li>
+                <li><strong>Решения за overfitting:</strong> Регуляризация (L1/L2), ранна спирка, dropout, събиране на повече данни</li>
+            </ul>
+
+            <p><strong>Cross-Validation</strong></p>
+            <p>
+                За малки датасети използваме cross-validation вместо един train/test split:
+            </p>
+            <ul style="margin-left: 20px;">
+                <li><strong>k-fold CV:</strong> Разделяме данни на k части, обучаваме k модела (всеки път един fold е тест), осредняваме резултатите</li>
+                <li><strong>Leave-One-Out CV:</strong> k = n (брой на записите) — много мощно, но скъпо</li>
+            </ul>
+
+            <h3>3.5 Feature Engineering (Инженеринг на признаци)</h3>
+            <p>
+                <strong>Feature Selection:</strong> Избор на найбойните признаци
+            </p>
+            <ul style="margin-left: 20px;">
+                <li>Filter methods: статистични мерки (correlation, mutual information)</li>
+                <li>Wrapper methods: оценяване на подмножества признаци с реален алгоритъм</li>
+                <li>Embedded methods: алгоритмът избира признаци при обучение (Tree-based, L1 penalty)</li>
+            </ul>
+
+            <p>
+                <strong>Feature Extraction:</strong> Конструиране на нови признаци от съществуващи
+            </p>
+            <ul style="margin-left: 20px;">
+                <li>Domain knowledge: например, от дата можем да екстрахираме ден на седмица, час, месец</li>
+                <li>Mathematical transformations: полиномни признаци, логаритмични скали</li>
+                <li>PCA: неупоредни най-информативни признаци</li>
+            </ul>
+
+            <p>
+                <strong>Feature Construction:</strong> Комбиниране на признаци
+            </p>
+            <ul style="margin-left: 20px;">
+                <li>Пример: за студент, от (посетени_лекции, съответни_задачи) можем да създадем индекс на активност</li>
+            </ul>
+
+            <!-- Section 4: Model Evaluation -->
+            <h2 id="section4">Раздел 4: Оценка и валидиране на модели</h2>
+
+            <h3>4.1 Confusion Matrix (Матрица на объркването)</h3>
+            <p>
+                За проблем на бинарна класификация:
+            </p>
+            <table>
+                <tr>
+                    <th colspan="2"></th>
+                    <th colspan="2">Предсказана стойност</th>
+                </tr>
+                <tr>
+                    <th colspan="2"></th>
+                    <th>Позитивна (Да)</th>
+                    <th>Негативна (Не)</th>
+                </tr>
+                <tr>
+                    <th rowspan="2">Реална<br/>стойност</th>
+                    <th>Позитивна (Да)</th>
+                    <td><strong>TP</strong> (True Positive)</td>
+                    <td><strong>FN</strong> (False Negative)</td>
+                </tr>
+                <tr>
+                    <th>Негативна (Не)</th>
+                    <td><strong>FP</strong> (False Positive)</td>
+                    <td><strong>TN</strong> (True Negative)</td>
+                </tr>
+            </table>
+
+            <div class="note-box">
+                <div class="box-title">Пояснение</div>
+                <ul style="margin-left: 20px;">
+                    <li><strong>TP:</strong> Правилно предсказан позитивен случай (bijvoorbeeld: спам имейл, правилно класифициран като спам)</li>
+                    <li><strong>FN:</strong> Пропуснат позитивен случай (болен човек, неправилно класифициран като здрав) — опасно!</li>
+                    <li><strong>FP:</strong> Невярно позитивен (здрав човек, неправилно класифициран като болен) — неудобен</li>
+                    <li><strong>TN:</strong> Правилно предсказан негативен случай</li>
+                </ul>
+            </div>
+
+            <h3>4.2 Основни метрики за класификация</h3>
+
+            <p><strong>Accuracy (Точност)</strong></p>
+            <div class="formula-block">
+Accuracy = (TP + TN) / (TP + FP + FN + TN)
+
+Дял от всички правилни предсказания
+            </div>
+            <p>
+                <strong>Когато използвам:</strong> Когато класовете са балансирани и всички грешки имат еднакво значение.
+            </p>
+
+            <p><strong>Precision (Прецизност)</strong></p>
+            <div class="formula-block">
+Precision = TP / (TP + FP)
+
+От всички позитивни предсказания, какъв дял беше правилен?
+            </div>
+            <p>
+                <strong>Когда користим:</strong> Когда importantes је избећи false positives (например: всички предложенные курсове трябвал да са добри за студента, не искаме да препоръчваме лоши курсове).
+            </p>
+
+            <p><strong>Recall (Припомняне) / Sensitivity</strong></p>
+            <div class="formula-block">
+Recall = TP / (TP + FN)
+
+От всички истински позитивни, колко открихме?
+            </div>
+            <p>
+                <strong>Когда користим:</strong> Когда една липсване на случај е лоша (например: диагностика на болест — пропуснат болен пациент е опасен).
+            </p>
+
+            <p><strong>F1-Score (Хармонична средна на Precision и Recall)</strong></p>
+            <div class="formula-block">
+F1 = 2 * (Precision * Recall) / (Precision + Recall)
+
+Баланс между Precision и Recall
+            </div>
+            <p>
+                <strong>Когда користим:</strong> Когда трябва баланс и класовете са дисбалансирани.
+            </p>
+
+            <p><strong>Specificity (Специфичност)</strong></p>
+            <div class="formula-block">
+Specificity = TN / (TN + FP)
+
+От всички истински негативни, колко открихме?
+            </div>
+
+            <h3>4.3 ROC Curve и AUC</h3>
+            <p>
+                <strong>ROC (Receiver Operating Characteristic) Curve:</strong> Графика, която показа връзката между True Positive Rate (TPR = Recall) и False Positive Rate (FPR = 1 - Specificity).
+            </p>
+            <div class="formula-block">
+TPR = TP / (TP + FN)     (Recall)
+FPR = FP / (FP + TN)      (1 - Specificity)
+            </div>
+
+            <p>
+                <strong>AUC (Area Under the Curve):</strong> Площадта под ROC кривата, от 0 до 1. Интерпретация:
+            </p>
+            <ul style="margin-left: 20px;">
+                <li>AUC = 1.0 → Перфектен класификатор</li>
+                <li>AUC = 0.5 → Случаен класификатор</li>
+                <li>AUC < 0.5 → Лошо (по-лошо от случайност)</li>
+            </ul>
+
+            <h3>4.4 Метрики за регресия</h3>
+            <p>
+                За проблеми на предсказване на числени стойности:
+            </p>
+
+            <p><strong>Mean Squared Error (MSE)</strong></p>
+            <div class="formula-block">
+MSE = (1/n) * Σ(y_i - ŷ_i)²
+
+Средна квадратична грешка — наказва големите грешки повече
+            </div>
+
+            <p><strong>Root Mean Squared Error (RMSE)</strong></p>
+            <div class="formula-block">
+RMSE = √MSE
+
+В същите единици като целевата променлива
+            </div>
+
+            <p><strong>Mean Absolute Error (MAE)</strong></p>
+            <div class="formula-block">
+MAE = (1/n) * Σ|y_i - ŷ_i|
+
+Средна абсолютна грешка — по-устойчива на outliers
+            </div>
+
+            <p><strong>R² (Coefficient of Determination)</strong></p>
+            <div class="formula-block">
+R² = 1 - (SS_res / SS_tot)
+   = 1 - (Σ(y_i - ŷ_i)² / Σ(y_i - ȳ)²)
+
+Дял на дисперсията, който е обяснен от модела
+0 до 1, по-високо е по-добро
+            </div>
+
+            <h3>4.5 Работен пример: Спам детекция</h3>
+            <div class="green-box">
+                <div class="box-title">Пример</div>
+                <p>
+                    Имаме спам филтър за имейлове. От 1000 имейла тестови набор:
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li>TP = 85 (спам, правилно открит)</li>
+                    <li>FP = 10 (не е спам, неправилно класифициран като спам)</li>
+                    <li>FN = 15 (спам, пропуснат)</li>
+                    <li>TN = 890 (не е спам, правилно откритен)</li>
+                </ul>
+                <p><strong>Задача:</strong> Изчислете Accuracy, Precision, Recall, F1-score.</p>
+            </div>
+
+            <div class="proof-steps">
+                <li>
+                    <strong>Accuracy:</strong> (TP + TN) / (TP + FP + FN + TN) = (85 + 890) / 1000 = 975 / 1000 = <strong>0.975 или 97.5%</strong>
+                </li>
+                <li>
+                    <strong>Precision:</strong> TP / (TP + FP) = 85 / (85 + 10) = 85 / 95 = <strong>0.895 или 89.5%</strong><br/>
+                    Интерпретация: От всички имейли, които филтърът класифицира като спам, 89.5% наистина са спам.
+                </li>
+                <li>
+                    <strong>Recall:</strong> TP / (TP + FN) = 85 / (85 + 15) = 85 / 100 = <strong>0.85 или 85%</strong><br/>
+                    Интерпретация: От всички истински спам имейли, 85% откриваме.
+                </li>
+                <li>
+                    <strong>F1-score:</strong> 2 * (0.895 * 0.85) / (0.895 + 0.85) = 2 * 0.760625 / 1.745 = 1.52125 / 1.745 = <strong>0.871 или 87.1%</strong>
+                </li>
+            </div>
+
+            <p>
+                <strong>Интерпретация на резултатите:</strong> Филтърът работи добре (97.5% точност), но има някои пропуски (15% от спам емейли не са открити). В практиката, може да са приемливо да имаме някои false positives (10 легитимни имейла класифицирани като спам), защото пропускането на спам (FN) е по-лошо.
+            </p>
+
+            <!-- Section 5: Challenges -->
+            <h2 id="section5">Раздел 5: Предизвикателства и добри практики</h2>
+
+            <h3>5.1 Проклятие на размерността (Curse of Dimensionality)</h3>
+            <div class="note-box">
+                <div class="box-title">Дефиниция</div>
+                <p>
+                    Феномен, при който с увеличение на брой признаци (размерност) пространството на данни става толкова разредено, че техните алгоритми работят по-лошо, поради това че имаме недостатъчно примери за толкова измерения.
+                </p>
+            </div>
+
+            <p><strong>Проблеми:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Нужни са експоненциално повече данни с всеки нов признак</li>
+                <li>Растяща сложност на модела → overfitting</li>
+                <li>Скорост на обучение се намалява</li>
+                <li>Евклидово разстояние между точки всички станаат приблизително равни</li>
+            </ul>
+
+            <p><strong>Решения:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Feature selection — избор на най-важните признаци</li>
+                <li>Dimensionality reduction — PCA, t-SNE</li>
+                <li>Събиране на повече данни</li>
+                <li>Регуляризация (L1/L2) — наказава много признаци</li>
+            </ul>
+
+            <h3>5.2 Липсващи данни (Missing Data)</h3>
+            <p>
+                Почти всички реални датасети имат липсващи стойности.
+            </p>
+
+            <p><strong>Типове механизма на липсване:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>MCAR (Missing Completely At Random):</strong> Липсването е случайно, не зависи от други данни</li>
+                <li><strong>MAR (Missing At Random):</strong> Липсването зависи от други наблюдени променливи</li>
+                <li><strong>MNAR (Missing Not At Random):</strong> Липсването зависи от самите липсващи стойности</li>
+            </ul>
+
+            <p><strong>Стратегии за справяне:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Deletion:</strong> Премахване на записи с липсващи стойности (просто, но губи информация)</li>
+                <li><strong>Imputation:</strong> Попълване с прогноза:
+                    <ul style="margin-left: 20px;">
+                        <li>Mean/median/mode — попълване със средна стойност</li>
+                        <li>Forward/backward fill — за временни редове</li>
+                        <li>KNN imputation — на основе на подобни записи</li>
+                        <li>Multiple imputation — създаване на няколко сценария</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>5.3 Дисбаланс на класовете (Class Imbalance)</h3>
+            <p>
+                Когда един клас е много по-редък от другия (например: 95% негативни, 5% позитивни).
+            </p>
+
+            <p><strong>Проблем:</strong> Модель просто предсказва мажоритетния клас и получава висока точност!
+            </p>
+
+            <p><strong>Решения:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Oversampling:</strong> Дублиране на минорични примери, или синтетично генериране (SMOTE)</li>
+                <li><strong>Undersampling:</strong> Намаляване на мажоритетни примери</li>
+                <li><strong>Cost-sensitive learning:</strong> Наказание за грешки в минорични класове</li>
+                <li><strong>Использование правилната метрика:</strong> F1, ROC-AUC вместо Accuracy</li>
+                <li><strong>Threshold tuning:</strong> Промяна на пороговата стойност для решения</li>
+            </ul>
+
+            <h3>5.4 Feature Selection (Избор на признаци)</h3>
+            <p>
+                Имаме много признаци, но не всички са полезни. Как ги избираме?
+            </p>
+
+            <p><strong>Filter Methods (преди обучение):</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Correlation с целева променлива</li>
+                <li>Mutual Information</li>
+                <li>Chi-squared тест (за категорични)</li>
+                <li>Быстрый, но не отчитат зависимости между признаци</li>
+            </ul>
+
+            <p><strong>Wrapper Methods (с алгоритъм):</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Recursive Feature Elimination (RFE)</li>
+                <li>Forwar selection, Backward selection</li>
+                <li>По-мощни, но скъпи (повторни обучения)</li>
+            </ul>
+
+            <p><strong>Embedded Methods (във време на обучение):</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Tree-based feature importance</li>
+                <li>L1 регуляризация (напомляне някои коефициенти)</li>
+                <li>Естественно се случва по време на обучение</li>
+            </ul>
+
+            <h3>5.5 No Free Lunch Theorem</h3>
+            <div class="theorem-box">
+                <div class="box-title">🎓 Теорема</div>
+                <p>
+                    <strong>Няма „универсален" алгоритъм, който е най-добър за всички проблеми.</strong>
+                </p>
+                <p>
+                    Формално: За някой алгоритъм, който е много добър при някой набор от проблеми, ще има други набор проблеми, при който е лош.
+                </p>
+            </div>
+
+            <p><strong>Последствия:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Трябва да пробваме няколко алгоритма за всеки проблем</li>
+                <li>Домейн знаейние е критично за избора на алгоритъм</li>
+                <li>Cross-validation е необходимо за справедлива сравнение</li>
+            </ul>
+
+            <!-- Section 6: Applications -->
+            <h2 id="section6">Раздел 6: Приложения на машинното обучение</h2>
+
+            <h3>6.1 Machine Learning в образованието (ITS)</h3>
+            <p>
+                <strong>Особено релевантно за вашата дисертация!</strong>
+            </p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Персонализирано обучение:</strong> Адаптиране на съдържание на базата на прогнос за ученикът е готин / наеденет</li>
+                <li><strong>Ранна идентификация на риск:</strong> Предсказване кой студент ще отпадне, преди да е твърде късно</li>
+                <li><strong>Препоръчване на ресурси:</strong> Препоръчване на курсове, учебници, упражнения</li>
+                <li><strong>Анализ на стил на учене:</strong> Класификация на студенти (визуални, аудиторни, кинестетични)</li>
+                <li><strong>Оценяване:</strong> Автоматична оценка на есета чрез NLP</li>
+                <li><strong>Детекция на фалшивост:</strong> Откривање на копиране (plagiarism detection)</li>
+            </ul>
+
+            <h3>6.2 Други основни приложения</h3>
+            <ul style="margin-left: 20px;">
+                <li><strong>Recommender Systems:</strong> Netflix, Amazon, Spotify — какво да препоръча следващо?</li>
+                <li><strong>Natural Language Processing:</strong> Машинен превод, анализ на мнения, chatbots</li>
+                <li><strong>Computer Vision:</strong> Разпознаване на лица, обекти, автономни превозни</li>
+                <li><strong>Fraud Detection:</strong> Банки и застраховки — открияване на измамнически трансакции</li>
+                <li><strong>Medical Diagnosis:</strong> Медицина — класификация на заболявания от снимки (рентген)</li>
+                <li><strong>Time Series Forecasting:</strong> Прогноза на времено (weather), цени на акции</li>
+            </ul>
+
+            <!-- Flashcards -->
+            <h2 id="flashcards">📇 Флашкарти за самотестване</h2>
+            <p style="font-size: 16px; color: var(--muted);">Щракнете върху всяка карта за да видите отговора.</p>
+
+            <div class="flashcards">
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Кое е точното определение на KDD по Fayyad?</span>
+                    <span class="fc-a">Нетривиалният процес на идентифициране на валидни, нови, потенциално полезни и разбираеми шаблони в данни</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Кои са 6-те фази на CRISP-DM по ред?</span>
+                    <span class="fc-a">1. Business Understanding, 2. Data Understanding, 3. Data Preparation, 4. Modeling, 5. Evaluation, 6. Deployment</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Каква е дефиницията на машинното обучение по Mitchell (1997)?</span>
+                    <span class="fc-a">Програма учи от опит E при задача T и мярка P, ако нейната перфоманса при T се подобрява с E</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Кои са трите главни типа машинно обучение?</span>
+                    <span class="fc-a">1. Supervised Learning (с етикети), 2. Unsupervised Learning (без етикети), 3. Reinforcement Learning (награди/наказания)</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">什么 е Confusion Matrix? Обяснете TP, FP, FN, TN</span>
+                    <span class="fc-a">Таблица за класификация: TP=правилен позитив, FP=невярно позитив, FN=пропущен позитив, TN=правилен негатив</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Формула за Precision и кога я използваме?</span>
+                    <span class="fc-a">Precision = TP/(TP+FP). Използваме когда искаме да избегнем false positives (всички позитивни прогнози да са точни)</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Формула за Recall и разлика от Precision?</span>
+                    <span class="fc-a">Recall = TP/(TP+FN). Recall е от всички истински позитивни колко открихме; Precision е из всички прогнози колко са правилни</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Какво е F1-score и кога го използваме?</span>
+                    <span class="fc-a">F1 = 2*(Precision*Recall)/(Precision+Recall). Хармонична средна, използваме при дисбалансирани класове</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Обяснете Overfitting и Underfitting</span>
+                    <span class="fc-a">Overfitting: модель твърде сложна, добра точност на training, лоша на test. Underfitting: модель твърде проста, лоша и на двете</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Какво е Bias-Variance Tradeoff?</span>
+                    <span class="fc-a">Баланс между Bias (недостатъчност) и Variance (сложност). High Bias=underfitting, High Variance=overfitting</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Какво е k-fold Cross-Validation?</span>
+                    <span class="fc-a">Разделяме данни на k части, обучаваме k модела (всяко един fold е тест), осредняваме резултатите за справедливост</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Обяснете Проклятие на размерността</span>
+                    <span class="fc-a">С повече признаци пространството на данни се разредява, нужни са експоненциално повече примери, алгоритмите работят по-лошо</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Кой е най-времеемкият етап на CRISP-DM?</span>
+                    <span class="fc-a">Data Preparation (Phase 3) — 60-80% от времето! Почистване, трансформация, балансиране на данни</span>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('open')">
+                    <span class="fc-q">Какво е No Free Lunch theorem?</span>
+                    <span class="fc-a">Няма универсален алгоритъм най-добър за всички проблеми. За някой алгоритъм добър при някой проблеми, лош при други</span>
+                </div>
+            </div>
+
+            <!-- Quick Reference -->
+            <h2 id="reference">⚡ Бърза справка</h2>
+
+            <h3>Ключни метрики при класификация — бързо справочник</h3>
+            <table>
+                <tr>
+                    <th>Метрика</th>
+                    <th>Формула</th>
+                    <th>Интерпретация</th>
+                    <th>Когда използ</th>
+                </tr>
+                <tr>
+                    <td>Accuracy</td>
+                    <td>(TP+TN)/(TP+FP+FN+TN)</td>
+                    <td>% от всички правилни</td>
+                    <td>Балансирани класове</td>
+                </tr>
+                <tr>
+                    <td>Precision</td>
+                    <td>TP/(TP+FP)</td>
+                    <td>% точность на позитивни</td>
+                    <td>Избегаване FP</td>
+                </tr>
+                <tr>
+                    <td>Recall</td>
+                    <td>TP/(TP+FN)</td>
+                    <td>% откривам на позитивни</td>
+                    <td>Избегаване FN</td>
+                </tr>
+                <tr>
+                    <td>F1</td>
+                    <td>2*P*R/(P+R)</td>
+                    <td>Баланс P и R</td>
+                    <td>Дисбалансирани класове</td>
+                </tr>
+                <tr>
+                    <td>AUC-ROC</td>
+                    <td>Площ под ROC крива</td>
+                    <td>Обобщена перфоманса</td>
+                    <td>Пороговост нежелателна</td>
+                </tr>
+            </table>
+
+            <h3>Ключни этапи на KDD процеса</h3>
+            <table>
+                <tr>
+                    <th>Етап</th>
+                    <th>Дейност</th>
+                    <th>Резултат</th>
+                </tr>
+                <tr>
+                    <td>Selection</td>
+                    <td>Събиране на релевантни данни</td>
+                    <td>Raw dataset</td>
+                </tr>
+                <tr>
+                    <td>Pre-processing</td>
+                    <td>Почистване, справяне с шум</td>
+                    <td>Clean dataset</td>
+                </tr>
+                <tr>
+                    <td>Transformation</td>
+                    <td>Feature engineering, нормализация</td>
+                    <td>Готови данни за алгоритъм</td>
+                </tr>
+                <tr>
+                    <td>Data Mining</td>
+                    <td>Прилагане на алгоритми</td>
+                    <td>Модель с шаблони</td>
+                </tr>
+                <tr>
+                    <td>Interpretation</td>
+                    <td>Анализ, валидиране</td>
+                    <td>Знания, решения</td>
+                </tr>
+            </table>
+
+            <h3>Формули за регресия</h3>
+            <div class="formula-block">
+MSE = (1/n) * Σ(y_i - ŷ_i)²
+RMSE = √MSE
+MAE = (1/n) * Σ|y_i - ŷ_i|
+R² = 1 - (SS_res / SS_tot)
+            </div>
+
+            <!-- Exam Strategy -->
+            <h2 id="strategy">💡 Стратегия за изпита (2-часовен отговор)</h2>
+
+            <div class="strategy-box">
+                <h3>Как да структурирате отговора си</h3>
+                <p>
+                    У вас са ~2 часа за един от двата теми. Трябва да напишете 3-5 страницы ръчно. Ево е предложена структура:
+                </p>
+
+                <h4>⏱️ Разпределение на времето</h4>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Първите 10 минути:</strong> План, организиране на мисли</li>
+                    <li><strong>20 минути:</strong> Раздел 1 (KDD определение, етапи) — 0.5-1 страница</li>
+                    <li><strong>30 минути:</strong> Раздел 2 (CRISP-DM с диаграма) — 1-1.5 страницы</li>
+                    <li><strong>25 минути:</strong> Раздел 3 (ML типове и концепции) — 0.5-1 страница</li>
+                    <li><strong>30 минути:</strong> Раздел 4 (Оценка на модели, confusion matrix, метрики) — 1-1.5 страницы</li>
+                    <li><strong>15 минути:</strong> Раздел 5 (Предизвикателства) — 0.5 страница</li>
+                    <li><strong>10 минути:</strong> Раздел 6 (Приложения) + заключение — 0.5 страница</li>
+                </ul>
+
+                <h4>📝 Как да напишете отговор</h4>
+
+                <div class="exam-tip">
+                    <strong>1. Дефиниции:</strong> Всяка главна концепция трябва с официално определение или формула. Покажете че я познавате точно.
+                </div>
+
+                <div class="exam-tip">
+                    <strong>2. Диаграми:</strong> Начертайте диаграмите на KDD и CRISP-DM процесите. Визуалната репрезентация показва дълбоко разбиране.
+                </div>
+
+                <div class="exam-tip">
+                    <strong>3. Таблици:</strong> Сравнителни таблици (KDD vs DM, типовете ML, метрики) доказват синтетично разбиране.
+                </div>
+
+                <div class="exam-tip">
+                    <strong>4. Примери:</strong> Дайте конкретни примери, особено от образованието (вашата дисертация) — това показва практическо разбиране.
+                </div>
+
+                <div class="exam-tip">
+                    <strong>5. Критичка анализ:</strong> Не просто преповедавайте. Направете критични забележки:
+                    <ul style="margin-left: 20px;">
+                        <li>„CRISP-DM е итеративен, но в реалния свят често се преминават фази"</li>
+                        <li>„Data Preparation отнема най-много времео, но е често пренебрегнат"</li>
+                        <li>„No Free Lunch theorem означава, че нямаме универсално решение"</li>
+                    </ul>
+                </div>
+
+                <div class="exam-tip">
+                    <strong>6. Свързване с дисертацията:</strong> Комисията знае че вашата дисертация е за ITS/ML в образованието. Свържете темата:
+                    <ul style="margin-left: 20px;">
+                        <li>„За персонализирано обучение в ITS, нужно е KDD за събиране и анализ на данни на студенти"</li>
+                        <li>„CRISP-DM е перфектна методология за развитието на адаптивна система"</li>
+                        <li>„ML метриките са критични за оценяване на ITS системата на студентите"</li>
+                    </ul>
+                </div>
+
+                <h4>🚫 Какво НЕ трябва да правите</h4>
+                <ul style="margin-left: 20px;">
+                    <li>❌ Списък на факти без структура — организирайте логично</li>
+                    <li>❌ Толкова много детали че нямате време за всичко — бъдете стратегични</li>
+                    <li>❌ Само теория без примери — покажете разбиране</li>
+                    <li>❌ Напишете друга тема вместо казаната — внимавайте с четене на въпроса</li>
+                </ul>
+
+                <h4>✅ Типичен начин да закончите отговора</h4>
+                <p style="font-style: italic; background-color: #f0fdf4; padding: 12px; border-radius: 6px;">
+                    „В заключение, машинното обучение и извличането на знания от данни чрез CRISP-DM методология е фундамент на модернята AI. За вашата дисертация за интелигентни системи за обучение, разбирането на този процес е критично. Системата трябва да събира данни на студентите (Selection → Pre-processing), да трансформира признаци за обучение (Transformation), да тренира адаптивни модели (Data Mining), и да оценява перфоманса чрез подходящи метрики (Evaluation) преди внедряване (Deployment)."
+                </p>
+            </div>
+
+            <!-- References -->
+            <div class="references">
+                <h3>📚 Препоръчани источники</h3>
+                <ol>
+                    <li>
+                        <strong>[8] Fayyad, U., Piatetsky-Shapiro, G., & Smyth, P. (1996).</strong> "From Data Mining to Knowledge Discovery in Databases." <em>AI Magazine</em>, 17(3), 37-54.
+                        <br/>— Класическа статия, определяща KDD процеса.
+                    </li>
+                    <li>
+                        <strong>[6] Chapman, P., Clinton, J., Kerber, R., & others. (2000).</strong> "CRISP-DM 1.0: Step-by-step data mining guide."
+                        <br/>— Официално описание на CRISP-DM в 48 страницы. Достъпно свободно онлайн.
+                    </li>
+                    <li>
+                        <strong>Mitchell, T. M. (1997).</strong> <em>Machine Learning</em>. McGraw-Hill.
+                        <br/>— Класически учебник, содержащий определяне на ML и теория на учене.
+                    </li>
+                    <li>
+                        <strong>Wirth, R., & Hipp, J. (2000).</strong> "CRISP-DM: Towards a Standard Process Model for Data Mining." <em>DMSSA</em>.
+                        <br/>— Допълнителен анализ на CRISP-DM процеса.
+                    </li>
+                    <li>
+                        <strong>Wolpert, D. H., & Macready, W. G. (1997).</strong> "No Free Lunch Theorems for Optimization." <em>IEEE Transactions</em>.
+                        <br/>— Теоретична основа на No Free Lunch theorem.
+                    </li>
+                </ol>
+            </div>
+
+            <footer>
+                <p>Създадено за PhD екзамен на ИМИ-БАН, Тема 10: Машинно самообучение и извличане на знания — CRISP-DM</p>
+                <p>Последна актуализация: март 2026 | За подробности и препоръки, консултирайте се със своя научен ръководител</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.contentLoaded();
+    </script>
+</body>
+</html>

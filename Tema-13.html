@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 13: Цифрови библиотеки. Дигитализация на культурно наследство</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfaf5;
+            color: #1f2937;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 270px;
+            background: linear-gradient(180deg, #0f2744 0%, #1a3a52 100%);
+            color: #fdfaf5;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(15, 39, 68, 0.3);
+        }
+
+        .sidebar h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #a8d5ff;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 8px 0;
+        }
+
+        .sidebar a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(165, 61, 18, 0.3);
+            color: #fca311;
+        }
+
+        .sidebar a.active {
+            background-color: #9a3412;
+            color: #fdfaf5;
+            font-weight: 600;
+        }
+
+        .nav-portal {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-portal a {
+            color: #fca311 !important;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .nav-portal a:hover {
+            background: none;
+            text-decoration: underline;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 40px;
+            max-width: 900px;
+        }
+
+        .header {
+            border-bottom: 3px solid #0f2744;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #0f2744;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #2563a8;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        h2 {
+            color: #2563a8;
+            font-size: 24px;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-left: 4px solid #166534;
+            padding-left: 12px;
+        }
+
+        h3 {
+            color: #166534;
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            color: #5b21b6;
+            font-size: 16px;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background-color: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .definition {
+            background-color: #dbeafe;
+            border-left: 4px solid #2563a8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .definition strong {
+            color: #0f2744;
+        }
+
+        .example {
+            background-color: #f0fdf4;
+            border-left: 4px solid #166534;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .example strong {
+            color: #166534;
+        }
+
+        .standard {
+            background-color: #fef3c7;
+            border-left: 4px solid #9a3412;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background-color: #0f2744;
+            color: #fdfaf5;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .code-block {
+            background-color: #1f2937;
+            color: #e0e0e0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .flashcard {
+            background: linear-gradient(135deg, #0f2744 0%, #2563a8 100%);
+            color: #fdfaf5;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-2px);
+        }
+
+        .flashcard-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .flashcard-answer {
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .quick-ref {
+            background: linear-gradient(135deg, #166534 0%, #15803d 100%);
+            color: #fdfaf5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .quick-ref h3 {
+            color: #fdfaf5;
+            border: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .quick-ref-item {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .quick-ref-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .quick-ref strong {
+            color: #fef3c7;
+        }
+
+        .connections {
+            background-color: #f3e8ff;
+            border-left: 4px solid #5b21b6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .connections strong {
+            color: #5b21b6;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, #2563a8 0%, #1e40af 100%);
+            color: #fdfaf5;
+            padding: 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .overview-card h4 {
+            color: #fdfaf5;
+            margin-top: 0;
+        }
+
+        .dublin-core-list {
+            background-color: #fef3c7;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .dublin-core-item {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #deb887;
+        }
+
+        .dublin-core-item:last-child {
+            border-bottom: none;
+        }
+
+        .dublin-core-item strong {
+            color: #9a3412;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 240px;
+            }
+
+            .content {
+                margin-left: 240px;
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            body {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="nav-portal">
+                <span>←</span>
+                <a href="../../index.html">Портал</a>
+            </div>
+
+            <h2>Содържание</h2>
+            <ul>
+                <li><a href="#overview">Обзор</a></li>
+                <li><a href="#section1">Раздел 1: Основи на ЦБ</a></li>
+                <li><a href="#section2">Раздел 2: Дигитализация</a></li>
+                <li><a href="#section3">Раздел 3: Метаданни</a></li>
+                <li><a href="#section4">Раздел 4: Культурно наследство</a></li>
+                <li><a href="#section5">Раздел 5: Технологии</a></li>
+                <li><a href="#section6">Раздел 6: Интероперабилност</a></li>
+                <li><a href="#flashcards">Flashcards</a></li>
+                <li><a href="#quickref">Бърза справка</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="header">
+                <h1>Тема 13: Цифрови библиотеки</h1>
+                <div class="subtitle">Дигитализация на культурно наследство. Стандарти и метаданни</div>
+            </div>
+
+            <section id="overview">
+                <h2>Обзор</h2>
+
+                <p>Тема 13 се занимава с цифровите библиотеки като интегрирана среда за управление, съхранение и достъп до дигитализирано културно наследство. Темата е централна в контекста на съвременните информационни системи и свързана е с множество други аспекти на курса.</p>
+
+                <div class="connections">
+                    <strong>Връзки с други теми:</strong>
+                    <ul>
+                        <li><strong>Тема 1</strong> — Основни информационни процеси; цифровите библиотеки са практическо приложение на обработка на информация</li>
+                        <li><strong>Тема 8</strong> — Бази данни за управление на метаданни; MARC, Dublin Core, METS</li>
+                        <li><strong>Тема 14</strong> — LMS системи за управление на образователното съдържание; дигиталните библиотеки могат да бъдат източник</li>
+                        <li><strong>Тема 15</strong> — Cloud технологии за инфраструктура на дигиталната библиотека; съхранение, резервни копия, масштабируемост</li>
+                    </ul>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h4>Цифрови библиотеки</h4>
+                        <p>Интегрирани системи за събиране, организиране и достъп до дигитализирани материали</p>
+                    </div>
+                    <div class="overview-card">
+                        <h4>Дигитализация</h4>
+                        <p>Процес на преобразуване на физически обекти в цифрови формати</p>
+                    </div>
+                    <div class="overview-card">
+                        <h4>Метаданни</h4>
+                        <p>Структурирана информация за описание и управление на дигитални обекти</p>
+                    </div>
+                    <div class="overview-card">
+                        <h4>Стандарти</h4>
+                        <p>Мерки за интероперабилност, съхранение и дългосрочна доступност</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section1">
+                <h2>Раздел 1: Цифрови библиотеки — основи</h2>
+
+                <h3>1.1 Определение на цифрови библиотеки</h3>
+
+                <p>Цифровата библиотека (Digital Library — DL) е комплексна система, която интегрира технологии за събиране, организиране и достъп до дигитализирани и роденоцифрови ресурси. Съществуват различни дефиниции в литературата:</p>
+
+                <div class="definition">
+                    <strong>DLI дефиниция (Digital Library Initiative):</strong> Цифровите библиотеки са организирани събрания на информация с придружаващи услуги, които се събират и организират дигитално, които са достъпни онлайн или на местата на техния запис.
+                </div>
+
+                <div class="definition">
+                    <strong>Borgman дефиниция (2003):</strong> Цифровата библиотека е системата, която интегрирует технологии за събиране, архивиране и организиране на информацията с услугите, които позволяват достъп до информацията. DL е съвкупност от електронни ресурси и свързани технически, правни и организационни механизми за намиране и поддържане на публичен достъп до информацията.
+                </div>
+
+                <div class="definition">
+                    <strong>Arms дефиниция (2000):</strong> Цифровата библиотека е целенасочено събрание на дигитални обекти, включително текст, видео, аудио, статични снимки, наредени във формат, който поддържа бързо търсене и retrieval чрез компютър.
+                </div>
+
+                <h3>1.2 DELOS Reference Model</h3>
+
+                <p>DELOS Reference Model, разработен от Candela et al., предоставя架構ен модел за разбиране на цифровите библиотеки. Моделът идентифицира 6 основни концепции:</p>
+
+                <ol>
+                    <li><strong>Content (Съдържание)</strong> — Дигиталните обекти и ресурси, които DL управлява</li>
+                    <li><strong>User (Потребител)</strong> — Участници в системата (читатели, администратори, издатели)</li>
+                    <li><strong>Functionality (Функционалност)</strong> — Операции както търсене, преглед, управление, запазване</li>
+                    <li><strong>Quality (Качество)</strong> — Показатели за оценка на услугите (достъпност, точност, полезност)</li>
+                    <li><strong>Policy (Политика)</strong> — Управление на авторски права, управление на достъп, данни</li>
+                    <li><strong>Architecture (Архитектура)</strong> — Техническа инфраструктура, базови технологии, взаимодействия</li>
+                </ol>
+
+                <div class="mermaid">
+                    graph TB
+                    subgraph DM["DELOS Model"]
+                        C["Content"]
+                        U["User"]
+                        F["Functionality"]
+                        Q["Quality"]
+                        P["Policy"]
+                        A["Architecture"]
+                    end
+                    C -->|described| F
+                    U -->|uses| F
+                    F -->|achieves| Q
+                    P -->|governs| C
+                    P -->|governs| U
+                    A -->|supports| F
+                </div>
+
+                <h3>1.3 Типове цифрови библиотеки</h3>
+
+                <ul>
+                    <li><strong>Институционални репозитории</strong> — Събрания на научни трудове на университети и изследователски институции (arXiv, ResearchGate)</li>
+                    <li><strong>Тематични DL</strong> — Специализирани събрания по определена тема (Project Gutenberg за класическа литература)</li>
+                    <li><strong>Национални DL</strong> — Национални наследствени материали (Българската национална библиотека)</li>
+                    <li><strong>Агрегатори</strong> — Системи, които събират метаданни от множество DL (Europeana, World Digital Library)</li>
+                </ul>
+
+                <h3>1.4 Примери за цифрови библиотеки</h3>
+
+                <div class="example">
+                    <strong>Europeana:</strong> Европейската платформа за агрегиране на дигитално европейско наследство. Съдържа 50+ милиона дигитализирани обекти от национални библиотеки, музеи и архиви.
+                </div>
+
+                <div class="example">
+                    <strong>World Digital Library (WDL):</strong> Инициатива на ЮНЕСКО и Библиотеката на Конгреса за предоставяне на достъп до важни първични источники от всички страни и всички периоди.
+                </div>
+
+                <div class="example">
+                    <strong>Google Books:</strong> Массово дигитализирани книги от световни библиотеки; съчетава OCR технология с метаданни.
+                </div>
+
+                <div class="example">
+                    <strong>JSTOR:</strong> Дигитален архив на академични списания и издания (най-вече на английски език).
+                </div>
+
+                <div class="example">
+                    <strong>arXiv:</strong> Репозиторий на научни препринти в физика, математика, CS (най-известен пример за institutional repository).
+                </div>
+            </section>
+
+            <section id="section2">
+                <h2>Раздел 2: Дигитализация</h2>
+
+                <h3>2.1 Процес на дигитализация</h3>
+
+                <p>Дигитализацията е процес на преобразуване на физически материали в цифрови формати. Процесът включва следните основни етапи:</p>
+
+                <ol>
+                    <li><strong>Selection (Избор)</strong> — Определяне кои материали да бъдат дигитализирани на базата на приоритети, наличност на ресурси</li>
+                    <li><strong>Scanning/Capture (Сканиране/Заснемане)</strong> — Физическо преобразуване на материалите в цифрови файлове</li>
+                    <li><strong>OCR (Оптично разпознаване на символи)</strong> — Преобразуване на изображения в търсима текст</li>
+                    <li><strong>Metadata Creation (Създаване на метаданни)</strong> — Създаване на каталозни записи и описателни метаданни</li>
+                    <li><strong>Storage (Съхранение)</strong> — Безопасно съхранение в подходящи формати и местоположения</li>
+                    <li><strong>Access (Достъп)</strong> — Предоставяне на онлайн достъп чрез уеб интерфейси</li>
+                </ol>
+
+                <h3>2.2 Стандарти за дигитализация</h3>
+
+                <div class="standard">
+                    <strong>FADGI (Federal Agencies Digital Guidelines Initiative):</strong> Американски стандарти за дигитализация на различни формати (книги, снимки, видео). Определя разделителната способност, цветова дълбочина и формати.
+                </div>
+
+                <div class="standard">
+                    <strong>Metamorfoze (Нидерланди):</strong> Холандски национален стандарт за дигитализация на културно наследство. Фокус на дълговечност и интероперабилност.
+                </div>
+
+                <div class="standard">
+                    <strong>IFLA Guidelines (International Federation of Library Associations):</strong> Международни препоръки за дигитализация на библиотечни материали. Включват насоки за формати, OCR, метаданни и управление на проекти.
+                </div>
+
+                <h3>2.3 Формати за дигитализирано съдържание</h3>
+
+                <ul>
+                    <li><strong>TIFF (Tagged Image File Format)</strong> — Предпочитан за архивно съхранение поради висока точност и способност за компресия без загуба</li>
+                    <li><strong>JPEG2000</strong> — Модерен формат с по-добра компресия от JPEG; поддържа слоеве и региони</li>
+                    <li><strong>PDF/A</strong> — Стандартизирана версия на PDF специално за дълготрайно съхранение; самодостатъчна, не зависи от външни ресурси</li>
+                    <li><strong>MPEG (видео)</strong> — Стандартизирани формати за видео съдържание</li>
+                </ul>
+
+                <h3>2.4 OCR технологии и предизвикателства</h3>
+
+                <p>OCR (Optical Character Recognition) е критична технология за преобразуване на сканирани изображения в машинно читаем текст. Въпреки че е зрялата технология, встречава предизвикателства:</p>
+
+                <ul>
+                    <li><strong>Исторически текстове</strong> — Архаични шрифтове, наклонени текстове и повредени оригинали затрудняват разпознаването</li>
+                    <li><strong>Многоезични документи</strong> — OCR е по-точен за английски; за други езици точността се понижава</li>
+                    <li><strong>Макет и структура</strong> — Сложни макети (колони, таблици, изображения) намаляват точността</li>
+                    <li><strong>Качество на сканиране</strong> — Лоша разделителна способност или мръсни оригинали намаляват точността</li>
+                </ul>
+
+                <p>Съвременни решения включват използване на ML модели (Deep Learning) и post-processing за корекция на OCR грешки.</p>
+            </section>
+
+            <section id="section3">
+                <h2>Раздел 3: Метаданни</h2>
+
+                <h3>3.1 Определение на метаданни</h3>
+
+                <div class="definition">
+                    <strong>Метаданни</strong> буквално означава "данни за данните". Метаданните са структурирана информация, която описва и управлява дигитални обекти. Съществуват три основни типа метаданни:
+                    <ul>
+                        <li><strong>Описателни метаданни</strong> — Информация за съдържанието (заглавие, автор, описание, предмет)</li>
+                        <li><strong>Структурни метаданни</strong> — Отношения между обектите (как страниците образуват книга)</li>
+                        <li><strong>Административни метаданни</strong> — Информация за управление (дата на създание, права, версия)</li>
+                    </ul>
+                </div>
+
+                <h3>3.2 Dublin Core (DC)</h3>
+
+                <p>Dublin Core е най-широко използваният стандарт за описание на ресурси. Съдържа 15 основни елемента:</p>
+
+                <div class="dublin-core-list">
+                    <div class="dublin-core-item">
+                        <strong>Title:</strong> Заглавието на ресурса
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Creator:</strong> Лице или организация, отговорна за създаването на съдържанието
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Subject:</strong> Тема или ключови думи, описващи съдържанието
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Description:</strong> Резюме или описание на съдържанието
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Publisher:</strong> Лице или организация, отговорна за публикуването
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Contributor:</strong> Лице или организация, която допринесла значимо, но не е създател
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Date:</strong> Дата, свързана със създаването или публикуването на ресурса
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Type:</strong> Категория на ресурса (книга, статия, снимка, видео)
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Format:</strong> Физическото или цифровото представяне (MIME тип)
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Identifier:</strong> Еденствен идентификатор на ресурса (URL, DOI, ISBN)
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Source:</strong> Препратка към ресурс, от който текущият ресурс е производен
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Language:</strong> Езикът на съдържанието на ресурса
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Relation:</strong> Справка на зависим ресурс
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Coverage:</strong> Географска или временна област, която ресурсът покрива
+                    </div>
+                    <div class="dublin-core-item">
+                        <strong>Rights:</strong> Информация о управлението на авторски права и лицензиране
+                    </div>
+                </div>
+
+                <h3>3.3 MARC 21</h3>
+
+                <p>MARC 21 (MAchine Readable Cataloging) е стандарт за библиотечна каталогизация, който позволява машинно четене и обработка на каталозни записи. MARC 21 е более детайлен и е широко използван в библиотеките. Включва полета за описание на документи, контролни полета и полета за издание/публикуване.</p>
+
+                <h3>3.4 METS (Metadata Encoding and Transmission Standard)</h3>
+
+                <p>METS е XML стандарт, развит от Библиотеката на Конгреса, за кодиране на структурни и описателни метаданни, както и административни метаданни и права за дигитални обекти. METS позволява интеграция на различни стандарти за метаданни (DC, MARC, PREMIS).</p>
+
+                <h3>3.5 MODS (Metadata Object Description Schema)</h3>
+
+                <p>MODS е XML стандарт, развит от Библиотеката на Конгреса, за описание на bibliographic обекти. MODS е опростена версия на MARC, специално разработена за DL приложения и е по-лесна за работа в XML среди.</p>
+
+                <h3>3.6 Сравнителна таблица на метаданни стандарти</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Стандарт</th>
+                            <th>Цел</th>
+                            <th>Сложност</th>
+                            <th>Основна употреба</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Dublin Core</strong></td>
+                            <td>Общо описание на интернет ресурси</td>
+                            <td>Проста (15 елемента)</td>
+                            <td>Агрегатори, мета-поисквачи</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MARC 21</strong></td>
+                            <td>Библиотечна каталогизация</td>
+                            <td>Комплексна (тристотин полета)</td>
+                            <td>Традиционни библиотеки</td>
+                        </tr>
+                        <tr>
+                            <td><strong>METS</strong></td>
+                            <td>Контейнер за всички метаданни</td>
+                            <td>Висока (вложено структурирани данни)</td>
+                            <td>Дигитални библиотеки, архиви</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MODS</strong></td>
+                            <td>Библиографско описание за дигитални обекти</td>
+                            <td>Средна (100+ елемента)</td>
+                            <td>Дигитални библиотеки</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>3.7 Работен пример: Dublin Core метаданни за средневековен bulgарски ръкопис</h3>
+
+                <p><strong>Сценарий:</strong> Дигитализирате средневековен български ръкопис от 14 век, намиращ се във фондовете на Националната библиотека на България. Ръкописът съдържа религиозни текстове.</p>
+
+                <div class="code-block">
+&lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"&gt;
+  &lt;rdf:Description
+    rdf:about="http://example-dlib.bg/manuscripts/mk-1407"&gt;
+    &lt;dc:title&gt;Евангелие (Четириевангелие)&lt;/dc:title&gt;
+    &lt;dc:creator&gt;Неизвестен преписвач&lt;/dc:creator&gt;
+    &lt;dc:subject&gt;Религиозни текстове; Христианство;
+      Средневековна литература&lt;/dc:subject&gt;
+    &lt;dc:description&gt;Средневековен превод на библейските
+      евангелия на старобългарски език.&lt;/dc:description&gt;
+    &lt;dc:date&gt;1407&lt;/dc:date&gt;
+    &lt;dc:type&gt;Text; Manuscript&lt;/dc:type&gt;
+    &lt;dc:format&gt;image/tiff; application/pdf&lt;/dc:format&gt;
+    &lt;dc:language&gt;bg; chu&lt;/dc:language&gt;
+    &lt;dc:coverage&gt;България, Средновековие&lt;/dc:coverage&gt;
+    &lt;dc:publisher&gt;Национална библиотека "Св. св. Кирил
+      и Методий"&lt;/dc:publisher&gt;
+    &lt;dc:rights&gt;In copyright; public access restricted to
+      designated facilities&lt;/dc:rights&gt;
+    &lt;dc:identifier&gt;urn:nbn:bg:lib-mk-1407&lt;/dc:identifier&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+                </div>
+
+                <p>Този пример показва как се описва средневековен ръкопис използвайки Dublin Core. Обърнете внимание на:</p>
+
+                <ul>
+                    <li>Наличност на неточни данни (неизвестен преписвач) се обозначава като "Unknown"</li>
+                    <li>Формат включва както архивния формат (TIFF), така и достъпния формат (PDF)</li>
+                    <li>Езикът е двойно обозначен — съвременния български (bg) и църковнославянския (chu)</li>
+                    <li>Rights информацията подчертава ограничения за достъпност</li>
+                    <li>Persistent identifier (URN) е включен</li>
+                </ul>
+            </section>
+
+            <section id="section4">
+                <h2>Раздел 4: Культурно наследство</h2>
+
+                <h3>4.1 UNESCO дефиниция на културно наследство</h3>
+
+                <div class="definition">
+                    <strong>Материално (тангибилно) культурно наследство:</strong> Физически обекти, включващи архитектурни съоръжения, археологически находки, артефакти, исторически градове, природни места. Това включва движими обекти (произведения на изкуството, манускрипти) и недвижими обекти.
+                </div>
+
+                <div class="definition">
+                    <strong>Нематериално (интангибилно) культурно наследство:</strong> Практики, представления, изрази, познания и умения. Включва традиционни обичаи, устни предания, ритуали, музика, танци и занаяти.
+                </div>
+
+                <h3>4.2 Българско дигитално културно наследство</h3>
+
+                <p>В България изследвания и проекти по дигитализирането на културното наследство се провеждат на institucties като ИМИ-БАН. Значимите проекти включват:</p>
+
+                <div class="example">
+                    <strong>Paneva-Marinova et al.</strong> — Разработка на семантични модели за управление на цифровите колекции от культурни материали и развитие на интелигентни системи за достъп.
+                </div>
+
+                <div class="example">
+                    <strong>Nisheva-Pavlova et al.</strong> — Изследвания върху дигитализирането на архивни материали и развитие на интероперабилни системи за управление на метаданни.
+                </div>
+
+                <div class="example">
+                    <strong>Ivanova et al.</strong> — Работа върху дигиталната документация на археологични находки и 3D моделиране на артефакти.
+                </div>
+
+                <h3>4.3 Europeana Data Model (EDM)</h3>
+
+                <p>Europeana Data Model е RDF-базиран модел за описание на цифровите культурни ресурси на европейско ниво. Основни концепции:</p>
+
+                <ul>
+                    <li><strong>Aggregation</strong> — Представлява събирането на метаданни около дигиталния обект и неговия оригинален физически обект</li>
+                    <li><strong>Web Resource</strong> — Цифровият файл или URL, които могат да бъдат достъпни онлайн</li>
+                    <li><strong>Provided CHO (Cultural Heritage Object)</strong> — Оригиналният физически (или исторически цифров) обект, който е дигитализиран</li>
+                </ul>
+
+                <h3>4.4 Предизвикателства при дигитализирането на наследство</h3>
+
+                <ul>
+                    <li><strong>Авторски права</strong> — Определяне на правата върху исторически материали, често съм недостатъчна документирани; необходим е правен анализ</li>
+                    <li><strong>Дълготрайно съхранение</strong> — Цифровите формати се менят; необходимо е планиране за миграция и запазване на дългов период</li>
+                    <li><strong>Интероперабилност</strong> — Различни институции използват различни стандарти; необходимо е хармонизиране за обобщено търсене</li>
+                    <li><strong>Финансирането</strong> — Дигитализацията е скъпа; необходимо е дълговремено финансиране</li>
+                    <li><strong>Лингвистични предизвикателства</strong> — Материалите в различни езици и писмени системи требуват специализирана обработка</li>
+                </ul>
+
+                <h3>4.5 3D дигитализация и виртуални музеи</h3>
+
+                <p>Модерните технологии позволяват 3D дигитализация на артефакти, което предоставя пълна визуалност и позволява виртуални музейни преживявания. Технологии включват:</p>
+
+                <ul>
+                    <li><strong>3D сканиране</strong> — Лазерни скенери и фотограметрия за създаване на точни 3D модели</li>
+                    <li><strong>Виртуална реалност</strong> — VR преживявания, които позволяват потребителите да преживяват дигитални колекции в имерсивни среди</li>
+                    <li><strong>Интерактивни платформи</strong> — Уеб-базирани платформи, които позволяват разглеждане и манипулиране на 3D обекти</li>
+                </ul>
+            </section>
+
+            <section id="section5">
+                <h2>Раздел 5: Технологични аспекти</h2>
+
+                <h3>5.1 OAI-PMH (Open Archives Initiative Protocol for Metadata Harvesting)</h3>
+
+                <p>OAI-PMH е протокол, който позволява събирането (harvesting) на метаданни от множество хранилища. Протоколът определя как един сървър (harvestable repository) разкрива своите метаданни на други системи (OAI harvesters).</p>
+
+                <p><strong>Как работи:</strong></p>
+
+                <ol>
+                    <li>Harvestable repository поддържа OAI-PMH endpoint (обикновено URL като http://example.org/oai)</li>
+                    <li>OAI harvesters правят HTTP заявки към endpoint с определени параметри (ListRecords, ListIdentifiers)</li>
+                    <li>Сървърът отговаря с XML, съдържащ метаданни в XML формат (обикновено Dublin Core)</li>
+                    <li>Harvesters могат периодично да проверяват за нови или актуализирани записи</li>
+                </ol>
+
+                <h3>5.2 Linked Open Data и семантичен уеб за DL</h3>
+
+                <p>Linked Open Data (LOD) е набор от най-добрите практики за публикуване на структурирани данни в интернета. За дигиталните библиотеки, LOD позволява:</p>
+
+                <ul>
+                    <li>Свързване на метаданни между различни DL и външни ресурси (DBpedia, Wikidata)</li>
+                    <li>Улесняване на съвместното търсене и навигация</li>
+                    <li>Подобряване на машинното разбиране на семантиката</li>
+                    <li>Интеграция със семантичния уеб чрез RDF и SPARQL</li>
+                </ul>
+
+                <h3>5.3 Persistent Identifiers</h3>
+
+                <p>Persistent identifiers (PIDs) са еденствени идентификатори за дигитални обекти, които остават стабилни дълго време. Това решава проблема на "broken links" в интернета.</p>
+
+                <div class="definition">
+                    <strong>DOI (Digital Object Identifier):</strong> Интернационален стандарт (ISO 26324), управляван от International DOI Foundation. DOI позволяват цитиране и дълготрайна идентификация на научни и други публикации. Пример: 10.1234/example.
+                </div>
+
+                <div class="definition">
+                    <strong>Handle System:</strong> Система, управлявана от CNRI, която предоставя persistent identifiers. Подобна на DOI, но с по-голяма гъвкавост. Пример: 123456789/0987654.
+                </div>
+
+                <div class="definition">
+                    <strong>URN (Uniform Resource Name):</strong> Стандарт за еденствено именуване на ресурси, независимо от тяхното местоположение. Пример: urn:nbn:bg:lib-mk-1407.
+                </div>
+
+                <h3>5.4 Digital Preservation: OAIS Reference Model</h3>
+
+                <p>OAIS (Open Archival Information System) е референтен модел за управление на архивирани дигитални обекти дълготайно. Моделът определя различни видове информационни пакети:</p>
+
+                <ul>
+                    <li><strong>SIP (Submission Information Package)</strong> — Информационен пакет, предоставен от издателя за архивирането</li>
+                    <li><strong>AIP (Archival Information Package)</strong> — Информационен пакет, съхранен в архива, включвайки всички необходими данни за дълготрайното съхранение</li>
+                    <li><strong>DIP (Dissemination Information Package)</strong> — Информационен пакет, издаден от архива на потребителя за достъп</li>
+                </ul>
+
+                <div class="mermaid">
+                    graph LR
+                    Publisher["Издател"] -->|SIP| OAIS["OAIS архив"]
+                    OAIS -->|AIP| Storage["Дълготрайно съхранение"]
+                    Storage -->|Migration/Refresh| OAIS
+                    OAIS -->|DIP| User["Потребител"]
+                </div>
+
+                <p>OAIS модела подчертава важността на метаданни за съхранение и миграция на цифровите обекти, които е необходима за преживяване на технологичните промени.</p>
+            </section>
+
+            <section id="section6">
+                <h2>Раздел 6: Интероперабилност</h2>
+
+                <h3>6.1 Нива на интероперабилност</h3>
+
+                <p>Интероперабилността се разбира на различни нива:</p>
+
+                <ul>
+                    <li><strong>Техническа интероперабилност</strong> — Способност на системите да комуникират на базовото ниво (мрежови протоколи)</li>
+                    <li><strong>Синтактична интероперабилност</strong> — Разбиране на структурата на данните (XML, JSON, RDF)</li>
+                    <li><strong>Семантична интероперабилност</strong> — Разбиране на значението на данните (онтологии, vocabulary mapping)</li>
+                    <li><strong>Организационна интероперабилност</strong> — Съгласуване на политики и процеси между институции</li>
+                </ul>
+
+                <h3>6.2 Протоколи и стандарти за интероперабилност</h3>
+
+                <div class="standard">
+                    <strong>Z39.50:</strong> Стандарт за информационни услуги и вероятност. Позволява клиенту да търси и се присъедини в информационни бази, разпределени по различни хостове. Използват се главно в библиотеки.
+                </div>
+
+                <div class="standard">
+                    <strong>SRU/SRW (Search/Retrieve via URL/Web Service):</strong> Модерна замяна на Z39.50, базирана на HTTP и XML/JSON. Позволява лесно претърсване на интернет.
+                </div>
+
+                <div class="standard">
+                    <strong>OAI-PMH:</strong> Обсъдена по-горе; позволява събирането на метаданни от множество хранилища.
+                </div>
+
+                <h3>6.3 IIIF (International Image Interoperability Framework)</h3>
+
+                <p>IIIF е съвкупност от отворени спецификации, разработени от IIIF Community, която улеснява достъпа до изображения през интернета. IIIF позволява:</p>
+
+                <ul>
+                    <li><strong>Единообразен достъп</strong> до изображения от множество хранилища</li>
+                    <li><strong>Интероперабилност</strong> на IIIF-совместими преглеждачи</li>
+                    <li><strong>Запазване на интелектуална собственост</strong> чрез контрол на достъпа</li>
+                    <li><strong>Дълготрайност</strong> чрез използване на стандартни уеб технологии</li>
+                </ul>
+
+                <p>IIIF включва Image API и Presentation API, които определяват как се доставя и презентира изображение съдържание.</p>
+            </section>
+
+            <section id="flashcards">
+                <h2>Flashcards за изпит</h2>
+
+                <div class="flashcard-container">
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво е цифрова библиотека?</div>
+                        <div class="flashcard-answer">Интегрирана система, която събира, организира и предоставя достъп до дигитализирани и роденоцифрови ресурси; комбинира технология, организация и правни механизми (Arms дефиниция)</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Назовете 6-те основни концепции на DELOS модела</div>
+                        <div class="flashcard-answer">Content, User, Functionality, Quality, Policy, Architecture</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво е OCR и кои са основните предизвикателства?</div>
+                        <div class="flashcard-answer">OCR (Optical Character Recognition) преобразува сканирани изображения в машинно читаем текст. Предизвикателства: исторически шрифтове, многоезични документи, сложни макети, качество на сканиране</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Колко елемента има Dublin Core стандартът?</div>
+                        <div class="flashcard-answer">15 основни елемента: Title, Creator, Subject, Description, Publisher, Contributor, Date, Type, Format, Identifier, Source, Language, Relation, Coverage, Rights</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Разлика между MARC 21 и MODS</div>
+                        <div class="flashcard-answer">MARC 21 е традиционен стандарт за библиотечна каталогизация (тристотин полета), опростен за машинна обработка. MODS е XML-базирана опростена версия, специално за дигитални библиотеки</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво е METS?</div>
+                        <div class="flashcard-answer">METS е XML контейнер, разработен от Библиотеката на Конгреса, който позволява интеграция на различни стандарти за метаданни (DC, MARC, PREMIS) и управление на структурни, описателни и административни метаданни</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво включва процесът на дигитализация?</div>
+                        <div class="flashcard-answer">Selection → Scanning/Capture → OCR → Metadata Creation → Storage → Access</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какви формати за дигитализирано съдържание познавате?</div>
+                        <div class="flashcard-answer">TIFF (архивен, без загуба); JPEG2000 (модерна компресия); PDF/A (за дълготрайно съхранение); MPEG (видео)</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво представлява Europeana?</div>
+                        <div class="flashcard-answer">Европейска платформа за агрегиране на дигитално европейско наследство. Съдържа 50+ милиона дигитализирани обекти от национални библиотеки, музеи и архиви</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво е OAI-PMH?</div>
+                        <div class="flashcard-answer">Open Archives Initiative Protocol for Metadata Harvesting; позволява събирането на метаданни от множество хранилища. Harvesters правят HTTP заявки към repositories и получават метаданни в XML</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Разлика между SIP, AIP и DIP в OAIS модела</div>
+                        <div class="flashcard-answer">SIP — пакет от издателя; AIP — пакет за дълготрайно съхранение в архива; DIP — пакет за издаване към потребител</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво са persistent identifiers и дайте примери</div>
+                        <div class="flashcard-answer">Еденствени идентификатори, които остават стабилни дълго време. Примери: DOI (10.1234/example), Handle System, URN (urn:nbn:bg:lib-mk-1407)</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво е IIIF?</div>
+                        <div class="flashcard-answer">International Image Interoperability Framework; съвкупност от отворени спецификации (Image API, Presentation API) за единообразен достъп до изображения от различни хранилища</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво е EDM модела в Europeana?</div>
+                        <div class="flashcard-answer">Europeana Data Model е RDF-базирана модел със основни концепции: Aggregation (събиране на метаданни), Web Resource (цифровият файл), Provided CHO (оригиналния обект)</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Четирите нива на интероперабилност</div>
+                        <div class="flashcard-answer">Техническа (комуникация на базовото ниво), синтактична (структура на данните), семантична (значение на данните), организационна (политики между институции)</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="quickref">
+                <h2>Бърза справка</h2>
+
+                <div class="quick-ref">
+                    <h3>Ключови дефиниции</h3>
+
+                    <div class="quick-ref-item">
+                        <strong>Digital Library:</strong> Интегрирана система за събиране, организиране и достъп до дигитализирани и роденоцифрови ресурси
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>Metadata:</strong> "Данни за данните" — описателни, структурни, административни информации, които описват и управляват дигитални обекти
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>Digitization:</strong> Преобразуване на физически материали в цифрови формати
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>OCR:</strong> Optical Character Recognition — преобразуване на сканирани изображения в машинно читаем текст
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>Interoperability:</strong> Способност на системите да си взаимодействат и разбират данните
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>Persistent Identifier:</strong> Еденствен идентификатор, който остава стабилен дълго време (DOI, Handle, URN)
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>Cultural Heritage:</strong> Материални и нематериални артефакти и знания, наследени от поколение на поколение
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>OAIS Model:</strong> Референтен модел за дълготрайно архивиране с пакети SIP, AIP, DIP
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>Linked Open Data:</strong> Практики за публикуване на структурирани данни, позволяващи свързване между хранилища
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>IIIF:</strong> International Image Interoperability Framework за единообразен достъп до изображения
+                    </div>
+                </div>
+
+                <div class="quick-ref">
+                    <h3>Важни стандарти и модели</h3>
+
+                    <div class="quick-ref-item">
+                        <strong>Dublin Core:</strong> 15 елемента за описание на интернет ресурси
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>MARC 21:</strong> Традиционен стандарт за библиотечна каталогизация
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>METS:</strong> XML контейнер за различни метаданни стандарти
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>MODS:</strong> XML-базирана опростена версия на MARC за дигитални библиотеки
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>DELOS Model:</strong> 6 концепции: Content, User, Functionality, Quality, Policy, Architecture
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>FADGI, Metamorfoze, IFLA:</strong> Стандарти за дигитализация
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>OAI-PMH:</strong> Протокол за събиране на метаданни
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>SRU/SRW:</strong> Модерна замяна на Z39.50 за търсене
+                    </div>
+                </div>
+
+                <div class="quick-ref">
+                    <h3>Примери на цифрови библиотеки</h3>
+
+                    <div class="quick-ref-item">
+                        <strong>Europeana:</strong> 50+ милиона дигитални европейски обекти
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>World Digital Library:</strong> Инициатива на ЮНЕСКО за глобално наследство
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>Google Books:</strong> Массово дигитализирани книги с OCR
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>JSTOR:</strong> Академични списания и издания
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>arXiv:</strong> Репозиторий на научни препринти
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>Bulgarian Digital Heritage:</strong> Проекти от ИМИ-БАН (Paneva-Marinova, Nisheva-Pavlova, Ivanova)
+                    </div>
+                </div>
+
+                <div class="quick-ref">
+                    <h3>За справляне в написване на отговор</h3>
+
+                    <div class="quick-ref-item">
+                        <strong>При въпрос за дефиниции:</strong> Дайте 1-2 дефиниции с различни подходи (технологичен, функционален, организационен)
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>При въпрос за процеси:</strong> Разбийте в етапи (selection, scanning, OCR, metadata, storage, access)
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>При въпрос за стандарти:</strong> Дайте целта, входа/изхода, области на приложение
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>При въпрос за метаданни:</strong> Споменете типове (описателни, структурни, административни) и дайте примери
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>При въпрос за предизвикателства:</strong> Дайте технически, организационни и правни аспекти
+                    </div>
+
+                    <div class="quick-ref-item">
+                        <strong>При въпрос за интероперабилност:</strong> Разбийте на 4 нива и дайте примери на решения (протоколи, стандарти)
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        mermaid.contentLoaded();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 15: Облачни технологии — SaaS, PaaS, IaaS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --navy: #0f2744;
+            --navy2: #1a3a5c;
+            --blue: #2563a8;
+            --lblue: #dbeafe;
+            --green: #166534;
+            --lgreen: #dcfce7;
+            --purple: #5b21b6;
+            --lpurple: #ede9fe;
+            --orange: #9a3412;
+            --lorange: #ffedd5;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+            --text: #1a1a2e;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--text);
+            font-size: 18px;
+            line-height: 1.75;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 270px;
+            height: 100vh;
+            background-color: var(--navy);
+            color: white;
+            padding: 30px 15px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar h2 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar a {
+            color: #e0e7ff;
+            text-decoration: none;
+            font-size: 15px;
+            display: block;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--navy2);
+            color: #fbbf24;
+        }
+
+        .sidebar a.active {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        /* Portal button */
+        .portal-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--blue);
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 101;
+            transition: background-color 0.2s ease;
+        }
+
+        .portal-btn:hover {
+            background-color: var(--navy2);
+        }
+
+        /* Main content */
+        .container {
+            margin-left: 270px;
+            flex: 1;
+            padding: 60px 40px 40px 40px;
+            max-width: 100%;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--navy);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--muted);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 40px 0 20px 0;
+            color: var(--navy);
+            border-bottom: 3px solid var(--blue);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 28px 0 15px 0;
+            color: var(--blue);
+        }
+
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        /* Boxes */
+        .overview-box, .def-box, .theorem-box, .note-box, .green-box {
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+        }
+
+        .overview-box {
+            border-left-color: var(--navy);
+            background-color: #f0f4f8;
+        }
+
+        .def-box {
+            border-left-color: var(--blue);
+            background-color: var(--lblue);
+        }
+
+        .theorem-box {
+            border-left-color: var(--purple);
+            background-color: var(--lpurple);
+        }
+
+        .note-box {
+            border-left-color: var(--orange);
+            background-color: var(--lorange);
+        }
+
+        .green-box {
+            border-left-color: var(--green);
+            background-color: var(--lgreen);
+        }
+
+        .box-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        /* Formula block */
+        .formula-block {
+            background-color: #0f172a;
+            color: #e0e7ff;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            margin: 16px 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: var(--navy);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 16px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        /* Flashcards */
+        .flashcards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 30px 0;
+        }
+
+        .fc {
+            background-color: white;
+            border: 2px solid var(--navy);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .fc:hover {
+            box-shadow: 0 8px 16px rgba(15, 39, 68, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .fc-q {
+            color: var(--navy);
+            font-weight: 600;
+            font-size: 15px;
+            display: block;
+        }
+
+        .fc-a {
+            color: var(--green);
+            font-size: 14px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .fc.open .fc-q {
+            display: none;
+        }
+
+        .fc.open .fc-a {
+            display: block;
+        }
+
+        /* Mermaid */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            background-color: white;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        /* Code/formula references */
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: var(--orange);
+        }
+
+        em {
+            color: var(--blue);
+            font-style: italic;
+        }
+
+        strong {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--blue);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--navy);
+        }
+
+        /* Exam strategy */
+        .strategy-box {
+            background-color: white;
+            border-left: 5px solid var(--purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .exam-tip {
+            background-color: #fff9e6;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        /* Reference section */
+        .references {
+            background-color: #f0fdf4;
+            border: 1px solid var(--green);
+            padding: 20px;
+            border-radius: 6px;
+            margin: 30px 0;
+        }
+
+        .references h3 {
+            color: var(--green);
+            margin-top: 0;
+        }
+
+        .references ol {
+            margin-left: 20px;
+        }
+
+        .references li {
+            margin-bottom: 8px;
+            font-size: 15px;
+            text-align: left;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        /* Pizza comparison */
+        .pizza-analogy {
+            background-color: #fff7ed;
+            border: 2px solid var(--orange);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .pizza-analogy h4 {
+            color: var(--orange);
+            margin-bottom: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .container {
+                margin-left: 240px;
+                padding: 50px 30px 30px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: fixed;
+                width: 100%;
+                height: auto;
+                max-height: 40vh;
+            }
+            .container {
+                margin-left: 0;
+                margin-top: 40vh;
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <h2>📚 Тема 15</h2>
+        <ul>
+            <li><a href="#overview">Обзор</a></li>
+            <li><a href="#section1">1. Основи</a></li>
+            <li><a href="#section2">2. Модели услуги</a></li>
+            <li><a href="#section3">3. Разгръщане</a></li>
+            <li><a href="#section4">4. Design Patterns</a></li>
+            <li><a href="#section5">5. Виртуализация</a></li>
+            <li><a href="#section6">6. Сигурност</a></li>
+            <li><a href="#section7">7. Икономика</a></li>
+            <li><a href="#example">Пример</a></li>
+            <li><a href="#flashcards">Flashcards</a></li>
+            <li><a href="#reference">Справка</a></li>
+        </ul>
+    </nav>
+
+    <!-- Portal Button -->
+    <a href="index.html" class="portal-btn">← Портал</a>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <h1>Тема 15: Облачни технологии — SaaS, PaaS, IaaS</h1>
+            <p class="subtitle">Модели на облачни изчисления, архитектура, дизайн и внедрение в IP среди</p>
+
+            <!-- Overview Section -->
+            <section id="overview">
+                <h2>Обзор</h2>
+                <div class="overview-box">
+                    <div class="box-title">Контекст и връзки</div>
+                    <p>
+                        Облачните технологии представляват критична инфраструктура за съвременните информационни системи.
+                        Този материал разширява знанията от <strong>Тема 9 (Big Data инфраструктура)</strong>, където разглеждахме
+                        разпределени системи и хранилища. Свързва се с <strong>Тема 14 (облачни LMS)</strong> и
+                        <strong>Тема 17 (облачна сигурност)</strong>. Облачните услуги са основата за цифровата трансформация
+                        и са задължителен елемент на PhD экзамена по Интегриране на Вероятност.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 1: Основи -->
+            <section id="section1">
+                <h2>Раздел 1: Основи на облачните изчисления</h2>
+
+                <h3>1.1 NIST дефиниция и характеристики</h3>
+                <div class="def-box">
+                    <div class="box-title">NIST дефиниция на облачни изчисления</div>
+                    <p>
+                        Облачните изчисления са модел за предоставяне на широко достъпни, удобни, по заявка мрежови услуги
+                        до разделяемо съвкупност от конфигурируеми изчислителни ресурси (мрежи, сървъри, хранилища, приложения, услуги),
+                        които могат да бъдат бързо предоставени и освободени с минимален управленски обхват или взаимодействие с поставчика.
+                    </p>
+                </div>
+
+                <h3>Пет существени характеристики:</h3>
+                <ol>
+                    <li><strong>Самообслужване по заявка (On-demand self-service)</strong> — потребителите могат да заявят ресурси без взаимодействие с поставчика</li>
+                    <li><strong>Широк мрежен достъп (Broad network access)</strong> — услугите са достъпни чрез стандартни механизми на мрежата</li>
+                    <li><strong>Събиране от ресурси (Resource pooling)</strong> — поставщикът събира ресурсите, обслужвайки множество потребители</li>
+                    <li><strong>Еластичност (Elasticity)</strong> — ресурсите се скалират динамично като функция на търсенето</li>
+                    <li><strong>Изчислено обслужване (Measured service)</strong> — потреблението се отчита и контролира прозрачно</li>
+                </ol>
+
+                <h3>1.2 История на облачните изчисления</h3>
+                <table>
+                    <tr>
+                        <th>Период</th>
+                        <th>Ключни événis</th>
+                        <th>Технологии</th>
+                    </tr>
+                    <tr>
+                        <td>1960–1970</td>
+                        <td>Мейнфрейми, timesharing</td>
+                        <td>IBM System/360, UNIVAC</td>
+                    </tr>
+                    <tr>
+                        <td>1980–1990</td>
+                        <td>Клиент-сервър архитектура</td>
+                        <td>LAN, SQL базиране</td>
+                    </tr>
+                    <tr>
+                        <td>1990–2000</td>
+                        <td>Интернет и WWW растеж</td>
+                        <td>Веб сървъри, ASP</td>
+                    </tr>
+                    <tr>
+                        <td>2000–2005</td>
+                        <td>Grid computing, виртуализация</td>
+                        <td>BOINC, Xen, VMware</td>
+                    </tr>
+                    <tr>
+                        <td>2006–2008</td>
+                        <td>Раждане на облака: AWS EC2, Azure, GCP</td>
+                        <td>Amazon Web Services, Microsoft Azure, Google Cloud</td>
+                    </tr>
+                    <tr>
+                        <td>2010–2015</td>
+                        <td>Зрелост, контейнеризация</td>
+                        <td>Docker (2013), Kubernetes (2014)</td>
+                    </tr>
+                    <tr>
+                        <td>2015–днес</td>
+                        <td>Serverless, AI/ML облак</td>
+                        <td>AWS Lambda, Azure Functions, AI услуги</td>
+                    </tr>
+                </table>
+
+                <h3>1.3 Ключни предимства на облачните изчисления</h3>
+                <ul>
+                    <li><strong>Еластичност:</strong> Автоматично скалиране на ресурсите според заявките</li>
+                    <li><strong>Pay-per-use модел:</strong> Плащаме само за използваните ресурси, без CapEx</li>
+                    <li><strong>Глобална мащабируемост:</strong> Разпределение към центрове по света за ниска латентност</li>
+                    <li><strong>Висока скорост на разгръщане:</strong> Миннути до часове вместо седмици</li>
+                    <li><strong>Интегрирана сигурност:</strong> Профилактирани механизми за защита</li>
+                    <li><strong>Намаляване на управленския товар:</strong> Поставчикът управлява инфраструктурата</li>
+                </ul>
+            </section>
+
+            <!-- Section 2: Модели за обслужване -->
+            <section id="section2">
+                <h2>Раздел 2: Модели за обслужване (SaaS, PaaS, IaaS)</h2>
+
+                <h3>2.1 Infrastructure-as-a-Service (IaaS)</h3>
+                <div class="def-box">
+                    <div class="box-title">IaaS дефиниция</div>
+                    <p>
+                        IaaS предоставя виртуализирана изчислителна мощност през Интернет. Потребителите управляват операционната система,
+                        приложенията и данните, докато поставчикът управлява виртуални машини, хранилище и мрежата.
+                    </p>
+                </div>
+                <p><strong>Примери:</strong> AWS EC2, Microsoft Azure VMs, Google Compute Engine, DigitalOcean</p>
+                <p><strong>Управление:</strong> Потребител управлява ОС, приложения; Поставчик управлява хардуер</p>
+
+                <h3>2.2 Platform-as-a-Service (PaaS)</h3>
+                <div class="def-box">
+                    <div class="box-title">PaaS дефиниция</div>
+                    <p>
+                        PaaS предоставя среда за разработка и разгръщане на облак. Разработчиците пишат код в рамките на
+                        предоставената платформа без управление на инфраструктурата. Включва runtime, middleware, бази данни и dev tools.
+                    </p>
+                </div>
+                <p><strong>Примери:</strong> Heroku, Google App Engine, Azure App Service, AWS Elastic Beanstalk</p>
+                <p><strong>Управление:</strong> Потребител управлява код и данни; Поставчик управлява ОС, runtime, инфраструктура</p>
+
+                <h3>2.3 Software-as-a-Service (SaaS)</h3>
+                <div class="def-box">
+                    <div class="box-title">SaaS дефиниция</div>
+                    <p>
+                        SaaS предоставя готово приложение, достъпно чрез браузър. Потребителите нямат отговорност за управление на инфраструктурата,
+                        ОС или дори приложението. Всичко е управлявано от поставчика.
+                    </p>
+                </div>
+                <p><strong>Примери:</strong> Gmail, Microsoft Office 365, Salesforce, Dropbox, Slack, Zoom</p>
+                <p><strong>Управление:</strong> Поставчик управлява всичко; Потребител само консумира услугата</p>
+
+                <h3>2.4 Други облачни модели (*aaS)</h3>
+                <table>
+                    <tr>
+                        <th>Модел</th>
+                        <th>Описание</th>
+                        <th>Примери</th>
+                    </tr>
+                    <tr>
+                        <td><strong>FaaS/Serverless</strong></td>
+                        <td>Функции при заявка без управление на сървъри</td>
+                        <td>AWS Lambda, Azure Functions, Google Cloud Functions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DBaaS</strong></td>
+                        <td>Управлявана база данни като услуга</td>
+                        <td>AWS RDS, Azure Cosmos DB, Google Cloud SQL</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CaaS</strong></td>
+                        <td>Контейнер управление и оркестрация</td>
+                        <td>AWS ECS, Google GKE, Azure Container Instances</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BaaS</strong></td>
+                        <td>Backend услуги за мобилни приложения</td>
+                        <td>Firebase, AWS Amplify, Azure App Service</td>
+                    </tr>
+                </table>
+
+                <h3>2.5 Аналогия на пица (Pizza-as-a-Service)</h3>
+                <div class="pizza-analogy">
+                    <h4>🍕 Сравнение на облачни модели като услуга</h4>
+                    <table>
+                        <tr>
+                            <th>Вариант</th>
+                            <th>Описание</th>
+                            <th>Управление</th>
+                        </tr>
+                        <tr>
+                            <td><strong>On-premises</strong></td>
+                            <td>Правите пица вкъщи — купувате мука, сос, сирене</td>
+                            <td>Потребител управлява всичко</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IaaS</strong></td>
+                            <td>Правите пица в наета кухня — получавате печка и инструменти</td>
+                            <td>Управлявате пицата, поставчик дава кухня</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PaaS</strong></td>
+                            <td>Пицерия предоставя готови съставки и печка</td>
+                            <td>Вие подготвяте, пицерия пече и сервира</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SaaS</strong></td>
+                            <td>Поръчвате доставка на готова пица</td>
+                            <td>Поставчик прави всичко, вие просто ядете</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>2.6 Детайлна сравнителна таблица (10+ критерия)</h3>
+                <table>
+                    <tr>
+                        <th>Критерий</th>
+                        <th>IaaS</th>
+                        <th>PaaS</th>
+                        <th>SaaS</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Управление инфраструктура</strong></td>
+                        <td>Потребител</td>
+                        <td>Поставчик</td>
+                        <td>Поставчик</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Управление ОС</strong></td>
+                        <td>Потребител</td>
+                        <td>Поставчик</td>
+                        <td>Поставчик</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Управление приложения</strong></td>
+                        <td>Потребител</td>
+                        <td>Потребител</td>
+                        <td>Поставчик</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Контрол</strong></td>
+                        <td>Висок</td>
+                        <td>Среден</td>
+                        <td>Нисък</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Гъвкавост</strong></td>
+                        <td>Висока</td>
+                        <td>Средна</td>
+                        <td>Ограничена</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Сложност</strong></td>
+                        <td>Висока</td>
+                        <td>Средна</td>
+                        <td>Ниска</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Цена</strong></td>
+                        <td>Нижа</td>
+                        <td>Средна</td>
+                        <td>По-висока</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Време разработка</strong></td>
+                        <td>Дълго</td>
+                        <td>Средно</td>
+                        <td>Кратко</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Скалируемост</strong></td>
+                        <td>Автоматична</td>
+                        <td>Встроена</td>
+                        <td>Встроена</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Примери</strong></td>
+                        <td>AWS EC2, Azure VMs</td>
+                        <td>Heroku, App Engine</td>
+                        <td>Office 365, Salesforce</td>
+                    </tr>
+                </table>
+
+                <h3>2.7 Мермейд диаграма на облачен стек</h3>
+                <div class="mermaid">
+                    graph TD
+                    A["Потребител"] -->|взаимодейства| B["SaaS слой<br/>Gmail, Office 365"]
+                    A -->|разработва| C["PaaS слой<br/>Heroku, App Engine"]
+                    A -->|управлява| D["IaaS слой<br/>EC2, Azure VMs"]
+                    D -->|разчита на| E["Физическа инфраструктура<br/>Сървъри, мрежа, хранилище"]
+                    B -->|построено на| C
+                    C -->|построено на| D
+                    style B fill:#dbeafe
+                    style C fill:#ede9fe
+                    style D fill:#dcfce7
+                    style E fill:#f0f4f8
+                </div>
+            </section>
+
+            <!-- Section 3: Модели за разгръщане -->
+            <section id="section3">
+                <h2>Раздел 3: Модели за разгръщане</h2>
+
+                <h3>3.1 Public Cloud (публичен облак)</h3>
+                <div class="def-box">
+                    <div class="box-title">Публичен облак</div>
+                    <p>
+                        Облачната инфраструктура е поставена за обществено ползване. Множество потребители (tenants) споделят ресурсите.
+                        Това е най-икономично, най-мащабируемо, но с най-ниско ниво на контрол и приватност.
+                    </p>
+                </div>
+
+                <h3>3.2 Private Cloud (частен облак)</h3>
+                <div class="def-box">
+                    <div class="box-title">Частен облак</div>
+                    <p>
+                        Облачната инфраструктура е предназначена за един потребител или организация. Може да се разполага
+                        в центъра на данните на организацията или при хостинг поставчик. Вкусува най-висока сигурност, но по-висока цена.
+                    </p>
+                </div>
+
+                <h3>3.3 Hybrid Cloud (хибридна облак)</h3>
+                <div class="def-box">
+                    <div class="box-title">Хибридна облак</div>
+                    <p>
+                        Комбинация от публичен и частен облак. Организацията съхранява критични данни в частния облак
+                        и използва публичния облак за мащабируемост и еластичност. Необходима е координация между средите.
+                    </p>
+                </div>
+
+                <h3>3.4 Multi-cloud (мултиоблака)</h3>
+                <p>
+                    Организацията използва услуги от няколко облачни поставчика (например AWS, Azure и GCP)
+                    за намаляване на зависимостта от един поставчик (vendor lock-in) и за оптимизиране на цени.
+                </p>
+
+                <h3>Сравнителна таблица на модели разгръщане</h3>
+                <table>
+                    <tr>
+                        <th>Модел</th>
+                        <th>Контрол</th>
+                        <th>Цена</th>
+                        <th>Сигурност</th>
+                        <th>Скалируемост</th>
+                        <th>Когда да се използва</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Public</strong></td>
+                        <td>Ниска</td>
+                        <td>Ниска</td>
+                        <td>Средна</td>
+                        <td>Висока</td>
+                        <td>Стартапи, мащабируеми приложения</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Private</strong></td>
+                        <td>Висока</td>
+                        <td>Висока</td>
+                        <td>Висока</td>
+                        <td>Средна</td>
+                        <td>Финансови организации, здравеопазване</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hybrid</strong></td>
+                        <td>Средна</td>
+                        <td>Средна</td>
+                        <td>Висока</td>
+                        <td>Висока</td>
+                        <td>Корпоративни системи с чувствителни данни</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multi-cloud</strong></td>
+                        <td>Висока</td>
+                        <td>Средна</td>
+                        <td>Висока</td>
+                        <td>Висока</td>
+                        <td>Избягване на vendor lock-in</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Section 4: Cloud Design Patterns -->
+            <section id="section4">
+                <h2>Раздел 4: Cloud Design Patterns</h2>
+                <p>
+                    Дизайн патерни за облачни системи предоставят проверени решения на типични проблеми.
+                    Основна справка: Homer et al., Microsoft Cloud Design Patterns [11, 17].
+                </p>
+
+                <h3>4.1 Модели за наличност (Availability Patterns)</h3>
+                <table>
+                    <tr>
+                        <th>Патерн</th>
+                        <th>Проблем</th>
+                        <th>Решение</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Health Endpoint Monitoring</strong></td>
+                        <td>Как да се следи здравеопазване на системата</td>
+                        <td>Редовни HTTP пингове до специален endpoint за проверка на здравето</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Queue-Based Load Leveling</strong></td>
+                        <td>Неравномерна натовареност, пикови на заявки</td>
+                        <td>Буферизиране на заявки в опашка (queue) за преработка при достъпност</td>
+                    </tr>
+                </table>
+
+                <h3>4.2 Управление на данни (Data Management Patterns)</h3>
+                <table>
+                    <tr>
+                        <th>Патерн</th>
+                        <th>Назначение</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Cache-Aside</strong></td>
+                        <td>Приложението управлява кеш, при miss се зарежда от база данни</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CQRS (Command Query Responsibility Segregation)</strong></td>
+                        <td>Отделяне на операции за четене от операции за писане</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Event Sourcing</strong></td>
+                        <td>Съхранение на всички промени като последователност от събития</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sharding</strong></td>
+                        <td>Хоризонтално скалиране чрез разделяне на данни по ключ</td>
+                    </tr>
+                </table>
+
+                <h3>4.3 Модели за устойчивост (Resiliency Patterns)</h3>
+                <table>
+                    <tr>
+                        <th>Патерн</th>
+                        <th>Назначение</th>
+                        <th>Механизъм</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Circuit Breaker</strong></td>
+                        <td>Избягване на каскадни откази</td>
+                        <td>Прекъсване на заявки към неработещ сервис</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Retry</strong></td>
+                        <td>Справяне с временни откази</td>
+                        <td>Повторна опит със експоненциално увеличаване на забавянето</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Compensating Transaction</strong></td>
+                        <td>Отмяна на разпределени транзакции</td>
+                        <td>Обратни операции при възникване на грешка</td>
+                    </tr>
+                </table>
+
+                <h3>4.4 Модели за мащабируемост (Scalability Patterns)</h3>
+                <table>
+                    <tr>
+                        <th>Патерн</th>
+                        <th>Описание</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Auto-scaling</strong></td>
+                        <td>Автоматично добавяне или премахване на инстанции според натоварването</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Throttling</strong></td>
+                        <td>Ограничаване на заявките за защита от преоверлоуд</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Load Balancing</strong></td>
+                        <td>Разпределяне на трафик между множество сървъри</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Section 5: Виртуализация и контейнеризация -->
+            <section id="section5">
+                <h2>Раздел 5: Виртуализация и контейнеризация</h2>
+
+                <h3>5.1 Hypervisor-базирана виртуализация</h3>
+                <div class="def-box">
+                    <div class="box-title">Hypervisor</div>
+                    <p>
+                        Софтуер, който позволява да се изпълняват множество операционни системи на един физически хост.
+                        Управлява разпределението на хардуерните ресурси към виртуалните машини.
+                    </p>
+                </div>
+                <ul>
+                    <li><strong>Type 1 (Bare Metal):</strong> Hypervisor работи директно на хардуер (VMware ESXi, Hyper-V, KVM)</li>
+                    <li><strong>Type 2 (Hosted):</strong> Hypervisor работи на хост операционна система (VirtualBox, Parallels)</li>
+                </ul>
+
+                <h3>5.2 Контейнеризация с Docker</h3>
+                <div class="def-box">
+                    <div class="box-title">Docker контейнер</div>
+                    <p>
+                        Лека виртуализация, която паковава приложение с всички зависимости в един изолиран пакет.
+                        За разлика от VM, контейнерите споделят операционната система на хост машината, което ги прави по-бързи и по-малко ресурсоинтензивни.
+                    </p>
+                </div>
+                <ul>
+                    <li><strong>Docker image:</strong> Неизменен шаблон, който дефинира всичко необходимо за приложението</li>
+                    <li><strong>Docker container:</strong> Работещ процес от image с собствен файловост и мрежа</li>
+                    <li><strong>Dockerfile:</strong> Текстов файл с инструкции за построение на image</li>
+                </ul>
+
+                <h3>5.3 Оркестрация с Kubernetes</h3>
+                <div class="def-box">
+                    <div class="box-title">Kubernetes</div>
+                    <p>
+                        Система за управление и оркестрация на контейнеризирани приложения в разпределена среда.
+                        Автоматизира разгръщане, мащабиране и управление на контейнери.
+                    </p>
+                </div>
+                <ul>
+                    <li><strong>Pod:</strong> Най-малката единица в Kubernetes, може да съдържа един или повече контейнери</li>
+                    <li><strong>Service:</strong> Абстракция за експониране на подове в мрежата</li>
+                    <li><strong>Deployment:</strong> Дефиниция на съжелаемо състояние на подове и репликите</li>
+                    <li><strong>StatefulSet:</strong> Управление на stateful приложения като бази данни</li>
+                </ul>
+
+                <h3>5.4 Сравнение: Виртуални машини vs Контейнери</h3>
+                <table>
+                    <tr>
+                        <th>Аспект</th>
+                        <th>Виртуални машини</th>
+                        <th>Контейнери</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Изоляция ОС</strong></td>
+                        <td>Пълна собствена ОС</td>
+                        <td>Споделена ОС, изолирани процеси</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Размер</strong></td>
+                        <td>1-20 GB</td>
+                        <td>10-500 MB</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Стартиране</strong></td>
+                        <td>Минути</td>
+                        <td>Секунди</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Производителност</strong></td>
+                        <td>Малко по-слаба заради hypervisor</td>
+                        <td>По-близо до native производителност</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Плътност</strong></td>
+                        <td>Десетки VM-и на хост</td>
+                        <td>Стотици контейнери на хост</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Управление</strong></td>
+                        <td>Ръчно или с инструменти като Terraform</td>
+                        <td>Оркестрация с Kubernetes</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Section 6: Сигурност -->
+            <section id="section6">
+                <h2>Раздел 6: Сигурност в облака</h2>
+
+                <h3>6.1 Модел на споделена отговорност</h3>
+                <div class="theorem-box">
+                    <div class="box-title">Shared Responsibility Model</div>
+                    <p>
+                        При облачни услуги, отговорността за сигурност се разделя между облачния поставчик и потребителя.
+                        Поставчикът е отговорен за сигурност на инфраструктурата, потребителят за сигурност на данните и приложението.
+                    </p>
+                </div>
+                <ul>
+                    <li><strong>IaaS:</strong> Поставчик управлява виртуализация и хост; Потребител управлява ОС, приложения, данни</li>
+                    <li><strong>PaaS:</strong> Поставчик управлява платформа; Потребител управлява приложение и данни</li>
+                    <li><strong>SaaS:</strong> Поставчик управлява всичко; Потребител управлява достъп и данни</li>
+                </ul>
+
+                <h3>6.2 Криптография в облака</h3>
+                <ul>
+                    <li><strong>Криптография на място (at rest):</strong> Данни на диск се криптирани с симетричен алгоритъм (AES-256)</li>
+                    <li><strong>Криптография в пътя (in transit):</strong> Данни при предаване се защитават с TLS/SSL</li>
+                    <li><strong>Ключово управление:</strong> KMS (Key Management Service) за управление на криптографски ключове</li>
+                </ul>
+
+                <h3>6.3 Identity and Access Management (IAM)</h3>
+                <p>
+                    Системи за управление на идентичности и разрешения за достъп. Ключови концепции:
+                </p>
+                <ul>
+                    <li><strong>Аутентификация:</strong> Проверка на идентичност на потребителя (пароли, MFA, SSO)</li>
+                    <li><strong>Авторизация:</strong> Определяне на какво може да направи потребителят (ролеви базирани контрол)</li>
+                    <li><strong>Принцип на най-малко привилегия:</strong> Потребителите получават само необходимите разрешения</li>
+                </ul>
+
+                <h3>6.4 Съответствие (Compliance) и регулаторни рамки</h3>
+                <table>
+                    <tr>
+                        <th>Стандарт</th>
+                        <th>Описание</th>
+                        <th>Приложима на</th>
+                    </tr>
+                    <tr>
+                        <td><strong>GDPR</strong></td>
+                        <td>Европейски регламент за защита на персоналните данни</td>
+                        <td>Всички организации обработващи данни на EU граждани</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ISO 27001</strong></td>
+                        <td>Международен стандарт за управление на информационна сигурност</td>
+                        <td>Всички организации с критични системи</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HIPAA</strong></td>
+                        <td>Американски стандарт за защита на здравоопазни данни</td>
+                        <td>Организации в здравеопазния сектор</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SOC 2</strong></td>
+                        <td>Отчет за контроли на облачни поставчици</td>
+                        <td>SaaS и облачни услуги</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Section 7: Икономика -->
+            <section id="section7">
+                <h2>Раздел 7: Икономика на облака</h2>
+
+                <h3>7.1 CapEx vs OpEx</h3>
+                <ul>
+                    <li><strong>CapEx (Capital Expenditure):</strong> Единовременни инвестиции в хардуер и инфраструктура. On-premises модел.</li>
+                    <li><strong>OpEx (Operational Expenditure):</strong> Текущи разходи за наеман на услуги. Облачен модел, платим по използване.</li>
+                </ul>
+                <p>
+                    Облачният модел преминава от CapEx към OpEx, което позволява по-гъвкаво финансиране и по-добра управления на разходите.
+                </p>
+
+                <h3>7.2 Total Cost of Ownership (TCO)</h3>
+                <p>
+                    TCO включва всички преки и косвени разходи: хардуер, софтуер, персонал, енергия, охлаждане, подръжка и замяна.
+                    Облачния модел често намалява TCO чрез елиминиране на управленските разходи и капиталови разходи.
+                </p>
+
+                <h3>7.3 Облачни ценови модели</h3>
+                <table>
+                    <tr>
+                        <th>Модел</th>
+                        <th>Описание</th>
+                        <th>Добре за</th>
+                    </tr>
+                    <tr>
+                        <td><strong>On-demand</strong></td>
+                        <td>Платиш колкото използваш, без ангажименти</td>
+                        <td>Непредсказуемо или пиков трафик</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reserved Instances</strong></td>
+                        <td>Отбира се инстанция за период (1-3 години), значителна намаляване на цена</td>
+                        <td>Стабилен трафик, базови натоварване</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Spot Instances</strong></td>
+                        <td>Използване на свободна капацитет с голямо намаляване на цена, но може да бъде прекъсната</td>
+                        <td>Batch процеси, който могат да поддържат прекъсване</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Savings Plans</strong></td>
+                        <td>Ангажимент за определен размер на разход ($ или часове), приложимо към различни услуги</td>
+                        <td>Смесени работни натоварване</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Worked Example -->
+            <section id="example">
+                <h2>Работен пример: Миграция на университетска LMS в облак</h2>
+                <p>
+                    Представете си университет, който искал да мигрира локалната си LMS (Learning Management System) в облак.
+                    Системата обслужва 10,000 студента, 500 преподавателя и има 500 GB данни.
+                </p>
+
+                <h3>Сценарий 1: IaaS подход</h3>
+                <div class="note-box">
+                    <div class="box-title">IaaS架構</div>
+                    <p>
+                        Развиване AWS EC2 инстанции с Linux, разпределена база данни (AWS RDS), S3 за хранилище.
+                        Университетът управлява ОС, приложението, скалирането.
+                    </p>
+                    <p><strong>Предимства:</strong> Максимален контрол, възможност за кастомизация, потенциално по-ниски разходи за дълговремен период</p>
+                    <p><strong>Недостатъци:</strong> Висок управленски товар, нужен DevOps екип, отговорност за сигурност на ОС</p>
+                </div>
+
+                <h3>Сценарий 2: PaaS подход</h3>
+                <div class="note-box">
+                    <div class="box-title">PaaS архитектура</div>
+                    <p>
+                        Използване на Azure App Service за хостинг на web приложението, Azure Database за PostgreSQL
+                        за БД, Azure Blob Storage за документи. Платформа управлява скалирането, резервното копиране, обновленията.
+                    </p>
+                    <p><strong>Предимства:</strong> Намален управленски товар, вградено скалиране, автоматични резервни копия</p>
+                    <p><strong>Недостатъци:</strong> Ограничена гъвкавост, потенциално по-висока цена, зависимост от платформата</p>
+                </div>
+
+                <h3>Сценарий 3: SaaS подход</h3>
+                <div class="note-box">
+                    <div class="box-title">SaaS решение</div>
+                    <p>
+                        Преместване на съществуващата LMS в облачен SaaS поставчик като Canvas, Blackboard Online или Moodle Cloud.
+                        Университетът просто заплаща месечна такса и възлага всичкото на поставчика.
+                    </p>
+                    <p><strong>Предимства:</strong> Минимален управленски товар, вградена сигурност и регулаторност, интеграции с други системи</p>
+                    <p><strong>Недостатъци:</strong> Минимална гъвкавост, цена може да бъде висока, зависимост от поставчик, потенциални проблеми със миграция на данни</p>
+                </div>
+
+                <h3>Препоръка</h3>
+                <p>
+                    За университет, които не имат значителен DevOps екип, <strong>PaaS</strong> е оптимален баланс между контрол,
+                    цена и управленски товар. Ако университетът има специфични нужди и ресурси, <strong>IaaS</strong> е подходящ.
+                    <strong>SaaS</strong> е добра опция ако университетът желае минимална администрация и готовност да отговори на стандартен процес.
+                </p>
+            </section>
+
+            <!-- Flashcards Section -->
+            <section id="flashcards">
+                <h2>Flashcards: Ключни концепции</h2>
+                <div class="flashcards">
+                    <div class="fc">
+                        <span class="fc-q">Кои са петте съществени характеристики на облачни изчисления според NIST?</span>
+                        <span class="fc-a">1) On-demand self-service, 2) Broad network access, 3) Resource pooling, 4) Elasticity, 5) Measured service</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Разлика между IaaS и PaaS?</span>
+                        <span class="fc-a">IaaS: потребител управлява ОС и приложение. PaaS: поставчик управлява ОС, потребител само приложение</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Кои са трите основни облачни сервисни модела?</span>
+                        <span class="fc-a">IaaS (Infrastructure), PaaS (Platform), SaaS (Software)</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Кога е основана AWS и кой е първи облачния сервис?</span>
+                        <span class="fc-a">2006 г. с AWS EC2 (Elastic Compute Cloud)</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Какво е Docker контейнер?</span>
+                        <span class="fc-a">Лека виртуализация паковаща приложение с зависимости, споделяща ОС на хост машина</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Кои са основните компоненти на Kubernetes?</span>
+                        <span class="fc-a">Pod (минимална единица), Service (мрежово експониране), Deployment (управление състояние), StatefulSet</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Разлика между public и private облак?</span>
+                        <span class="fc-a">Public: споделена ресурси, икономично, ниска сигурност. Private: собствена инфраструктура, висока сигурност, висока цена</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Какво е Circuit Breaker патерн?</span>
+                        <span class="fc-a">Дизайн патерн който прекъсва заявки към неработещ сервис за избягване на каскадни откази</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Кои са разликите между VM и контейнер?</span>
+                        <span class="fc-a">VM: собствена ОС, стартиране в минути, по-голям размер. Контейнер: споделена ОС, стартиране в секунди, по-малък размер</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Какво е shared responsibility model?</span>
+                        <span class="fc-a">Разделение на отговорност между облачен поставчик (инфраструктура) и потребител (данни, приложение)</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">Кои са ценовите модели на облака?</span>
+                        <span class="fc-a">On-demand (платиш колкото използваш), Reserved (отбира се за 1-3 години), Spot (свободна капацитет с отстъпка)</span>
+                    </div>
+                    <div class="fc">
+                        <span class="fc-q">CapEx vs OpEx в облачния контекст?</span>
+                        <span class="fc-a">CapEx: единовременни инвестиции (on-premises). OpEx: текущи разходи (облак pay-per-use)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Reference -->
+            <section id="reference">
+                <h2>Бърза справка</h2>
+                <div class="green-box">
+                    <div class="box-title">Терминология</div>
+                    <ul>
+                        <li><strong>On-demand:</strong> Ресурси при заявка без ангажименти</li>
+                        <li><strong>Elasticity:</strong> Способност да скалират ресурси динамично</li>
+                        <li><strong>Tenant:</strong> Потребител или организация, която използва облачна услуга</li>
+                        <li><strong>Hypervisor:</strong> Софтуер управляващ виртуалните машини</li>
+                        <li><strong>Container image:</strong> Неизменен шаблон на контейнер</li>
+                        <li><strong>Orchestration:</strong> Автоматизиране на разгръщане и управление на контейнери</li>
+                        <li><strong>KMS (Key Management Service):</strong> Управление на криптографски ключове</li>
+                        <li><strong>IAM:</strong> Identity and Access Management система</li>
+                        <li><strong>GDPR:</strong> Европейски закон за защита на персоналните данни</li>
+                        <li><strong>TCO:</strong> Total Cost of Ownership, общ разход през целия живот на системата</li>
+                    </ul>
+                </div>
+
+                <div class="green-box">
+                    <div class="box-title">Ключни числа и дати</div>
+                    <ul>
+                        <li>2006: AWS EC2 пуск, начало на облачното време</li>
+                        <li>2008: Google Cloud Platform основан</li>
+                        <li>2010: Microsoft Azure основан</li>
+                        <li>2013: Docker представен, революция в контейнеризацията</li>
+                        <li>2014: Kubernetes официално издаден от Google</li>
+                        <li>Пет съществени характеристики на облака (NIST)</li>
+                        <li>Три сервисни модела: IaaS, PaaS, SaaS</li>
+                        <li>Четири модели разгръщане: Public, Private, Hybrid, Multi-cloud</li>
+                    </ul>
+                </div>
+
+                <div class="green-box">
+                    <div class="box-title">Примери на услуги по модел</div>
+                    <table>
+                        <tr>
+                            <th>IaaS</th>
+                            <th>PaaS</th>
+                            <th>SaaS</th>
+                        </tr>
+                        <tr>
+                            <td>AWS EC2</td>
+                            <td>Heroku</td>
+                            <td>Gmail</td>
+                        </tr>
+                        <tr>
+                            <td>Azure VMs</td>
+                            <td>Google App Engine</td>
+                            <td>Office 365</td>
+                        </tr>
+                        <tr>
+                            <td>Google Compute Engine</td>
+                            <td>Azure App Service</td>
+                            <td>Salesforce</td>
+                        </tr>
+                        <tr>
+                            <td>DigitalOcean</td>
+                            <td>AWS Elastic Beanstalk</td>
+                            <td>Dropbox</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <!-- References -->
+            <div class="references">
+                <h3>Литература и справки</h3>
+                <ol>
+                    <li>Homer, S., Sharp, R., Narayan, D., & Gagliardi, R. (2014). <em>Cloud Design Patterns: Prescriptive Architecture Guidance for Cloud Application Development.</em> Microsoft Patterns & Practices</li>
+                    <li>NIST (2011). <em>The NIST Definition of Cloud Computing.</em> National Institute of Standards and Technology</li>
+                    <li>Mell, P., & Grance, T. (2011). <em>Cloud Computing Standards Roadmap.</em> NIST Special Publication 500-291</li>
+                    <li>Amazon Web Services. (2023). <em>AWS Well-Architected Framework.</em></li>
+                    <li>Microsoft Azure. (2023). <em>Cloud Design Patterns and Best Practices.</em></li>
+                    <li>Newman, S. (2015). <em>Building Microservices: Designing Fine-Grained Systems.</em> O'Reilly Media</li>
+                    <li>Burns, B., Grant, B., Oppenheimer, D., Brewer, E., & Wilkes, J. (2016). <em>Borg, Omega, and Kubernetes.</em> ACM Queue</li>
+                </ol>
+            </div>
+
+            <div class="exam-tip">
+                <strong>💡 Совет за екзамена:</strong> При отговора на въпроси за облачни технологии, винаги обяснете разликата между
+                трите сервисни модела (IaaS, PaaS, SaaS) като начало. След това разберете какъв модел е най-подходящ за
+                конкретния сценарий. Използвайте аналогията на пица за яснота и помните за shared responsibility model за сигурност.
+            </div>
+
+            <footer>
+                <p>Тема 15: Облачни технологии — SaaS, PaaS, IaaS | PhD Examinations, IMI-BAN</p>
+                <p>Последна актуализация: Март 2026</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Flashcard toggle functionality
+        document.querySelectorAll('.fc').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('open');
+            });
+        });
+
+        // Sidebar active link
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
