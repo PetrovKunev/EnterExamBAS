@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 8: Бази от данни. Модели на данните. СУБД</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --navy: #0f2744;
+            --blue: #2563a8;
+            --green: #166534;
+            --purple: #5b21b6;
+            --orange: #9a3412;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--cream);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 270px;
+            background-color: var(--navy);
+            color: white;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 12px 0;
+        }
+
+        .sidebar a {
+            color: #e0e7ff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            color: white;
+            background-color: var(--blue);
+        }
+
+        .sidebar .sub-item {
+            margin-left: 15px;
+            font-size: 15px;
+        }
+
+        .main {
+            margin-left: 270px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--navy);
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: var(--blue);
+            font-size: 28px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--blue);
+        }
+
+        h3 {
+            color: var(--navy);
+            font-size: 22px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .overview-section {
+            background-color: white;
+            border-left: 5px solid var(--purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .overview-section h4 {
+            color: var(--purple);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .def-box {
+            background-color: #f0f4ff;
+            border-left: 5px solid var(--blue);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .def-box strong {
+            color: var(--navy);
+        }
+
+        .theorem-box {
+            background-color: #f0fdf4;
+            border-left: 5px solid var(--green);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .theorem-box.worked-example {
+            background-color: #f0fdf4;
+            border-left: 5px solid var(--green);
+        }
+
+        .theorem-box.worked-example h4 {
+            color: var(--green);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .note-box {
+            background-color: #fff8e1;
+            border-left: 5px solid var(--orange);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .note-box strong {
+            color: var(--orange);
+        }
+
+        .formula-block {
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            overflow-x: auto;
+        }
+
+        .formula-block code {
+            color: var(--navy);
+        }
+
+        .gen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .gen-table th {
+            background-color: var(--navy);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .gen-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        .gen-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .gen-table tr:hover {
+            background-color: #f0f4ff;
+        }
+
+        .proof-steps {
+            background-color: white;
+            border: 1px solid var(--blue);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .proof-steps ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .proof-steps li {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .flashcards {
+            margin: 20px 0;
+        }
+
+        .fc {
+            background-color: white;
+            border: 2px solid var(--purple);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .fc:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .fc-q {
+            color: var(--purple);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .fc-a {
+            color: var(--navy);
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--purple);
+        }
+
+        .fc.active .fc-a {
+            display: block;
+        }
+
+        .portal-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: var(--navy);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            z-index: 100;
+        }
+
+        .portal-btn:hover {
+            background-color: var(--blue);
+        }
+
+        .quick-ref {
+            background-color: white;
+            border: 2px solid var(--green);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .quick-ref h4 {
+            color: var(--green);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .quick-ref ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .quick-ref li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .quick-ref li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+        }
+
+        .literature {
+            background-color: white;
+            border-left: 5px solid var(--red);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .literature h4 {
+            color: var(--red);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .literature ul {
+            list-style: none;
+            margin-left: 10px;
+        }
+
+        .literature li {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .portal-btn {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Съдържание</h2>
+            <ul>
+                <li><a href="#overview">Обзор</a></li>
+                <li><a href="#section1">1. Основни понятия</a>
+                    <ul>
+                        <li class="sub-item"><a href="#s1-1">1.1 Дефиниции</a></li>
+                        <li class="sub-item"><a href="#s1-2">1.2 Независимост</a></li>
+                        <li class="sub-item"><a href="#s1-3">1.3 Архитектура</a></li>
+                        <li class="sub-item"><a href="#s1-4">1.4 Схема vs инстанция</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section2">2. Модели на данните</a>
+                    <ul>
+                        <li class="sub-item"><a href="#s2-1">2.1 Йерархичен</a></li>
+                        <li class="sub-item"><a href="#s2-2">2.2 Мрежов</a></li>
+                        <li class="sub-item"><a href="#s2-3">2.3 Релационен</a></li>
+                        <li class="sub-item"><a href="#s2-4">2.4 ER модел</a></li>
+                        <li class="sub-item"><a href="#s2-5">2.5 Обектни модели</a></li>
+                        <li class="sub-item"><a href="#s2-6">2.6 NoSQL модели</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section3">3. Релационна алгебра</a></li>
+                <li><a href="#section4">4. Нормализация</a></li>
+                <li><a href="#section5">5. SQL основи</a></li>
+                <li><a href="#section6">6. Транзакции</a></li>
+                <li><a href="#section7">7. Архитектура СУБД</a></li>
+                <li><a href="#flashcards">Флешкарти</a></li>
+                <li><a href="#quick-ref">Бърза справка</a></li>
+                <li><a href="#literature">Литература</a></li>
+            </ul>
+        </div>
+
+        <div class="main">
+            <h1>Тема 8: Бази от данни. Модели на данните. СУБД</h1>
+            <p style="font-size: 16px; color: #666; margin-bottom: 20px;"><em>4-часов писмен изпит, PhD ИМИ-БАН • без справочни материали</em></p>
+
+            <div id="overview" class="overview-section">
+                <h4>Преди да започнете</h4>
+                <p><strong>Свързване с други теми:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Тема 5 (Структури от данни):</strong> Основни структури (дървета, графи) формират базата на йерархични и мрежови модели на данните</li>
+                    <li><strong>Тема 4 (Формални езици):</strong> SQL е формален език с своя грамматика; отношенията се дефинират като формални релации</li>
+                    <li><strong>Тема 9 (Big Data):</strong> NoSQL и документни модели разширяват релационното към масивни разпределени системи</li>
+                </ul>
+            </div>
+
+            <h2 id="section1">1. Основни понятия</h2>
+
+            <h3 id="s1-1">1.1 Дефиниции</h3>
+            <div class="def-box">
+                <strong>База данни (БД):</strong> Организирана колекция от свързани данни, съхранявани заедно в контролирана среда, предназначена да служи на множество потребители и приложения.
+            </div>
+
+            <div class="def-box">
+                <strong>СУБД (система за управление на бази данни):</strong> Софтуерна система, която позволява дефиниране, създание, поддържане и контролирано достъп до бази данни. Примери: PostgreSQL, MySQL, Oracle, SQL Server.
+            </div>
+
+            <div class="def-box">
+                <strong>Система от бази данни:</strong> Съвкупност от БД + СУБД + приложения + потребители. Целта е централизиран контрол на данните с минимална техническа работа от потребителя.
+            </div>
+
+            <h3 id="s1-2">1.2 Независимост на данните</h3>
+            <p>Един от главните цели на СУБД е постигане на независимост между физическото и логическото представяне на данните.</p>
+
+            <div class="def-box">
+                <strong>Физическа независимост:</strong> Логическата структура на БД не зависи от физическото хранилище (磁 диск, SSD, брой файлове и т.н.). Промените в физическото ниво не изискват промени в приложенията.
+            </div>
+
+            <div class="def-box">
+                <strong>Логическа независимост:</strong> Приложенията не зависят от точната логическа схема. Могат да бъдат добавени нови обекти без промяна на съществуващите приложения.
+            </div>
+
+            <h3 id="s1-3">1.3 Тристепенна архитектура ANSI/SPARC</h3>
+            <p>Стандартната архитектура дефинира три нива на абстракция:</p>
+
+            <div class="mermaid">
+                graph TD
+                    A["<b>Външно ниво</b><br/>Потребителски преглед<br/>Различни за всеки потребител"] -->|Преображение| B["<b>Концептуално ниво</b><br/>Логическа схема<br/>Целата БД от погледа на организацията"]
+                    B -->|Преображение| C["<b>Вътрешно ниво</b><br/>Физическо представяне<br/>Страници, блокове, индекси"]
+                    style A fill:#2563a8,color:#fff
+                    style B fill:#166534,color:#fff
+                    style C fill:#5b21b6,color:#fff
+            </div>
+
+            <div class="note-box">
+                <strong>Пример:</strong> Студент вижда възрастта си като число; системата я съхранява като дата на раждане; физически е последователност от байтове на диск.
+            </div>
+
+            <h3 id="s1-4">1.4 Схема vs инстанция</h3>
+
+            <div class="def-box">
+                <strong>Схема (метаданни):</strong> Структурата на БД — описание на таблици, полета, типове, ограничения. Остава относително стабилна.
+            </div>
+
+            <div class="def-box">
+                <strong>Инстанция (данни):</strong> Действителните стойности в БД. Изменя се при всяка операция INSERT, UPDATE, DELETE.
+            </div>
+
+            <h2 id="section2">2. Модели на данните</h2>
+
+            <h3 id="s2-1">2.1 Йерархичен модел</h3>
+            <p>Един от най-старите модели (1960s, IMS на IBM). Представя данните като дърво.</p>
+
+            <div class="def-box">
+                <strong>Характеристики:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Един корен, родител-дете връзки</li>
+                    <li>Едно дете може да има един родител</li>
+                    <li>Навигация "top-down"</li>
+                </ul>
+            </div>
+
+            <p><strong>Пример структура:</strong></p>
+            <div class="mermaid">
+                graph TD
+                    A["Университет"] -->|има| B["Факултет"]
+                    B -->|има| C["Катедра"]
+                    C -->|има| D["Курс"]
+                    style A fill:#2563a8,color:#fff
+                    style B fill:#2563a8,color:#fff
+                    style C fill:#2563a8,color:#fff
+                    style D fill:#2563a8,color:#fff
+            </div>
+
+            <div class="note-box">
+                <strong>Недостатъци:</strong> Не подържа добре много-към-много връзки; сложна навигация; слаба логическа независимост.
+            </div>
+
+            <h3 id="s2-2">2.2 Мрежов модел</h3>
+            <p>Разширява йерархичния модел с позволяване на графови структури (CODASYL, 1970s).</p>
+
+            <div class="def-box">
+                <strong>Характеристики:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Един записи може да има множество родители</li>
+                    <li>Връзки като "множества" (sets) между типове записи</li>
+                    <li>Все още навигационен подход</li>
+                </ul>
+            </div>
+
+            <div class="note-box">
+                <strong>Недостатъци:</strong> Сложна манипулация; трудна нормализация; не е универсален стандарт.
+            </div>
+
+            <h3 id="s2-3">2.3 Релационен модел</h3>
+            <p>Предложен от E.F. Codd (1970). През десетилетието стана доминиращ стандарт.</p>
+
+            <div class="def-box">
+                <strong>Основни понятия:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Релация:</strong> таблица с редове и колони</li>
+                    <li><strong>Кортеж:</strong> ред в таблица</li>
+                    <li><strong>Атрибут:</strong> колона в таблица</li>
+                    <li><strong>Домейн:</strong> възможни стойности на атрибут</li>
+                    <li><strong>Степен:</strong> брой атрибути</li>
+                    <li><strong>Мощност:</strong> брой кортежи</li>
+                </ul>
+            </div>
+
+            <div class="def-box">
+                <strong>Видове ключове:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Първичен ключ:</strong> атрибут(и), който однозначно идентифицира кортеж; NOT NULL, UNIQUE</li>
+                    <li><strong>Кандидат-ключ:</strong> всеки атрибут(и), който би могъл да бъде първичен</li>
+                    <li><strong>Външен ключ:</strong> атрибут(и), който реферира първичен ключ в друга таблица; осигурява релационна целостност</li>
+                    <li><strong>Съставен ключ:</strong> първичен ключ от два или повече атрибута</li>
+                </ul>
+            </div>
+
+            <p><strong>12 правила на Codd (кратко):</strong></p>
+            <div class="gen-table">
+                <tr>
+                    <th style="width: 10%;">№</th>
+                    <th style="width: 45%;">Правило</th>
+                    <th style="width: 45%;">Описание</th>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>Фундаментално</td>
+                    <td>СУБД трябва да управлява БД явно с релации</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Информационна база</td>
+                    <td>Всички данни представени като релации</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Гарантиран достъп</td>
+                    <td>Всеки елемент достъпен чрез таблица+первичен ключ</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>NULL обработка</td>
+                    <td>Систематично представяне на липсващи данни</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Динамичен каталог</td>
+                    <td>Метаданни съхранени като релации</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Язик на манипулацията</td>
+                    <td>Един език (SQL) за DML и DDL</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Актуализирани изгледи</td>
+                    <td>Актуализируеми изгледи автоматично</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Вмъкване, изтриване, актуализация</td>
+                    <td>DML операции на високо ниво</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Физическа независимост</td>
+                    <td>Промени на физичното ниво не влияят приложенията</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Логическа независимост</td>
+                    <td>Промени на логичното ниво минимално влияят приложенията</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Целостност</td>
+                    <td>Ограничения дефинирани на високо ниво</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>Разпределена независимост</td>
+                    <td>Данни могат да бъдат разпределени географски</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Обход без нарушения</td>
+                    <td>DML не може да нарушава целостност</td>
+                </tr>
+            </div>
+
+            <h3 id="s2-4">2.4 ER модел</h3>
+            <p>Предложен от Peter Chen (1976). Концептуален модел за проектиране на БД.</p>
+
+            <div class="def-box">
+                <strong>Основни компоненти:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Обект (Entity):</strong> нещо реално или абстрактно (Student, Course)</li>
+                    <li><strong>Атрибут:</strong> свойство на обекта (name, age, email)</li>
+                    <li><strong>Връзка (Relationship):</strong> асоциация между обекти (Enrolled, Teaches)</li>
+                    <li><strong>Кардиналност:</strong> 1:1, 1:N (1:много), M:N (много:много)</li>
+                </ul>
+            </div>
+
+            <p><strong>Работен пример:</strong> Университетска база данни</p>
+            <div class="theorem-box worked-example">
+                <h4>ER диаграма за университетска БД</h4>
+                <p>Обекти: Student, Course, Professor, Enrollment</p>
+                <div class="mermaid">
+                    erDiagram
+                        STUDENT ||--o{ ENROLLMENT : "enrolls in"
+                        COURSE ||--o{ ENROLLMENT : "has"
+                        PROFESSOR ||--o{ COURSE : "teaches"
+                        STUDENT {
+                            int StudentID PK
+                            string Name
+                            string Email
+                            date DateOfBirth
+                        }
+                        PROFESSOR {
+                            int ProfessorID PK
+                            string Name
+                            string Department
+                        }
+                        COURSE {
+                            int CourseID PK
+                            string Title
+                            int Credits
+                            int ProfessorID FK
+                        }
+                        ENROLLMENT {
+                            int EnrollmentID PK
+                            int StudentID FK
+                            int CourseID FK
+                            string Grade
+                            date EnrollmentDate
+                        }
+                </div>
+                <p><strong>Анализ на връзките:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Student—Enrollment: 1:N (един студент → много записвания)</li>
+                    <li>Course—Enrollment: 1:N (един курс → много студенти)</li>
+                    <li>Professor—Course: 1:N (един преподавател → много курсове)</li>
+                </ul>
+            </div>
+
+            <h3 id="s2-5">2.5 Обектно-ориентиран и обектно-релационен модел</h3>
+
+            <div class="def-box">
+                <strong>Обектно-ориентиран модел (OOP):</strong> Интегрира ООП концепции (класове, наследяване, полиморфизъм) със СУБД.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Съхранява обекти директно</li>
+                    <li>Поддържа методи и наследяване</li>
+                    <li>Примери: ObjectStore, Versant</li>
+                </ul>
+            </div>
+
+            <div class="def-box">
+                <strong>Обектно-релационен модел (SQL:1999):</strong> Хибрид на релационния и ООП.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Релационна основа + допълнителни ООП функции</li>
+                    <li>Потребителски типове данни (UDT)</li>
+                    <li>Примери: PostgreSQL, Oracle</li>
+                </ul>
+            </div>
+
+            <h3 id="s2-6">2.6 Документен, ключ-стойност, колонен и графов модел</h3>
+
+            <div class="def-box">
+                <strong>Документен модел:</strong> Съхранява полуструктурирани данни (JSON, XML).
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Пример: MongoDB, CouchDB</li>
+                    <li>Гъвкава схема; удобно за променливи структури</li>
+                </ul>
+            </div>
+
+            <div class="def-box">
+                <strong>Ключ-стойност модел:</strong> Проста съхраняване на двойки (ключ → стойност).
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Пример: Redis, Memcached</li>
+                    <li>Бързо, за cache-ване и сесии</li>
+                </ul>
+            </div>
+
+            <div class="def-box">
+                <strong>Колонен модел:</strong> Съхранява данни по колони вместо редове.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Пример: HBase, Cassandra, Apache Parquet</li>
+                    <li>Оптимално за аналитика и Big Data</li>
+                </ul>
+            </div>
+
+            <div class="def-box">
+                <strong>Графов модел:</strong> Представя данни като възли и ребра.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Пример: Neo4j, ArangoDB</li>
+                    <li>Отличен за социални мрежи, препоръчатели</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 20px;"><strong>Забележка:</strong> Последните четири модела се наричат "NoSQL" и се свързват с Тема 9 (Big Data).</p>
+
+            <p><strong>Таблица сравнение: Класични модели на данните</strong></p>
+            <div class="gen-table">
+                <tr>
+                    <th>Модел</th>
+                    <th>Структура</th>
+                    <th>Достъп</th>
+                    <th>Силни страни</th>
+                    <th>Слабости</th>
+                </tr>
+                <tr>
+                    <td><strong>Йерархичен</strong></td>
+                    <td>Дърво</td>
+                    <td>Навигационен (top-down)</td>
+                    <td>Интуитивен за йерархични данни</td>
+                    <td>Един родител; сложни много-към-много; трудна навигация</td>
+                </tr>
+                <tr>
+                    <td><strong>Мрежов</strong></td>
+                    <td>Граф (directed)</td>
+                    <td>Навигационен</td>
+                    <td>Много-към-много връзки</td>
+                    <td>Сложна манипулация; зависимост от физическо представяне</td>
+                </tr>
+                <tr>
+                    <td><strong>Релационен</strong></td>
+                    <td>Таблици / Релации</td>
+                    <td>Декларативен (SQL)</td>
+                    <td>Универсален; лесна нормализация; висока независимост</td>
+                    <td>Не всички данни се представят лесно като таблици</td>
+                </tr>
+            </div>
+
+            <h2 id="section3">3. Релационна алгебра</h2>
+
+            <p>Релационна алгебра е формален система от операции над релации. Базата на SQL е интерпретация на релационна алгебра.</p>
+
+            <h3>Основни операции</h3>
+
+            <div class="def-box">
+                <strong>Селекция (Selection, σ):</strong> Филтрира редове според условие.
+                <div class="formula-block">σ<sub>condition</sub>(R)</div>
+                Пример: σ<sub>age > 20</sub>(Students) връща всички студенти старши от 20 години.
+            </div>
+
+            <div class="def-box">
+                <strong>Проекция (Projection, π):</strong> Избира определени колони.
+                <div class="formula-block">π<sub>col1, col2, ...</sub>(R)</div>
+                Пример: π<sub>name, email</sub>(Students) връща само име и email на студентите.
+            </div>
+
+            <div class="def-box">
+                <strong>Декартово произведение (Cartesian product, ×):</strong> Всеки ред от първа релация комбиниран с всеки ред от втора.
+                <div class="formula-block">R × S</div>
+                Ако |R| = m, |S| = n, тогава |R × S| = m × n редове.
+            </div>
+
+            <div class="def-box">
+                <strong>Обединение (Union, ∪):</strong> Комбинира редове от две релации (еднаква схема).
+                <div class="formula-block">R ∪ S</div>
+                Дублирани редове се премахват.
+            </div>
+
+            <div class="def-box">
+                <strong>Разлика (Set difference, −):</strong> Редове, които са в R но не и в S.
+                <div class="formula-block">R − S</div>
+            </div>
+
+            <div class="def-box">
+                <strong>Естествено свързване (Natural join, ⋈):</strong> Свързва две релации по еднакви атрибути.
+                <div class="formula-block">R ⋈ S</div>
+                Еднакви колони се появяват само веднъж; се връщат само редове с съвпадащи стойности.
+            </div>
+
+            <div class="def-box">
+                <strong>Theta-join (θ-join, ⋈<sub>θ</sub>):</strong> Свързване по произволно условие θ.
+                <div class="formula-block">R ⋈<sub>θ</sub> S = σ<sub>θ</sub>(R × S)</div>
+            </div>
+
+            <div class="def-box">
+                <strong>Външно свързване (Outer join):</strong> Съхранява редовете от една или две релации дори без съвпадение.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>LEFT OUTER JOIN:</strong> Всички редове от лява релация</li>
+                    <li><strong>RIGHT OUTER JOIN:</strong> Всички редове от дясна релация</li>
+                    <li><strong>FULL OUTER JOIN:</strong> Всички редове от обе релации</li>
+                </ul>
+            </div>
+
+            <div class="def-box">
+                <strong>Деление (Division, ÷):</strong> Намира обобщени кортежи.
+                <div class="formula-block">R ÷ S = π<sub>X</sub>(R) \ π<sub>X</sub>((π<sub>X</sub>(R) × S) − R)</div>
+                Като: "Намерете студенти, които са записани на ВСЕ курсове."
+            </div>
+
+            <p><strong>Работен пример:</strong> Релационна алгебра</p>
+            <div class="theorem-box worked-example">
+                <h4>Задача: Намерете имена на студенти, записани на курс 'CS101'</h4>
+                <p><strong>Дадени таблици:</strong></p>
+                <div class="formula-block">
+Students(sid, name, age)<br/>
+Enrolled(sid, cid, grade)
+                </div>
+                <p><strong>Решение (в релационна алгебра):</strong></p>
+                <div class="formula-block">
+π<sub>name</sub>(σ<sub>cid='CS101'</sub>(Students ⋈ Enrolled))
+                </div>
+                <p><strong>Поетапно:</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li><strong>Свързване:</strong> Students ⋈ Enrolled (съхранява студенти със техните записвания)</li>
+                        <li><strong>Селекция:</strong> σ<sub>cid='CS101'</sub>(...) (филтрира само курс 'CS101')</li>
+                        <li><strong>Проекция:</strong> π<sub>name</sub>(...) (избира само имена)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <h2 id="section4">4. Нормализация</h2>
+
+            <p>Нормализация е процес на проектиране на релационна БД, целящ да се елиминират аномалии при актуализация (INSERT, UPDATE, DELETE) и редундантност на данни.</p>
+
+            <h3>Функционални зависимости</h3>
+
+            <div class="def-box">
+                <strong>Функционална зависимост (FD):</strong> Атрибут Y функционално зависи от X (X → Y), ако всяка стойност на X съответства на точно една стойност на Y.
+                <p style="margin-top: 10px;">Пример: StudentID → StudentName (по един ID има един студент)</p>
+            </div>
+
+            <h3>Нормални форми</h3>
+
+            <div class="def-box">
+                <strong>1NF (First Normal Form):</strong> Всеки атрибут съдържа само атомарни (неделими) стойности. Няма повтарящи се групи.
+                <p style="margin-top: 10px;"><strong>Пример на нарушение:</strong> Колона "PhoneNumbers" съдържа (123-456, 789-012) за един студент.</p>
+            </div>
+
+            <div class="def-box">
+                <strong>2NF (Second Normal Form):</strong> 1NF + Всеки неключов атрибут пълно зависи от първичния ключ (няма частични зависимости).
+                <p style="margin-top: 10px;"><strong>Пример:</strong> Таблица (StudentID, CourseID, StudentName) нарушава 2NF, защото StudentName зависи само от StudentID, не от цялия ключ.</p>
+            </div>
+
+            <div class="def-box">
+                <strong>3NF (Third Normal Form):</strong> 2NF + Няма транзитивни зависимости между неключови атрибути.
+                <p style="margin-top: 10px;"><strong>Пример:</strong> Таблица (StudentID, DepartmentID, DepartmentName) нарушава 3NF, защото DepartmentName зависи от DepartmentID, който зависи от StudentID.</p>
+            </div>
+
+            <div class="def-box">
+                <strong>BCNF (Boyce-Codd Normal Form):</strong> 3NF + Всеки детерминант (атрибут слева от →) е кандидат-ключ.
+                <p style="margin-top: 10px;">BCNF е най-строга; обикновено 3NF е достатъчна.</p>
+            </div>
+
+            <p><strong>Работен пример:</strong> Нормализация от UNF до 3NF</p>
+            <div class="theorem-box worked-example">
+                <h4>Задача: Нормализирайте таблица OrderInfo</h4>
+                <p><strong>Начално состояние (UNF):</strong></p>
+                <div class="formula-block">
+OrderInfo(OrderID, CustomerName, CustomerCity, ProductID, ProductName, Qty, Price)
+                </div>
+                <p style="margin-top: 15px;"><strong>Проблеми:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>ProductName зависи от ProductID, не от OrderID</li>
+                    <li>Price зависи от ProductID, не от OrderID</li>
+                    <li>CustomerCity зависи от CustomerName, което не е ключ</li>
+                </ul>
+
+                <p style="margin-top: 15px;"><strong>Стъпка 1: Преход към 1NF</strong></p>
+                <p>Таблицата е вече в 1NF (всички стойности са атомарни).</p>
+
+                <p style="margin-top: 15px;"><strong>Стъпка 2: Преход към 2NF</strong></p>
+                <p>Елиминиране на частични зависимости. ProductID е както ProductName, Price зависят само от ProductID:</p>
+                <div class="formula-block">
+Orders(OrderID, CustomerName, CustomerCity, ProductID, Qty)<br/>
+Products(ProductID, ProductName, Price)
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Стъпка 3: Преход към 3NF</strong></p>
+                <p>Елиминиране на транзитивни зависимости. CustomerCity зависи от CustomerName, който зависи от OrderID. Отделяме Customers:</p>
+                <div class="formula-block">
+Orders(OrderID, CustomerID, ProductID, Qty)<br/>
+Products(ProductID, ProductName, Price)<br/>
+Customers(CustomerID, CustomerName, CustomerCity)
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Проверка:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>Всяка таблица е 1NF (атомарни стойности)</li>
+                    <li>Всеки неключов атрибут пълно зависи от първичния ключ (2NF)</li>
+                    <li>Няма транзитивни зависимости между неключови атрибути (3NF)</li>
+                </ul>
+            </div>
+
+            <h3>Денормализация</h3>
+
+            <div class="note-box">
+                <strong>Кога се денормализира:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>За повишаване на производителност при четене (намаляване на JOIN операции)</li>
+                    <li>При часто востребувани данни без актуализация</li>
+                    <li>Кешване на калкулирани стойности</li>
+                </ul>
+            </div>
+
+            <div class="note-box">
+                <strong>Рискове на денормализацията:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Редундантност на данни</li>
+                    <li>Аномалии при актуализация</li>
+                    <li>Инкохерентност на данни</li>
+                </ul>
+            </div>
+
+            <h2 id="section5">5. SQL основи</h2>
+
+            <h3>DDL (Data Definition Language)</h3>
+
+            <div class="def-box">
+                <strong>CREATE TABLE:</strong> Създаване на таблица.
+                <div class="formula-block">
+CREATE TABLE Students (
+  StudentID INT PRIMARY KEY,
+  Name VARCHAR(100) NOT NULL,
+  Email VARCHAR(100) UNIQUE,
+  DOB DATE
+);
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>ALTER TABLE:</strong> Изменение на структура на таблица.
+                <div class="formula-block">
+ALTER TABLE Students
+ADD COLUMN GPA DECIMAL(3,2);
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>DROP TABLE:</strong> Изтриване на таблица.
+                <div class="formula-block">
+DROP TABLE Students;
+                </div>
+            </div>
+
+            <h3>DML (Data Manipulation Language)</h3>
+
+            <div class="def-box">
+                <strong>SELECT:</strong> Избор на данни.
+                <div class="formula-block">
+SELECT Name, Email FROM Students WHERE Age > 20;
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>INSERT:</strong> Добавяне на нови редове.
+                <div class="formula-block">
+INSERT INTO Students (StudentID, Name, Email)
+VALUES (1, 'Ivan Petrov', 'ivan@mail.bg');
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>UPDATE:</strong> Изменение на съществуващи редове.
+                <div class="formula-block">
+UPDATE Students SET GPA = 3.8 WHERE StudentID = 1;
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>DELETE:</strong> Изтриване на редове.
+                <div class="formula-block">
+DELETE FROM Students WHERE StudentID = 1;
+                </div>
+            </div>
+
+            <h3>JOIN операции</h3>
+
+            <div class="def-box">
+                <strong>INNER JOIN:</strong> Редове със съвпадащи стойности в двете таблици.
+                <div class="formula-block">
+SELECT s.Name, e.Grade
+FROM Students s
+INNER JOIN Enrolled e ON s.StudentID = e.StudentID;
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>LEFT OUTER JOIN:</strong> Всички редове от лява таблица, съответстващи от дясна.
+                <div class="formula-block">
+SELECT s.Name, e.Grade
+FROM Students s
+LEFT JOIN Enrolled e ON s.StudentID = e.StudentID;
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>RIGHT OUTER JOIN:</strong> Всички редове от дясна таблица, съответстващи от лява.
+                <div class="formula-block">
+SELECT s.Name, e.Grade
+FROM Students s
+RIGHT JOIN Enrolled e ON s.StudentID = e.StudentID;
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>FULL OUTER JOIN:</strong> Всички редове от обе таблици.
+                <div class="formula-block">
+SELECT s.Name, e.Grade
+FROM Students s
+FULL OUTER JOIN Enrolled e ON s.StudentID = e.StudentID;
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>CROSS JOIN:</strong> Декартово произведение.
+                <div class="formula-block">
+SELECT *
+FROM Students s
+CROSS JOIN Courses c;
+                </div>
+            </div>
+
+            <h3>GROUP BY, HAVING, подзаявки</h3>
+
+            <div class="def-box">
+                <strong>GROUP BY и агрегатни функции:</strong>
+                <div class="formula-block">
+SELECT CourseID, COUNT(*) as NumStudents, AVG(Grade) as AvgGrade
+FROM Enrolled
+GROUP BY CourseID;
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>HAVING:</strong> Филтър върху групирани данни.
+                <div class="formula-block">
+SELECT CourseID, COUNT(*) as NumStudents
+FROM Enrolled
+GROUP BY CourseID
+HAVING COUNT(*) > 10;
+                </div>
+            </div>
+
+            <div class="def-box">
+                <strong>Подзаявки (Subqueries):</strong>
+                <div class="formula-block">
+SELECT Name FROM Students
+WHERE StudentID IN (
+  SELECT StudentID FROM Enrolled
+  WHERE Grade >= 'A'
+);
+                </div>
+            </div>
+
+            <h3>Изгледи, индекси, тригери</h3>
+
+            <div class="def-box">
+                <strong>Изглед (View):</strong> Виртуална таблица, дефинирана от SQL запитване.
+                <div class="formula-block">
+CREATE VIEW GoodStudents AS
+SELECT s.Name, e.Grade
+FROM Students s
+JOIN Enrolled e ON s.StudentID = e.StudentID
+WHERE e.Grade >= 'B';
+                </div>
+                <p style="margin-top: 10px;">Предимства: Безопасност, простота, логическа независимост.</p>
+            </div>
+
+            <div class="def-box">
+                <strong>Индекс (Index):</strong> Структура за ускорение на търсене.
+                <div class="formula-block">
+CREATE INDEX idx_student_email ON Students(Email);
+                </div>
+                <p style="margin-top: 10px;">B-tree индекси са най-често използвани.</p>
+            </div>
+
+            <div class="def-box">
+                <strong>Тригер (Trigger):</strong> Автоматично се изпълнява при определено събитие.
+                <div class="formula-block">
+CREATE TRIGGER update_timestamp
+BEFORE UPDATE ON Students
+FOR EACH ROW
+SET NEW.UpdatedAt = CURRENT_TIMESTAMP;
+                </div>
+            </div>
+
+            <p><strong>Работен пример:</strong> SQL заявка</p>
+            <div class="theorem-box worked-example">
+                <h4>Задача: Намерете имена на студенти, записани в повече от 3 курса, подредени по брой курсове</h4>
+                <div class="formula-block">
+SELECT s.Name, COUNT(e.CourseID) as NumCourses
+FROM Students s
+JOIN Enrolled e ON s.StudentID = e.StudentID
+GROUP BY s.StudentID, s.Name
+HAVING COUNT(e.CourseID) > 3
+ORDER BY NumCourses DESC;
+                </div>
+                <p style="margin-top: 15px;"><strong>Поетапно:</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li><strong>JOIN:</strong> Students и Enrolled по StudentID</li>
+                        <li><strong>GROUP BY:</strong> Групиране по студент</li>
+                        <li><strong>COUNT:</strong> Брой курсове на студент</li>
+                        <li><strong>HAVING:</strong> Филтър — само студенти с повече от 3 курса</li>
+                        <li><strong>ORDER BY:</strong> Сортиране по брой курсове (низходящо)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <h2 id="section6">6. Транзакции и ACID</h2>
+
+            <h3>ACID свойства</h3>
+
+            <div class="def-box">
+                <strong>Atomicity (Атомност):</strong> Транзакция е неделима — либо цялата се изпълни, либо нищо. При неуспех се откатва напълно (rollback).
+            </div>
+
+            <div class="def-box">
+                <strong>Consistency (Консистентност):</strong> БД остава в валидно состояние преди и след транзакция. Всички ограничения (constraints) са удовлетворени.
+            </div>
+
+            <div class="def-box">
+                <strong>Isolation (Изолация):</strong> Едновременни транзакции не се влияят взаимно. Резултатите са еквивалентни на последователно изпълнение.
+            </div>
+
+            <div class="def-box">
+                <strong>Durability (Трайност):</strong> След успешно commit, данните остават съхранени дори при системен отказ.
+            </div>
+
+            <h3>Concurrency control</h3>
+
+            <div class="def-box">
+                <strong>Заключване (Locking):</strong> Механизъм за предотвратяване на конфликти при едновременен достъп.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Shared lock (S-lock):</strong> Позволява читане; много транзакции могат да имат S-lock</li>
+                    <li><strong>Exclusive lock (X-lock):</strong> Позволява писане; само една транзакция може да има X-lock</li>
+                </ul>
+            </div>
+
+            <div class="def-box">
+                <strong>Two-Phase Locking (2PL):</strong> Протокол за гарантиране на serialization.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Growing phase:</strong> Транзакция набира заключвания</li>
+                    <li><strong>Shrinking phase:</strong> Транзакция отпуска заключвания</li>
+                </ul>
+                <p style="margin-top: 10px;">Гарантира, че резултатът е еквивалентен на някой последователен редослед.</p>
+            </div>
+
+            <h3>Recovery</h3>
+
+            <div class="def-box">
+                <strong>Write-Ahead Logging (WAL):</strong> Преди да се напишат данни на диск, промените се записват в логов файл.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>При отказ, системата чита логът и възстановява последното консистентно състояние</li>
+                    <li>Гарантира durability</li>
+                </ul>
+            </div>
+
+            <h3>Нива на изолация</h3>
+
+            <div class="gen-table">
+                <tr>
+                    <th>Ниво</th>
+                    <th>Dirty Read</th>
+                    <th>Non-repeatable Read</th>
+                    <th>Phantom Read</th>
+                </tr>
+                <tr>
+                    <td><strong>Read Uncommitted</strong></td>
+                    <td>✓ (възможно)</td>
+                    <td>✓</td>
+                    <td>✓</td>
+                </tr>
+                <tr>
+                    <td><strong>Read Committed</strong></td>
+                    <td>✗</td>
+                    <td>✓</td>
+                    <td>✓</td>
+                </tr>
+                <tr>
+                    <td><strong>Repeatable Read</strong></td>
+                    <td>✗</td>
+                    <td>✗</td>
+                    <td>✓</td>
+                </tr>
+                <tr>
+                    <td><strong>Serializable</strong></td>
+                    <td>✗</td>
+                    <td>✗</td>
+                    <td>✗</td>
+                </tr>
+            </div>
+
+            <h2 id="section7">7. Архитектура на СУБД</h2>
+
+            <h3>Query processing pipeline</h3>
+
+            <div class="mermaid">
+                graph LR
+                    A["SQL заявка"] -->|Parsing| B["Синтаксис дърво"]
+                    B -->|Validation| C["Проверка на схема"]
+                    C -->|Optimization| D["Оптимален план"]
+                    D -->|Compilation| E["Изпълним код"]
+                    E -->|Execution| F["Резултат"]
+                    style A fill:#2563a8,color:#fff
+                    style B fill:#2563a8,color:#fff
+                    style C fill:#166534,color:#fff
+                    style D fill:#166534,color:#fff
+                    style E fill:#5b21b6,color:#fff
+                    style F fill:#2563a8,color:#fff
+            </div>
+
+            <div class="def-box">
+                <strong>Parsing:</strong> Проверява синтаксиса на SQL заявката; създава синтаксисно дърво.
+            </div>
+
+            <div class="def-box">
+                <strong>Validation:</strong> Проверява съответствието с метаданни (таблици, колони, типове).
+            </div>
+
+            <div class="def-box">
+                <strong>Optimization:</strong> Query optimizer избира най-ефективния план за изпълнение. Използва статистика за мощност на таблици, индекси и т.н.
+            </div>
+
+            <div class="def-box">
+                <strong>Compilation:</strong> Генериране на изпълним код.
+            </div>
+
+            <div class="def-box">
+                <strong>Execution:</strong> Изпълнение на плана; достъп до дискови данни, кеш, изчисление на резултата.
+            </div>
+
+            <h3>Storage engine</h3>
+
+            <div class="def-box">
+                <strong>Страници (Pages):</strong> Данните се организират в блокове (обикновено 4KB или 8KB). Storage engine чете/пише целиページ.
+            </div>
+
+            <div class="def-box">
+                <strong>B-tree индекси:</strong> Дървовидна структура за бързо търсене. Log(N) операции за намиране, вмъкване, изтриване.
+            </div>
+
+            <div class="def-box">
+                <strong>Hash индекси:</strong> Бързо точно съвпадение; не подържа range queries.
+            </div>
+
+            <h3>Buffer management</h3>
+
+            <div class="def-box">
+                <strong>Buffer Pool (Cache):</strong> Кеш на дискови страници в RAM. LRU (Least Recently Used) или други политики за замяна на страници.
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Намалява операции с диск</li>
+                    <li>Повишава производителност</li>
+                </ul>
+            </div>
+
+            <h2 id="flashcards">Флешкарти</h2>
+
+            <div class="flashcards">
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Какво е база данни?</div>
+                    <div class="fc-a">Организирана колекция от свързани данни, съхранявани заедно в контролирана среда, предназначена да служи на множество потребители и приложения.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Дефинирайте физическа независимост на данните.</div>
+                    <div class="fc-a">Логическата структура на БД не зависи от физическото хранилище (диск, SSD и т.н.). Промените на физическото ниво не изискват промени в приложенията.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Какви са трите нива на архитектура ANSI/SPARC?</div>
+                    <div class="fc-a">1) Външно ниво (потребителски преглед), 2) Концептуално ниво (логическа схема), 3) Вътрешно ниво (физическо представяне).</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Какво е разлика между йерархичен и мрежов модел?</div>
+                    <div class="fc-a">Йерархичен: дърво със един родител на дете; мрежов: граф с множество родители на дете.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Назовете видовете ключове в релационния модел.</div>
+                    <div class="fc-a">Първичен (PRIMARY KEY), кандидат (един от възможните първични), външен (FOREIGN KEY), съставен (от два или повече атрибута).</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Какво е функционална зависимост?</div>
+                    <div class="fc-a">X → Y означава, че всяка стойност на X съответства на точно една стойност на Y. Пример: StudentID → StudentName.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Обяснете разликата между 2NF и 3NF.</div>
+                    <div class="fc-a">2NF: няма частични зависимости (неключови атрибути зависят пълно от първичния ключ). 3NF: допълнително няма транзитивни зависимости между неключови атрибути.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Какво е естествено свързване (Natural join)?</div>
+                    <div class="fc-a">Свързва две релации по еднакви атрибути. Еднакви колони се появяват само веднъж; връща редове със съвпадащи стойности.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Определете ACID свойствата на транзакции.</div>
+                    <div class="fc-a">Atomicity: неделима; Consistency: валидна схема; Isolation: независимост от други транзакции; Durability: трайно съхранени данни.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Какво е Two-Phase Locking (2PL)?</div>
+                    <div class="fc-a">Протокол с две фази: растяща (транзакция набира заключвания) и свиваща (отпуска заключвания). Гарантира serialization.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Какво е Write-Ahead Logging (WAL)?</div>
+                    <div class="fc-a">Преди писане на данни на диск, промените се записват в логов файл. При отказ системата чита логът и възстановява консистентното състояние.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Обяснете разликата между INNER JOIN и LEFT OUTER JOIN.</div>
+                    <div class="fc-a">INNER JOIN: редове със съвпадащи стойности в двете таблици. LEFT OUTER JOIN: всички редове от лява таблица + съответстващи от дясна (NULL ако няма съвпадение).</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Какво е ER модел? Кои са основните компоненти?</div>
+                    <div class="fc-a">Entity-Relationship модел (Peter Chen, 1976) за концептуално проектиране. Компоненти: обекти (entities), атрибути, връзки (relationships), кардиналност (1:1, 1:N, M:N).</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">Кои са нивата на изолация на транзакции?</div>
+                    <div class="fc-a">Read Uncommitted, Read Committed, Repeatable Read, Serializable (по нарастваща строгост и намаляваща производителност).</div>
+                </div>
+            </div>
+
+            <h2 id="quick-ref">Бърза справка</h2>
+
+            <div class="quick-ref">
+                <h4>Основни дефиниции</h4>
+                <ul>
+                    <li>БД = организирана колекция данни</li>
+                    <li>СУБД = софтуер за управление на БД</li>
+                    <li>Схема = структура; инстанция = данни</li>
+                    <li>Релация = таблица; кортеж = ред; атрибут = колона</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>Релационна алгебра</h4>
+                <ul>
+                    <li>σ (селекция) = филтриране редове</li>
+                    <li>π (проекция) = избор колони</li>
+                    <li>⋈ (естествено свързване) = комбиниране по еднакви атрибути</li>
+                    <li>∪ (обединение) = комбиниране редове</li>
+                    <li>− (разлика) = редове само в първа релация</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>SQL команди</h4>
+                <ul>
+                    <li>DDL: CREATE, ALTER, DROP</li>
+                    <li>DML: SELECT, INSERT, UPDATE, DELETE</li>
+                    <li>JOIN: INNER, LEFT, RIGHT, FULL, CROSS</li>
+                    <li>Групиране: GROUP BY, HAVING, ORDER BY</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>Нормални форми</h4>
+                <ul>
+                    <li>1NF: атомарни стойности</li>
+                    <li>2NF: 1NF + няма частични зависимости</li>
+                    <li>3NF: 2NF + няма транзитивни зависимости</li>
+                    <li>BCNF: всеки детерминант е кандидат-ключ</li>
+                </ul>
+            </div>
+
+            <div class="quick-ref">
+                <h4>ACID свойства</h4>
+                <ul>
+                    <li>Atomicity: неделима операция</li>
+                    <li>Consistency: валидна схема</li>
+                    <li>Isolation: независимост</li>
+                    <li>Durability: трайност</li>
+                </ul>
+            </div>
+
+            <h2 id="literature">Литература</h2>
+
+            <div class="literature">
+                <h4>Препоръчани источники</h4>
+                <ul>
+                    <li>[13] Kroenke, D.M. et al. <em>Database Processing: Fundamentals, Design, Implementation</em> (последно издание)</li>
+                    <li>[14] Lemahieu, W. et al. <em>Fundamentals of Database Engineering</em> (ако налично)</li>
+                    <li>[16] Meier, A. & Kaufmann, M. <em>SQL & NoSQL Databases: Modeling, Visualization, and Querying</em></li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid var(--navy); text-align: center; color: #666; font-size: 16px;">
+                <p>© 2026 IMI-BAN PhD Exam Study Materials</p>
+                <p style="font-size: 14px; margin-top: 10px;">Подготовка за 4-часов писмен изпит по Тема 8</p>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="portal-btn">← Портал</a>
+
+    <script>
+        // Mermaid initialization
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.contentLoaded();
+
+        // Smooth scroll for links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Flashcard interactivity
+        document.querySelectorAll('.fc').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

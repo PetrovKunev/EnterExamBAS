@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 7: Езици за програмиране — класификация, парадигми</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --navy: #0f2744;
+            --navy2: #1a3a5c;
+            --blue: #2563a8;
+            --lblue: #dbeafe;
+            --green: #166534;
+            --lgreen: #dcfce7;
+            --purple: #5b21b6;
+            --lpurple: #ede9fe;
+            --orange: #9a3412;
+            --lorange: #ffedd5;
+            --red: #991b1b;
+            --cream: #fdfaf5;
+            --text: #1a1a2e;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            line-height: 1.75;
+            color: var(--text);
+            background-color: var(--cream);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 270px;
+            background-color: var(--navy);
+            color: white;
+            padding: 30px 15px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar a {
+            color: #b0cce4;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--navy2);
+            color: #ffffff;
+        }
+
+        .sidebar a.active {
+            background-color: var(--blue);
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 270px;
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            margin-left: 270px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--navy);
+            border-bottom: 3px solid var(--blue);
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            color: var(--navy);
+        }
+
+        h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: var(--blue);
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: var(--navy2);
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        /* Portal Button */
+        .portal-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--blue);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .portal-btn:hover {
+            background-color: var(--navy);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Definition Box */
+        .def-box {
+            background-color: var(--lblue);
+            border-left: 4px solid var(--blue);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .def-box strong {
+            color: var(--blue);
+        }
+
+        /* Theorem Box */
+        .theorem-box {
+            background-color: var(--lpurple);
+            border-left: 4px solid var(--purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .theorem-box strong {
+            color: var(--purple);
+        }
+
+        /* Green Theorem Box (Examples) */
+        .theorem-box.green {
+            background-color: var(--lgreen);
+            border-left-color: var(--green);
+        }
+
+        .theorem-box.green strong {
+            color: var(--green);
+        }
+
+        /* Note Box */
+        .note-box {
+            background-color: var(--lorange);
+            border-left: 4px solid var(--orange);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .note-box strong {
+            color: var(--orange);
+        }
+
+        /* Formula Block */
+        .formula-block {
+            background-color: var(--navy);
+            color: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: auto;
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 16px;
+            color: var(--navy);
+        }
+
+        pre {
+            background-color: var(--navy);
+            color: #e0e7ff;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        /* General Table */
+        .gen-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .gen-table th {
+            background-color: var(--navy);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .gen-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .gen-table tr:hover {
+            background-color: #f9fafb;
+        }
+
+        /* Proof Steps */
+        .proof-steps {
+            background-color: #f9fafb;
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .proof-steps ol {
+            margin-left: 20px;
+        }
+
+        .proof-steps li {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+
+        /* Flashcard Section */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .flashcard {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .flashcard:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: var(--blue);
+        }
+
+        .flashcard.flipped .fc-q {
+            display: none;
+        }
+
+        .flashcard.flipped .fc-a {
+            display: block;
+        }
+
+        .flashcard:not(.flipped) .fc-a {
+            display: none;
+        }
+
+        .fc-q, .fc-a {
+            padding: 20px;
+        }
+
+        .fc-q {
+            background-color: var(--lblue);
+            border-bottom: 2px solid var(--blue);
+        }
+
+        .fc-q strong {
+            color: var(--blue);
+            font-size: 16px;
+        }
+
+        .fc-a {
+            background-color: var(--lgreen);
+            border-bottom: 2px solid var(--green);
+        }
+
+        .fc-a strong {
+            color: var(--green);
+        }
+
+        .fc-hint {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        /* Overview Box */
+        .overview-box {
+            background: linear-gradient(135deg, var(--lblue) 0%, var(--lpurple) 100%);
+            border: 2px solid var(--blue);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .overview-box h3 {
+            color: var(--navy);
+            margin-top: 0;
+        }
+
+        .overview-box ul {
+            margin-left: 20px;
+        }
+
+        .overview-box li {
+            margin-bottom: 8px;
+        }
+
+        /* Quick Reference */
+        .quick-ref {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .quick-ref-item {
+            background-color: white;
+            border: 2px solid var(--border);
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .quick-ref-item h4 {
+            color: var(--blue);
+            margin-top: 0;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            margin-bottom: 20px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background-color: var(--blue);
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--blue);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 12px;
+            width: 2px;
+            height: 20px;
+            background-color: var(--border);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-item strong {
+            color: var(--blue);
+        }
+
+        /* List styles */
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* 2x2 Matrix */
+        .matrix-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .matrix-table th, .matrix-table td {
+            border: 2px solid var(--navy);
+            padding: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .matrix-table th {
+            background-color: var(--navy);
+            color: white;
+        }
+
+        .matrix-table td {
+            background-color: #f9fafb;
+        }
+
+        .matrix-table tr:nth-child(even) td {
+            background-color: white;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border);
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mermaid */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main {
+                max-width: 800px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .portal-btn {
+                position: static;
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            .quick-ref {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>Съдържание</h2>
+            <ul>
+                <li><a href="#overview">Обзор</a></li>
+                <li><a href="#section1">Раздел 1: Класификация</a></li>
+                <li><a href="#section2">Раздел 2: Императивна</a></li>
+                <li><a href="#section3">Раздел 3: ООП</a></li>
+                <li><a href="#section4">Раздел 4: Функционална</a></li>
+                <li><a href="#section5">Раздел 5: Логическа</a></li>
+                <li><a href="#section6">Раздел 6: Мулти-парадигмени</a></li>
+                <li><a href="#section7">Раздел 7: Ключови концепции</a></li>
+                <li><a href="#section8">Раздел 8: Еволюция</a></li>
+                <li><a href="#flashcards">Флашкарти</a></li>
+                <li><a href="#quickref">Бърза справка</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <a href="index.html" class="portal-btn">← Портал</a>
+
+            <div class="breadcrumb">
+                <a href="index.html">Портал</a> / Тема 7: Езици за програмиране
+            </div>
+
+            <h1>Тема 7: Езици за програмиране — классификация, парадигми</h1>
+
+            <!-- Overview Box -->
+            <div class="overview-box" id="overview">
+                <h3>Обзорна кутия</h3>
+                <p><strong>Свързани теми:</strong></p>
+                <ul>
+                    <li><strong>Тема 4 (Формални езици):</strong> Езиците за програмиране са частен случай на формални езици. Те използват синтаксис, дефиниран чрез граматики (BNF, EBNF).</li>
+                    <li><strong>Тема 3 (Алгоритми):</strong> Езиците са средство за изпълнение на алгоритми. Различните парадигми пряко влияят на начина, по който описваме алгоритмични решения.</li>
+                    <li><strong>Тема 12 (Жизнен цикъл на софтуер):</strong> Избор на език зависи от требованията на софтуера, архитектурата, перформансите и поддържаемостта.</li>
+                </ul>
+                <p><strong>Контекст за изпита:</strong> Очаква се 3-5 страницы ръкопис по два случайни теми. За тази тема е необходимо да знаете историческо развитие, основни класификации и парадигми с примери.</p>
+            </div>
+
+            <!-- Section 1: Classification -->
+            <section id="section1">
+                <h2>Раздел 1: Класификация на езиците</h2>
+
+                <h3 id="1.1">1.1 По ниво на абстракция (Generations)</h3>
+                <p>Езиците могат да се класифицират според нивото на абстракция, което осигуряват спрямо хардуера:</p>
+
+                <div class="def-box">
+                    <strong>1GL (Machine Code):</strong> Екзекутабилни инструкции за процесора. Директна манипулация на битове и регистри. Пример: <code>10110000 01100001</code>
+                </div>
+
+                <div class="def-box">
+                    <strong>2GL (Assembly Language):</strong> Символни кодове за машинни инструкции. Директна работа със регистри и памет. Примери: x86 Assembly, ARM Assembly. Изисква асемблер за превод.
+                </div>
+
+                <div class="def-box">
+                    <strong>3GL (High-Level Languages):</strong> Абстракция от хардуерната архитектура. Примери: C, Java, Python, C++. Изискват компилатор или интерпретатор.
+                </div>
+
+                <div class="def-box">
+                    <strong>4GL (Very High-Level Languages):</strong> Декларативни езици, фокусирани на "ЧЕ" трябва да се направи, не "КАК". Примери: SQL (заявки към БД), MATLAB (научни вычисления), Visual Basic (RAD среди).
+                </div>
+
+                <div class="def-box">
+                    <strong>5GL (AI-oriented Languages):</strong> Езици за логическо програмиране и автоматично решение на проблеми. Примери: Prolog, Lisp, системи за експертни познания.
+                </div>
+
+                <h3 id="1.2">1.2 По модел на изпълнение</h3>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Модел</th>
+                            <th>Описание</th>
+                            <th>Примери</th>
+                            <th>Предимства</th>
+                            <th>Недостатъци</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Компилирани</strong></td>
+                            <td>Преводят се до машинен код преди изпълнение. Ексекутивен файл е независим.</td>
+                            <td>C, C++, Go, Rust</td>
+                            <td>Висока производителност, kontrola на памет</td>
+                            <td>Дълга компилация, платформозависимост</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Интерпретирани</strong></td>
+                            <td>Изпълняват се директно от интерпретатор, ред по ред.</td>
+                            <td>Python, Ruby, JavaScript (историески)</td>
+                            <td>Лесна разработка, преносимост</td>
+                            <td>По-бавно изпълнение, зависимост от интерпретатор</td>
+                        </tr>
+                        <tr>
+                            <td><strong>JIT-компилирани</strong></td>
+                            <td>Интерпретира се до междинен код (bytecode), който се компилира при изпълнение.</td>
+                            <td>Java (JVM), C# (.NET), JavaScript (V8)</td>
+                            <td>Баланс между скорост и портативност</td>
+                            <td>Сложност, хибридна инфраструктура</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 id="1.3">1.3 По типова система (Type System)</h3>
+
+                <p>Типовата система определя как языкът управља и проверява типовете на данните:</p>
+
+                <p><strong>Статична типова система:</strong> Типовете се проверяват при компилация. C, Java, Haskell, Rust.</p>
+
+                <p><strong>Динамична типова система:</strong> Типовете се проверяват при изпълнение. Python, JavaScript, Ruby, Lua.</p>
+
+                <p><strong>Силна типова система:</strong> Языкът не позволява неявни преобразувания между несъвместими типове. Java, Python, Haskell.</p>
+
+                <p><strong>Слаба типова система:</strong> Позволява автоматични или явни преобразувания. C, JavaScript, PHP.</p>
+
+                <p><strong>Type Inference:</strong> Компилаторът автоматично дедуцира типовете. ML, Haskell, Rust.</p>
+
+                <p><strong>Номинална типова еквивалентност:</strong> Два типа са еквивалентни, ако имат същото име. Java, C++.</p>
+
+                <p><strong>Структурна типова еквивалентност:</strong> Два типа са еквивалентни, ако имат същата структура. Go, TypeScript (частично).</p>
+
+                <p><strong>Параметричен полиморфизъм (Generics):</strong> Позволява писане на генерични кодове. Java (List&lt;T&gt;), C++ (templates), Rust.</p>
+
+                <div class="note-box">
+                    <strong>2x2 матрица на комбинациите:</strong>
+                </div>
+
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Статична</th>
+                            <th>Динамична</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Силна</th>
+                            <td><strong>Java, C#, Rust, Haskell</strong><br>Типове се проверяват преди изпълнение, неявни преобразувания са забранени.</td>
+                            <td><strong>Python, Ruby, Scheme</strong><br>Типове се проверяват при изпълнение, неявни преобразувания са редки.</td>
+                        </tr>
+                        <tr>
+                            <th>Слаба</th>
+                            <td><strong>C, C++</strong><br>Типове се проверяват преди изпълнение, но позволяват опасни преобразувания.</td>
+                            <td><strong>JavaScript, PHP, Perl</strong><br>Типове се проверяват при изпълнение, много неявни преобразувания.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 id="1.4">1.4 По парадигма (Overview)</h3>
+
+                <p>Парадигма е filosofски подход към програмирането. Главните парадигми са:</p>
+
+                <ul>
+                    <li><strong>Императивна:</strong> Описва последователност на команди (как). Процедурна: C, Pascal. Обектно-ориентирана: Java, C++, Python.</li>
+                    <li><strong>Декларативна:</strong> Описва желаното състояние (какво). Функционална: Haskell, Lisp. Логическа: Prolog.</li>
+                    <li><strong>Мулти-парадигмени:</strong> Поддържат повече от една парадигма. Python, JavaScript, Scala, Kotlin.</li>
+                </ul>
+
+            </section>
+
+            <!-- Section 2: Imperative -->
+            <section id="section2">
+                <h2>Раздел 2: Императивна парадигма</h2>
+
+                <h3>2.1 Процедурно програмиране</h3>
+
+                <p>Процедурното програмиране е един от най-старите стилове. Програмата е последовност от процедури (функции), които манипулират глобално състояние.</p>
+
+                <div class="def-box">
+                    <strong>Процедура:</strong> Именуван набор от инструкции, който може да приема параметри и да връщa резултати. Примери: функции в C, подпрограми в Fortran.
+                </div>
+
+                <p><strong>Характеристики:</strong></p>
+                <ul>
+                    <li>Съсредоточение върху алгоритъма (как да се реши проблемът)</li>
+                    <li>Глобално състояние (променливи)</li>
+                    <li>Последователно изпълнение на инструкции</li>
+                    <li>Примери: C, Fortran, Pascal, Basic, Go (частично)</li>
+                </ul>
+
+                <h3>2.2 Структурно програмиране (Structured Programming)</h3>
+
+                <p>През 1968 г. Edsger Dijkstra издава статията "Go To Considered Harmful", която инициира революция в програмирането. Структурното програмиране ограничава контролния поток до три основни структури:</p>
+
+                <div class="theorem-box">
+                    <strong>Три основни структури:</strong>
+                    <ul>
+                        <li><strong>Последователност:</strong> Инструкциите се изпълняват една след друга.</li>
+                        <li><strong>Избор (If-Then-Else):</strong> Условно изпълнение на блокове код.</li>
+                        <li><strong>Цикъл (While/For):</strong> Повторно изпълнение на блок, докато условието е истино.</li>
+                    </ul>
+                </div>
+
+                <p><strong>Теорема на Бьом и Якопини (1966):</strong> Всяка програма, използваща безусловен скок (goto), може да се преобразува в еквивалентна програма, която използва само три структури. Това е теоретична основа на структурното програмиране.</p>
+
+                <h3>2.3 Работен пример: Структурно vs Неструктурно</h3>
+
+                <div class="theorem-box green">
+                    <strong>Задача:</strong> Намерете първото четно число в списък [3, 5, 8, 1, 10]. Ако го намерите, отпечатайте го и спрете.
+                </div>
+
+                <p><strong>Неструктурно (с goto):</strong></p>
+                <pre><code>i := 0
+loop:
+  if i >= length(list) goto end
+  if list[i] mod 2 == 0 goto found
+  i := i + 1
+  goto loop
+found:
+  print list[i]
+end:</code></pre>
+
+                <p><strong>Структурно:</strong></p>
+                <pre><code>found := false
+i := 0
+while i < length(list) and not found do
+  if list[i] mod 2 == 0 then
+    print list[i]
+    found := true
+  end if
+  i := i + 1
+end while</code></pre>
+
+                <p><strong>С break (модерна структурна):</strong></p>
+                <pre><code>for i := 0 to length(list) - 1 do
+  if list[i] mod 2 == 0 then
+    print list[i]
+    break
+  end if
+end for</code></pre>
+
+                <p>Последното е най-четливо и поддържаемо.</p>
+
+            </section>
+
+            <!-- Section 3: OOP -->
+            <section id="section3">
+                <h2>Раздел 3: Обектно-ориентирана парадигма (ООП)</h2>
+
+                <h3>3.1 Историческо развитие</h3>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Simula (1967)</strong> - Крилан Нигард и Оле-Йохан Даль. Първи език с класове и наследяване. Разработен за симуляции.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Smalltalk (1972)</strong> - Алан Кей и екипа. "Чистия" ООП език. Всичко е обект. Първа графична среда (Dynabook).
+                    </div>
+                    <div class="timeline-item">
+                        <strong>C++ (1985)</strong> - Бьёрн Страустръп. ООП разширение на C. Множественото наследяване.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Java (1991-1995)</strong> - Джеймс Гослинг. "Write Once, Run Anywhere" (WORA). JVM-базирана ООП. Подкрепа за многонишковост.
+                    </div>
+                </div>
+
+                <h3>3.2 Четирите стълба на ООП</h3>
+
+                <div class="def-box">
+                    <strong>1. Капсулация (Encapsulation):</strong> Скриване на вътрешното състояние (private атрибути) зад публичен интерфейс. Ограничава достъпа до данните.
+                </div>
+
+                <div class="def-box">
+                    <strong>2. Наследяване (Inheritance):</strong> Дочерния клас наследява свойства и методи от родителския клас. Позволява йерархия и преизползване на код.
+                </div>
+
+                <div class="def-box">
+                    <strong>3. Полиморфизъм (Polymorphism):</strong> Един интерфейс, множество реализации. Позволява един метод да се поведе различно в различни контексти.
+                </div>
+
+                <div class="def-box">
+                    <strong>4. Абстракция (Abstraction):</strong> Скриване на сложност и експозиция на основните черти. Абстрактни класи и интерфейси.
+                </div>
+
+                <h3>3.3 Работен пример: Йерархия Shape</h3>
+
+                <div class="theorem-box green">
+                    <strong>Задача:</strong> Дефинирайте йерархия от фигури (Shape) с наследяване и полиморфизъм. Всяка фигура трябва да има метод area() и display().
+                </div>
+
+                <pre><code>abstract class Shape {
+  protected String color;
+
+  abstract double area();
+  abstract void display();
+}
+
+class Circle extends Shape {
+  private double radius;
+
+  Circle(double radius, String color) {
+    this.radius = radius;
+    this.color = color;
+  }
+
+  double area() {
+    return Math.PI * radius * radius;
+  }
+
+  void display() {
+    System.out.println("Circle: " + color + ", area=" + area());
+  }
+}
+
+class Rectangle extends Shape {
+  private double width, height;
+
+  Rectangle(double width, double height, String color) {
+    this.width = width;
+    this.height = height;
+    this.color = color;
+  }
+
+  double area() {
+    return width * height;
+  }
+
+  void display() {
+    System.out.println("Rectangle: " + color + ", area=" + area());
+  }
+}
+
+// Употреба:
+Shape[] shapes = {
+  new Circle(5, "red"),
+  new Rectangle(4, 6, "blue")
+};
+
+for (Shape s : shapes) {
+  s.display();  // Полиморфизъм: извиква правилния метод
+}</code></pre>
+
+                <p>Полиморфизмът позволява итерирането през различни типове с един и същи метод.</p>
+
+            </section>
+
+            <!-- Section 4: Functional -->
+            <section id="section4">
+                <h2>Раздел 4: Функционална парадигма</h2>
+
+                <h3>4.1 Ламбда смятане (Lambda Calculus)</h3>
+
+                <p>Развито от Алончо Чьорч през 1930-те години като математическа основа на функционалното програмиране.</p>
+
+                <div class="def-box">
+                    <strong>Ламбда израз:</strong> λx.E, където x е параметър, E е тело. Пример: λx.x+1 (функция, която добавя 1 към x).
+                </div>
+
+                <div class="def-box">
+                    <strong>Beta-редукция:</strong> Приложение на функция към аргумент. (λx.x+1) 5 → 6
+                </div>
+
+                <div class="def-box">
+                    <strong>Alpha-еквивалентност:</strong> Различни имена на параметри, същата функция. λx.x+1 ≡ λy.y+1
+                </div>
+
+                <h3>4.2 Основни концепции</h3>
+
+                <ul>
+                    <li><strong>Чисти функции (Pure Functions):</strong> Функциите не имат странични ефекти. Същия вход дава същия изход.</li>
+                    <li><strong>Неизменимост (Immutability):</strong> Данните не се modificат след създаване. Нови стойности се създават чрез трансформация.</li>
+                    <li><strong>Higher-order функции:</strong> Функции приемат функции като параметри или връщат функции.</li>
+                    <li><strong>First-class функции:</strong> Функциите могат да се присвояват, предават и съхранявват.</li>
+                </ul>
+
+                <p><strong>Основни езици:</strong></p>
+                <ul>
+                    <li><strong>Lisp (1959)</strong> - Джон Маккарти. "List Processing". Първи функционален език.</li>
+                    <li><strong>ML (1973)</strong> - Робин Милнър. Статична типизация с type inference.</li>
+                    <li><strong>Haskell (1990)</strong> - Симон Пейтън Джоунс и др. "Чист" функционален език. Ленива евалуация.</li>
+                    <li><strong>Erlang (1986)</strong> - Джо Армстронг. За телекомуникационни системи. Конкурентност.</li>
+                </ul>
+
+                <h3>4.3 Работен пример: map/filter/reduce</h3>
+
+                <div class="theorem-box green">
+                    <strong>Задача:</strong> От списък [1,2,3,4,5], получете сумата на квадратите на четните числа.
+                </div>
+
+                <p><strong>Решение в Python:</strong></p>
+                <pre><code>numbers = [1, 2, 3, 4, 5]
+
+# Функционален подход:
+result = sum(
+  map(lambda x: x * x,
+    filter(lambda x: x % 2 == 0, numbers)
+  )
+)
+
+# Алтернативно с list comprehension:
+result = sum(x*x for x in numbers if x % 2 == 0)
+
+# Резултат: 2^2 + 4^2 = 4 + 16 = 20
+print(result)  # 20</code></pre>
+
+                <p><strong>Решение в Haskell:</strong></p>
+                <pre><code>numbers = [1, 2, 3, 4, 5]
+
+-- Функционален подход:
+result = sum . map (^ 2) . filter even $ numbers
+
+-- Резултат: 20</code></pre>
+
+                <p><strong>Обяснение на преобразуванията:</strong></p>
+                <ul>
+                    <li>filter: [1,2,3,4,5] → [2,4] (четни)</li>
+                    <li>map квадрирам: [2,4] → [4,16]</li>
+                    <li>sum: [4,16] → 20</li>
+                </ul>
+
+            </section>
+
+            <!-- Section 5: Logic -->
+            <section id="section5">
+                <h2>Раздел 5: Логическа/Декларативна парадигма</h2>
+
+                <h3>5.1 Prolog</h3>
+
+                <p><strong>Prolog</strong> (Programming in Logic) е базиран на математическата логика. Програмата се състои от факти и правила. Системата решава заявки чрез дедукция.</p>
+
+                <div class="def-box">
+                    <strong>Факт:</strong> Твърдение, което е винаги истинско. Синтаксис: predicate(arg1, arg2).
+                </div>
+
+                <div class="def-box">
+                    <strong>Правило:</strong> Условно твърдение. Синтаксис: head :- body.
+                </div>
+
+                <div class="def-box">
+                    <strong>Заявка (Query):</strong> Въпрос към системата. Синтаксис: ?- goal.
+                </div>
+
+                <h3>5.2 Работен пример: Семейни отношения</h3>
+
+                <div class="theorem-box green">
+                    <strong>Задача:</strong> Дефинирайте факти и правила за семейни отношения. Отговорете на заявки.
+                </div>
+
+                <p><strong>Факти:</strong></p>
+                <pre><code>% Родители
+parent(alice, bob).
+parent(alice, charlie).
+parent(bob, david).
+parent(bob, emma).
+
+% Пол
+male(bob).
+male(charlie).
+male(david).
+female(alice).
+female(emma).</code></pre>
+
+                <p><strong>Правила:</strong></p>
+                <pre><code>% X е майка на Y, ако X е родител на Y и X е женска
+mother(X, Y) :- parent(X, Y), female(X).
+
+% X е баща на Y, ако X е родител на Y и X е мъж
+father(X, Y) :- parent(X, Y), male(X).
+
+% X е дядо на Y, ако X е родител на Z и Z е родител на Y
+grandparent(X, Y) :- parent(X, Z), parent(Z, Y).
+
+% X е сестра на Y, ако имат един и същ родител и X е женска
+sister(X, Y) :- parent(Z, X), parent(Z, Y), female(X), X \= Y.</code></pre>
+
+                <p><strong>Заявки и отговори:</strong></p>
+                <pre><code>?- mother(alice, X).
+% Отговор: X = bob; X = charlie.
+
+?- father(bob, Y).
+% Отговор: Y = david; Y = emma.
+
+?- grandparent(alice, david).
+% Отговор: yes.
+
+?- sister(X, david).
+% Отговор: X = emma.</code></pre>
+
+                <h3>5.3 Други логически езици</h3>
+
+                <ul>
+                    <li><strong>Datalog:</strong> Подмножество на Prolog без функции. Използва се в databaze и анализа на безопасност.</li>
+                    <li><strong>Constraint Logic Programming (CLP):</strong> Разширение на Prolog с ограничения. Примери: CLP(FD) за целите числа, CLP(R) за реални числа.</li>
+                </ul>
+
+            </section>
+
+            <!-- Section 6: Multi-paradigm -->
+            <section id="section6">
+                <h2>Раздел 6: Мулти-парадигмени езици</h2>
+
+                <p>Модерните езици часто поддържат множество парадигми. Това позволява избор на най-подходящия стил за дадена задача.</p>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Език</th>
+                            <th>Година</th>
+                            <th>Парадигми</th>
+                            <th>Типова система</th>
+                            <th>Основно употребление</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Python</strong></td>
+                            <td>1991</td>
+                            <td>Императивна, ООП, функционална</td>
+                            <td>Динамична, силна</td>
+                            <td>Wissenschaft, machine learning, веб</td>
+                        </tr>
+                        <tr>
+                            <td><strong>JavaScript</strong></td>
+                            <td>1995</td>
+                            <td>Императивна, ООП, функционална</td>
+                            <td>Динамична, слаба</td>
+                            <td>Веб (frontend, Node.js)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scala</strong></td>
+                            <td>2003</td>
+                            <td>ООП, функционална</td>
+                            <td>Статична, силна (type inference)</td>
+                            <td>Big Data (Spark), функционално ООП</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kotlin</strong></td>
+                            <td>2016</td>
+                            <td>ООП, функционална</td>
+                            <td>Статична, силна (type inference)</td>
+                            <td>Android, JVM</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Предимства на мулти-парадигмените езици:</strong></p>
+                <ul>
+                    <li>Гъвкавост: escolha на стила за дадена задача</li>
+                    <li>Постепенно усвояване: можете да почнете с един стил и да прейдете към друг</li>
+                    <li>Интеграция: комбиниране на лучшите аспекти на разни парадигми</li>
+                </ul>
+
+            </section>
+
+            <!-- Section 7: Key Concepts -->
+            <section id="section7">
+                <h2>Раздел 7: Ключови концепции в езиците</h2>
+
+                <h3>7.1 Обхват и свързване (Scope and Binding)</h3>
+
+                <div class="def-box">
+                    <strong>Статичен (лексикален) обхват:</strong> Обхватът се определя от текста на кода (структурата на вложаност). Повечето съвременни езици използват статичен обхват.
+                </div>
+
+                <div class="def-box">
+                    <strong>Динамичен обхват:</strong> Обхватът се определя от време изпълнение (call stack). Рядко използван; Bash, Lisp (по избор).
+                </div>
+
+                <p><strong>Пример с статичен обхват (Python):</strong></p>
+                <pre><code>x = "глобален"
+
+def outer():
+    x = "външен"
+
+    def inner():
+        x = "вътрешен"
+        print(x)  # Отпечатва: "вътрешен"
+
+    inner()
+    print(x)  # Отпечатва: "външен"
+
+outer()
+print(x)  # Отпечатва: "глобален"</code></pre>
+
+                <h3>7.2 Механизми за предаване на параметри</h3>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Механизъм</th>
+                            <th>Описание</th>
+                            <th>Примери</th>
+                            <th>Производителност</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>По стойност (by value)</strong></td>
+                            <td>Копира се стойността. Промени в функцията не влияят на оригинала.</td>
+                            <td>C, Java (примитивни типове), Python (за числа)</td>
+                            <td>Над памет за больших данни</td>
+                        </tr>
+                        <tr>
+                            <td><strong>По референция (by reference)</strong></td>
+                            <td>Предава се адресът. Промени влияят на оригинала.</td>
+                            <td>C/C++ (указатели), Java (обекти), Python (мутативни обекти)</td>
+                            <td>Ефикасно, но рискувано</td>
+                        </tr>
+                        <tr>
+                            <td><strong>По име (by name)</strong></td>
+                            <td>Параметърът се evalва всеки път, когато се ползва. Ленива евалуация.</td>
+                            <td>Haskell, Scheme (thunks)</td>
+                            <td>Подходящо за ленива евалуация</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ленива евалуация (lazy evaluation)</strong></td>
+                            <td>Аргументът се не евалува, докато не е необходим.</td>
+                            <td>Haskell (по подразумение)</td>
+                            <td>Оптимизирано за безкрайни структури</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>7.3 Управление на паметта</h3>
+
+                <div class="def-box">
+                    <strong>Стек (Stack):</strong> LIFO памет за локални променливи и адреси на връщане. Автоматично се освобождава при излизане от функция. Бързо, но ограничено.
+                </div>
+
+                <div class="def-box">
+                    <strong>Куп (Heap):</strong> Произволна памет за динамични структури данни. Ръчно управление (C) или автоматично (GC). Бавно, но неограничено.
+                </div>
+
+                <p><strong>Garbage Collection (GC):</strong> Автоматично освобождаване на неупотребявана памет.</p>
+
+                <ul>
+                    <li><strong>Mark-and-sweep:</strong> Маркира достижими обекти, след което свързва неклассифициранных.</li>
+                    <li><strong>Reference counting:</strong> Брой на референциите към всеки обект. Освобождава се, когато счетач е 0.</li>
+                    <li><strong>Generational GC:</strong> Обекти се разделят на поколения. Млади обекти се събират по-често.</li>
+                </ul>
+
+                <p><strong>Езици и управление на паметта:</strong></p>
+                <ul>
+                    <li><strong>Ръчно:</strong> C, C++ (free/delete)</li>
+                    <li><strong>Автоматично с GC:</strong> Java, Python, C#, Lisp, Haskell</li>
+                    <li><strong>Собственост (ownership):</strong> Rust (RAII, borrow checker)</li>
+                </ul>
+
+            </section>
+
+            <!-- Section 8: Historical Evolution -->
+            <section id="section8">
+                <h2>Раздел 8: Историческа еволюция на езиците</h2>
+
+                <p>Историята на програмните езици отразява развитието на компютрите и индустрията:</p>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Година</th>
+                            <th>Език</th>
+                            <th>Автор(и)</th>
+                            <th>Парадигма</th>
+                            <th>Исторически betydelse</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1957</td>
+                            <td><strong>FORTRAN</strong></td>
+                            <td>John Backus (IBM)</td>
+                            <td>Процедурна</td>
+                            <td>Първи компилирам език,科学ни вычисления</td>
+                        </tr>
+                        <tr>
+                            <td>1958</td>
+                            <td><strong>ALGOL</strong></td>
+                            <td>Международен комитет</td>
+                            <td>Процедурна</td>
+                            <td>Стандартен език за алгоритми, структурно програмиране</td>
+                        </tr>
+                        <tr>
+                            <td>1959</td>
+                            <td><strong>LISP</strong></td>
+                            <td>John McCarthy (MIT)</td>
+                            <td>Функционална</td>
+                            <td>Първи функционален език, AI програмиране</td>
+                        </tr>
+                        <tr>
+                            <td>1959</td>
+                            <td><strong>COBOL</strong></td>
+                            <td>Grace Hopper и др.</td>
+                            <td>Процедурна</td>
+                            <td>Бизнес системи, дълга история (още използван)</td>
+                        </tr>
+                        <tr>
+                            <td>1967</td>
+                            <td><strong>Simula</strong></td>
+                            <td>Kristen Nygård, Ole-Johan Dahl</td>
+                            <td>ООП</td>
+                            <td>Първи ООП език, класи и наследяване</td>
+                        </tr>
+                        <tr>
+                            <td>1972</td>
+                            <td><strong>Prolog</strong></td>
+                            <td>Alain Colmerauer</td>
+                            <td>Логическа</td>
+                            <td>Логическо програмиране, AI</td>
+                        </tr>
+                        <tr>
+                            <td>1972</td>
+                            <td><strong>C</strong></td>
+                            <td>Dennis Ritchie</td>
+                            <td>Процедурна</td>
+                            <td>Системно програмиране, Unix, все още доминиращ</td>
+                        </tr>
+                        <tr>
+                            <td>1972</td>
+                            <td><strong>Smalltalk</strong></td>
+                            <td>Alan Kay, Xerox PARC</td>
+                            <td>ООП</td>
+                            <td>"Чистия" ООП, първа графична среда</td>
+                        </tr>
+                        <tr>
+                            <td>1973</td>
+                            <td><strong>ML</strong></td>
+                            <td>Robin Milner (Edinburgh)</td>
+                            <td>Функционална</td>
+                            <td>Type inference, статична типизация в функцион. езици</td>
+                        </tr>
+                        <tr>
+                            <td>1980</td>
+                            <td><strong>Ada</strong></td>
+                            <td>Jean Ichbiah, US Department of Defense</td>
+                            <td>ООП, процедурна</td>
+                            <td>Язык за критични системи, строг стандарт</td>
+                        </tr>
+                        <tr>
+                            <td>1985</td>
+                            <td><strong>C++</strong></td>
+                            <td>Bjarne Stroustrup</td>
+                            <td>ООП, процедурна</td>
+                            <td>ООП разширение на C, множественото наследяване, шаблони</td>
+                        </tr>
+                        <tr>
+                            <td>1986</td>
+                            <td><strong>Erlang</strong></td>
+                            <td>Joe Armstrong, Ericsson</td>
+                            <td>Функционална, конкурентна</td>
+                            <td>Telecom системи, горещ перезагрузка</td>
+                        </tr>
+                        <tr>
+                            <td>1990</td>
+                            <td><strong>Haskell</strong></td>
+                            <td>Simon Peyton Jones и др.</td>
+                            <td>Функционална</td>
+                            <td>"Чистия" функционален език, ленива евалуация</td>
+                        </tr>
+                        <tr>
+                            <td>1991</td>
+                            <td><strong>Python</strong></td>
+                            <td>Guido van Rossum</td>
+                            <td>Мултипарадигмена</td>
+                            <td>Четимост, простота, sci-fi вычисления, AI</td>
+                        </tr>
+                        <tr>
+                            <td>1992</td>
+                            <td><strong>Ruby</strong></td>
+                            <td>Yukihiro Matsumoto</td>
+                            <td>Мултипарадигмена</td>
+                            <td>Динамичност, Rails framework</td>
+                        </tr>
+                        <tr>
+                            <td>1995</td>
+                            <td><strong>Java</strong></td>
+                            <td>James Gosling (Sun Microsystems)</td>
+                            <td>ООП</td>
+                            <td>WORA, JVM, конкурентност, enterprise</td>
+                        </tr>
+                        <tr>
+                            <td>1995</td>
+                            <td><strong>JavaScript</strong></td>
+                            <td>Brendan Eich</td>
+                            <td>Мултипарадигмена</td>
+                            <td>Веб браузъри, Node.js, повсеместност</td>
+                        </tr>
+                        <tr>
+                            <td>2000</td>
+                            <td><strong>C#</strong></td>
+                            <td>Anders Hejlsberg (Microsoft)</td>
+                            <td>ООП, функционална</td>
+                            <td>.NET platform, LINQ (SQL в C#), async/await</td>
+                        </tr>
+                        <tr>
+                            <td>2003</td>
+                            <td><strong>Scala</strong></td>
+                            <td>Martin Odersky (EPFL)</td>
+                            <td>ООП, функционална</td>
+                            <td>JVM, Big Data (Apache Spark)</td>
+                        </tr>
+                        <tr>
+                            <td>2009</td>
+                            <td><strong>Go</strong></td>
+                            <td>Robert Griesemer, Rob Pike, Ken Thompson (Google)</td>
+                            <td>Процедурна, конкурентна</td>
+                            <td>Простота, конкурентност (goroutines), системно програмиране</td>
+                        </tr>
+                        <tr>
+                            <td>2010</td>
+                            <td><strong>Rust</strong></td>
+                            <td>Graydon Hoare (Mozilla)</td>
+                            <td>Системна, функционална</td>
+                            <td>Безопасност паметта без GC, ownership model</td>
+                        </tr>
+                        <tr>
+                            <td>2016</td>
+                            <td><strong>Kotlin</strong></td>
+                            <td>JetBrains</td>
+                            <td>ООП, функционална</td>
+                            <td>JVM, Android официален език (2019), interop с Java</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Основни тенденции</h3>
+                <ul>
+                    <li><strong>1950-1960:</strong> Математически основи (Fortran, Lisp, Algol). Ориентирани към напрямо изпълнение на научни算 алгоритми.</li>
+                    <li><strong>1960-1980:</strong> Структурно програмиране (C), ООП (Simula, Smalltalk). Съсредоточение върху разработката на големи системи.</li>
+                    <li><strong>1990-2010:</strong> Интернет и мобилност (Java, JavaScript, Python). Динамични езици за бързо прототипиране.</li>
+                    <li><strong>2010-наст.:</strong> Безопасност и конкурентност (Rust, Go, Kotlin). Полиморфизъм, асинхронност, безопасност паметта.</li>
+                </ul>
+
+            </section>
+
+            <!-- Flashcards -->
+            <section id="flashcards">
+                <h2>Флашкарти за самопроверка</h2>
+
+                <p>Кликнете върху всяка карта, за да видите отговора. Тези карти са критични за изпита.</p>
+
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 1:</strong> Определете първото поколение езици (1GL) и дайте пример.</div>
+                        <div class="fc-a"><strong>Отговор:</strong> 1GL е машинен код (binary). Директни инструкции за процесора. Пример: 10110000 01100001. Немеса развитие, но най-бързо изпълнение. <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 2:</strong> Какво е структурното програмиране? Кой го предложи?</div>
+                        <div class="fc-a"><strong>Отговор:</strong> Структурното програмиране е парадигма, която използва три основни структури: последователност, избор (if-then-else) и цикъл. Това е алтернатива на goto. Edsger Dijkstra го предложи през 1968 със статия "Go To Considered Harmful". <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 3:</strong> Перечислите четирите стълба на ООП и кратко дефинирайте всеки.</div>
+                        <div class="fc-a"><strong>Отговор:</strong>
+                        <br>1. <strong>Капсулация:</strong> Скриване на вътрешното състояние (private данни).
+                        <br>2. <strong>Наследяване:</strong> Дочерни класи наследяват от родителски.
+                        <br>3. <strong>Полиморфизъм:</strong> Един интерфейс, множество реализации.
+                        <br>4. <strong>Абстракция:</strong> Скриване на сложност, изложение на основите.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 4:</strong> Ламбда смятане. Какво е β-редукция?</div>
+                        <div class="fc-a"><strong>Отговор:</strong> Ламбда смятане (λ-calculus) е математическа основа на функционално програмиране, развита от Алончо Чьорч. β-редукция е приложението на функция към аргумент. Пример: (λx.x+1) 5 → 6. Замященват формалния параметър х с аргумент 5. <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 5:</strong> Prolog: факти, правила, заявки. Дайте един пример за правило.</div>
+                        <div class="fc-a"><strong>Отговор:</strong>
+                        <br><strong>Факт:</strong> parent(alice, bob). (неусловно твърдение)
+                        <br><strong>Правило:</strong> mother(X, Y) :- parent(X, Y), female(X). (условно)
+                        <br><strong>Заявка:</strong> ?- mother(alice, X). (въпрос към системата)
+                        <br>Правилото казва: X е майка на Y, ако X е родител на Y И X е женска.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 6:</strong> Разлика между статична и динамична типова система. Примери.</div>
+                        <div class="fc-a"><strong>Отговор:</strong>
+                        <br><strong>Статична:</strong> Типове се проверяват при компилация. Примери: Java, C, Rust, Haskell. Грешките се открива рано.
+                        <br><strong>Динамична:</strong> Типове се проверяват при изпълнение. Примери: Python, JavaScript, Ruby. По-гъвкава, но рискувана.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 7:</strong> Какво е чиста функция (pure function)? Защо е важна в функционално програмиране?</div>
+                        <div class="fc-a"><strong>Отговор:</strong> Чистата функция няма странични ефекти и зависи само от своите параметри. Същия вход дава същия изход, всеки път. Примери: f(x) = x+1. Важна е защото улеснява reasoninging, тестване и паралелизация. Противоположност: функции със странични ефекти (пишат във файл, изменяват глобално състояние).
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 8:</strong> JVM-базирани езици vs компилирани към машинен код. Предимства и недостатъци.</div>
+                        <div class="fc-a"><strong>Отговор:</strong>
+                        <br><strong>JVM (Java, Scala, Kotlin):</strong>
+                        <br>+ Преносимост (WORA)
+                        <br>+ Гаран за безопасност памет
+                        <br>- По-бавен старт (инициализация на VM)
+                        <br><strong>Машинен код (C, C++, Go):</strong>
+                        <br>+ Директно, бързо
+                        <br>+ Малки файлове
+                        <br>- Платформозависимост
+                        <br>- Отговорност за памет
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 9:</strong> Какво е собственост (ownership) в Rust? Как се различава от garbage collection?</div>
+                        <div class="fc-a"><strong>Отговор:</strong> Собствеността е система за управление на паметта в Rust. Всяка стойност има един собственик. Когато собственикът излиза от обхват, памет се освобождава (RAII). На разлика от GC, която бяга както (stop-the-world), собствеността е детерминистична и няма гауранции.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 10:</strong> Първи три ООП езика, които са се явили исторически. Какво е било ново в всеки?</div>
+                        <div class="fc-a"><strong>Отговор:</strong>
+                        <br>1. <strong>Simula (1967):</strong> Първи ООП език с класи, наследяване и виртуални методи.
+                        <br>2. <strong>Smalltalk (1972):</strong> "Чистия" ООП - всичко е обект. Първа графична среда.
+                        <br>3. <strong>C++ (1985):</strong> ООП разширение на C. Множественото наследяване, шаблони.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 11:</strong> Разлика между статичен (лексикален) и динамичен обхват. Примeр.</div>
+                        <div class="fc-a"><strong>Отговор:</strong>
+                        <br><strong>Статичен (лексикален):</strong> Обхватът се определя от текста на кода. Това, което видим е това, което имаме. Java, Python, C.
+                        <br><strong>Динамичен:</strong> Обхватът зависи от call stack. Рядко; Bash, Lisp (по избор).
+                        <br>Статичен е по-лесен за понимане и е стандартният избор на съвременни езици.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 12:</strong> Какво е type inference? Кои езици го поддържат?</div>
+                        <div class="fc-a"><strong>Отговор:</strong> Type inference е способностята на компилаторът да се дедуцирам типовете на променливите без явно деклариран. Примери: ML (от 1973), Haskell, Rust, Scala, C++ (auto ключова дума). На разлика от явно дефинирани типове (int x = 5), можете да напишете (x = 5) и компилаторът го разбира.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Reference -->
+            <section id="quickref">
+                <h2>Бърза справка</h2>
+
+                <h3>Основни парадигми</h3>
+                <div class="quick-ref">
+                    <div class="quick-ref-item">
+                        <h4>Императивна</h4>
+                        <p><strong>Суть:</strong> Как да направим нещо.</p>
+                        <p><strong>Примери:</strong> C, Java (частично), Pascal, Go.</p>
+                        <p><strong>Особено:</strong> Команди, последовательност, променливи.</p>
+                    </div>
+                    <div class="quick-ref-item">
+                        <h4>Декларативна</h4>
+                        <p><strong>Суть:</strong> Какво искам.</p>
+                        <p><strong>Примери:</strong> Функционална (Haskell), логическа (Prolog), SQL.</p>
+                        <p><strong>Особено:</strong> Трансформация данни, декларация на желания.</p>
+                    </div>
+                </div>
+
+                <h3>Поколенията на езиците</h3>
+                <div class="quick-ref">
+                    <div class="quick-ref-item">
+                        <h4>1GL-2GL</h4>
+                        <p>Машинен код и асемблер. Директна работа с хардуера. Древни, рядко се използват.</p>
+                    </div>
+                    <div class="quick-ref-item">
+                        <h4>3GL</h4>
+                        <p>Висок ниво абстракция. C, Java, Python. Доминиращи днес.</p>
+                    </div>
+                    <div class="quick-ref-item">
+                        <h4>4GL</h4>
+                        <p>Декларативен. SQL, MATLAB. Специализирани задачи.</p>
+                    </div>
+                    <div class="quick-ref-item">
+                        <h4>5GL</h4>
+                        <p>AI ориентирани. Prolog, Lisp. Логическо решение на проблеми.</p>
+                    </div>
+                </div>
+
+                <h3>Ключови типове системи</h3>
+                <div class="quick-ref">
+                    <div class="quick-ref-item">
+                        <h4>Статична + силна</h4>
+                        <p><strong>Java, C#, Rust, Haskell</strong></p>
+                        <p>Най-безопасна. Грешките се открива при компилация.</p>
+                    </div>
+                    <div class="quick-ref-item">
+                        <h4>Динамична + силна</h4>
+                        <p><strong>Python, Ruby, Scheme</strong></p>
+                        <p>Гъвкава, но грешките се открива при изпълнение.</p>
+                    </div>
+                    <div class="quick-ref-item">
+                        <h4>Статична + слаба</h4>
+                        <p><strong>C, C++</strong></p>
+                        <p>Контрол, но рискувано. Неявни преобразувания.</p>
+                    </div>
+                    <div class="quick-ref-item">
+                        <h4>Динамична + слаба</h4>
+                        <p><strong>JavaScript, PHP</strong></p>
+                        <p>Много гъвкава, но неразбираема. "Делај всичко".</p>
+                    </div>
+                </div>
+
+                <h3>Механизми за предаване на параметри</h3>
+                <div class="quick-ref">
+                    <div class="quick-ref-item">
+                        <h4>По стойност (by value)</h4>
+                        <p>Копира се данните. Промени не влияят на оригинала. По-безопасно, по-скъпо.</p>
+                    </div>
+                    <div class="quick-ref-item">
+                        <h4>По референция (by reference)</h4>
+                        <p>Предава се адресът. Промени влияят. По-ефикасно, по-рискувано.</p>
+                    </div>
+                </div>
+
+                <h3>Историческа подпомощ</h3>
+                <p><strong>Заслужа да памtite:</strong></p>
+                <ul>
+                    <li><strong>1957:</strong> FORTRAN (първи компилирам език)</li>
+                    <li><strong>1959:</strong> LISP (първи функционален), COBOL (бизнес)</li>
+                    <li><strong>1967:</strong> Simula (първи ООП)</li>
+                    <li><strong>1972:</strong> Smalltalk (чиста ООП), C (системен)</li>
+                    <li><strong>1985:</strong> C++ (ООП за масите)</li>
+                    <li><strong>1990:</strong> Haskell (чист функционален)</li>
+                    <li><strong>1995:</strong> Java (WORA), JavaScript (веб)</li>
+                    <li><strong>2010:</strong> Rust (безопасност паметта)</li>
+                </ul>
+
+            </section>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p><strong>Препоръчана литература:</strong></p>
+                <ul style="list-style: none; margin-left: 0;">
+                    <li>[18] Nakov S., et al. (Интерпретирани езици и парадигми)</li>
+                    <li>[21] Scott M.L. (Programming Language Pragmatics)</li>
+                </ul>
+                <p style="margin-top: 20px;">Материал за 4-часова PhD писмена работа (IMI-BAN). Очаква се 3-5 страницы ръкопис.</p>
+                <p style="margin-top: 10px; font-size: 12px;">Последно актуализирано: <span id="date"></span></p>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Set current date
+        document.getElementById('date').textContent = new Date().toLocaleDateString('bg-BG', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Smooth scrolling for sidebar links
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Update active link on scroll
+        window.addEventListener('scroll', function () {
+            const sections = document.querySelectorAll('section');
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Initialize Mermaid
+        mermaid.initialize({ startOnLoad: true, theme: 'light' });
+        mermaid.contentLoaded();
+    </script>
+</body>
+</html>
