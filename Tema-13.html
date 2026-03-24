@@ -416,7 +416,8 @@
                 <li><a href="#section1">Раздел 1: Основи на ЦБ</a></li>
                 <li><a href="#section2">Раздел 2: Дигитализация</a></li>
                 <li><a href="#section3">Раздел 3: Метаданни</a></li>
-                <li><a href="#section4">Раздел 4: Культурно наследство</a></li>
+                <li><a href="#section4">Раздел 4: Културно наследство</a></li>
+                <li style="margin-left: 10px;"><a href="#section4-cidoc">• CIDOC-CRM</a></li>
                 <li><a href="#section5">Раздел 5: Технологии</a></li>
                 <li><a href="#section6">Раздел 6: Интероперабилност</a></li>
                 <li><a href="#flashcards">Flashcards</a></li>
@@ -760,7 +761,47 @@
             <section id="section4">
                 <h2>Раздел 4: Культурно наследство</h2>
 
-                <h3>4.1 UNESCO дефиниция на културно наследство</h3>
+                <h3 id="section4-cidoc">4.1 CIDOC-CRM (Conceptual Reference Model)</h3>
+
+                <div class="definition">
+                    <strong>CIDOC-CRM (ISO 21127):</strong> Международен стандарт за концептуален справочен модел за обмен и интеграция на информация за културно наследство. Разработен от Международния комитет за документация (CIDOC) на Международния съвет на музеите (ICOM).
+                </div>
+
+                <p><strong>Основни характеристики на CIDOC-CRM:</strong></p>
+                <ul>
+                    <li><strong>Описание на обекти и събития:</strong> Моделира не само обектите, но и контекста на тяхното създаване, история и употреба</li>
+                    <li><strong>Семантична богатост:</strong> Позволява представяне на сложни връзки между обекти, места, хора и временни периоди</li>
+                    <li><strong>Интероперабилност:</strong> Стандартна норма за обмен на информация между различни музейни системи и архиви</li>
+                    <li><strong>Гъвкавост:</strong> Поддържа различни нива на детайлизация, подходящи за различни типове ресурси</li>
+                </ul>
+
+                <p><strong>Основни класи (Entity Types) в CIDOC-CRM:</strong></p>
+                <ul>
+                    <li><strong>E1 CRM Entity:</strong> Базовата класа, представляща всеки обект или концепт</li>
+                    <li><strong>E2 Temporal Entity:</strong> Обекти и събития с временно измерение</li>
+                    <li><strong>E5 Event:</strong> Събитие или действие (създаване, использване, преместване)</li>
+                    <li><strong>E19 Physical Object:</strong> Материален обект (артефакт, документ)</li>
+                    <li><strong>E21 Person:</strong> Физическо лице (художник, собственик, исторически фигура)</li>
+                    <li><strong>E27 Site:</strong> Географско място (град, археологично място)</li>
+                    <li><strong>E71 Man-Made Object:</strong> Създаден от хората обект</li>
+                    <li><strong>E90 Symbolic Object:</strong> Абстрактни обекти (информация, идеи)</li>
+                </ul>
+
+                <p><strong>Връзка с другите стандарти:</strong></p>
+                <ul>
+                    <li><strong>Dublin Core:</strong> CIDOC-CRM разширява DC с по-детайлна семантика; DC е подмножество на CRM</li>
+                    <li><strong>EDM (Europeana Data Model):</strong> EDM е надстройка над CIDOC-CRM, специализирана за европейски проекти</li>
+                    <li><strong>RDF/OWL:</strong> CIDOC-CRM е основан на RDF, позволявайки семантични заявки</li>
+                </ul>
+
+                <p><strong>Приложение в Института за математика и информатика (ИМИ-БАН):</strong></p>
+                <p>
+                    При управление на дигиталните колекции на культурно наследство, ИМИ-БАН използва CIDOC-CRM за структурирано
+                    представяне на метаданни. Trabajo от Панева-Маринова, Иванова и други разработват семантични модели и онтологии,
+                    базирани на CIDOC-CRM, за интеграция на различни источники на данни и поддържане на интероперабилност между системите.
+                </p>
+
+                <h3>4.2 UNESCO дефиниция на културно наследство</h3>
 
                 <div class="definition">
                     <strong>Материално (тангибилно) культурно наследство:</strong> Физически обекти, включващи архитектурни съоръжения, археологически находки, артефакти, исторически градове, природни места. Това включва движими обекти (произведения на изкуството, манускрипти) и недвижими обекти.
@@ -955,6 +996,16 @@
                     <div class="flashcard">
                         <div class="flashcard-question">Какво е METS?</div>
                         <div class="flashcard-answer">METS е XML контейнер, разработен от Библиотеката на Конгреса, който позволява интеграция на различни стандарти за метаданни (DC, MARC, PREMIS) и управление на структурни, описателни и административни метаданни</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Какво е CIDOC-CRM (ISO 21127)?</div>
+                        <div class="flashcard-answer">Conceptual Reference Model е международен стандарт за обмен и интеграция на информация за культурно наследство. Разработен от CIDOC на ICOM. Поддържа RDF и позволява семантични заявки. Основни класи: Event, Person, Physical Object, Site</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-question">Връзка между CIDOC-CRM, Dublin Core и Europeana Data Model (EDM)</div>
+                        <div class="flashcard-answer">Dublin Core е подмножество на CIDOC-CRM с по-проста семантика. EDM е надстройка над CIDOC-CRM, специализирана за европейски проекти. Всички три са базирани на RDF</div>
                     </div>
 
                     <div class="flashcard">

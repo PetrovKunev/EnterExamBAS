@@ -498,8 +498,19 @@
                 <ul>
                     <li><a href="#overview">Обзор</a></li>
                     <li><a href="#algorithms">Раздел 1: Алгоритми</a></li>
-                    <li><a href="#computability">Раздел 2: Изчислимост</a></li>
-                    <li><a href="#turing-machines">Раздел 3: Машини на Тюринг</a></li>
+                    <li><a href="#computability">Раздел 2: Изчислимост</a>
+                        <ul class="sub">
+                            <li><a href="#halting-problem">Халтинг проблем</a></li>
+                            <li><a href="#rice-theorem">Теорема на Райс</a></li>
+                            <li><a href="#reducibility">Редуцируемост</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#turing-machines">Раздел 3: Машини на Тюринг</a>
+                        <ul class="sub">
+                            <li><a href="#dtm-ntm">DTM срещу NTM</a></li>
+                            <li><a href="#tm-example-binary-add">Пример: събиране</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#church-turing">Раздел 4: Тезис на Чърч-Тюринг</a></li>
                     <li><a href="#complexity">Раздел 5: Сложност</a></li>
                     <li><a href="#flashcards">Flashcards</a></li>
@@ -813,7 +824,7 @@ D(M):
                     </ol>
                 </div>
 
-                <h3>Редуцируемост (Reducibility)</h3>
+                <h3 id="reducibility">Редуцируемост (Reducibility)</h3>
 
                 <div class="def-box">
                     <strong>Многоеденична редукция:</strong> Езикът A е редуцируем до езикът B (обозначава се A ≤_m B), ако съществува изчислима функция f такава, че за всяка дума w: w ∈ A ако и само ако f(w) ∈ B.
@@ -824,7 +835,7 @@ D(M):
                     <strong>Свойство на редуцируемост:</strong> Ако A ≤_m B и B е разрешим, то A е разрешим. Контрапозитивно: Ако A е неразрешим и A ≤_m B, то B е неразрешим.
                 </div>
 
-                <h3>Теорема на Райс (Rice's Theorem)</h3>
+                <h3 id="rice-theorem">Теорема на Райс (Rice's Theorem)</h3>
 
                 <div class="theorem-box">
                     <strong>Теорема на Райс:</strong> Нека P е нетривиално свойство на langue (език), разпознаван от машини на Тюринг. Тогава проблемът за определяне дали дадена машина на Тюринг разпознава език със свойство P е неразрешим.
@@ -837,7 +848,85 @@ D(M):
                         <li>Дали дадена машина разпознава празния език? — Неразрешимо (свойство: "е празен")</li>
                         <li>Дали дадена машина разпознава крайния език? — Неразрешимо (свойство: "е краен")</li>
                         <li>Дали дадена машина разпознава регулярен език? — Неразрешимо (свойство: "е регулярен")</li>
+                        <li>Дали дадена машина разпознава някой дум? — Неразрешимо (свойство: "е непразен")</li>
                     </ul>
+                </div>
+
+                <h4>Работен пример: Приложение на Райс</h4>
+
+                <div class="example-box">
+                    <strong>Задача:</strong> Предположим, че имаме машина E_EMPTY, която решава дали дадена машина M разпознава празния език (L(M) = ∅). Покажете, че E_EMPTY е неразрешима с помощта на Теорема на Райс.
+                </div>
+
+                <div class="proof-steps">
+                    <strong>Решение:</strong>
+                    <ol>
+                        <li><strong>Идентифицирайте свойството P:</strong> P = "разпознава ли език L празния език?". Това е семантично свойство на език (не синтактично свойство на машина).</li>
+
+                        <li><strong>Проверете дали е нетривиално:</strong>
+                            <ul style="margin: 0.5rem 0;">
+                                <li>Някои машини разпознават празния език (например машина, която веднага отхвърля всеки вход)</li>
+                                <li>Други машини разпознават непразни езици (например машина, която приема всичко)</li>
+                                <li>Следователно P е нетривиално</li>
+                            </ul>
+                        </li>
+
+                        <li><strong>Приложи Теорема на Райс:</strong> Тъй като P е нетривиално семантично свойство на езиците, разпознавани от машини на Тюринг, Теорема на Райс гласи, че проблемът за определяне дали произволна машина M има свойство P е неразрешим.</li>
+
+                        <li><strong>Заключение:</strong> Проблемът E_EMPTY е неразрешим.</li>
+                    </ol>
+                </div>
+
+                <h3 id="reducibility-details">Редуцируемост (Reducibility) — Детайли и примери</h3>
+
+                <div class="def-box">
+                    <strong>Многоеденична редукция (revisited):</strong> Езикът A е редуцируем до езикът B (обозначава се A ≤_m B) чрез редукцирана функция f, ако:
+                    <ul style="margin-top: 0.8rem; margin-bottom: 0;">
+                        <li>f е изчислима функция</li>
+                        <li>За всяка дума w: w ∈ A ако и само ако f(w) ∈ B</li>
+                    </ul>
+                </div>
+
+                <h4>Работен пример: Редукция HALT_TM → E_TM</h4>
+
+                <div class="example-box">
+                    <strong>Задача:</strong> Покажете редукция от HALT_TM (Проблем на Халтинга) към E_TM (дали машина разпознава празния език). Това показва, че E_TM е също неразрешим.
+                </div>
+
+                <div class="proof-steps">
+                    <strong>Решение:</strong>
+                    <ol>
+                        <li><strong>Дефиниция на проблеми:</strong>
+                            <ul style="margin: 0.5rem 0;">
+                                <li>HALT_TM = {⟨M, w⟩ : машина M завршава при вход w}</li>
+                                <li>E_TM = {⟨M⟩ : машина M разпознава празния език L(M) = ∅}</li>
+                            </ul>
+                        </li>
+
+                        <li><strong>Конструкция на редукционна функция f:</strong> От входа ⟨M, w⟩ за HALT_TM, конструираме нова машина M':
+                            <div class="formula-block">
+M'(x):
+  1. Игнорирай входа x
+  2. Симулирай M на w
+  3. Ако M завршава, приеми x
+  4. Ако M не завршава, отхвърли x
+                            </div>
+                        </li>
+
+                        <li><strong>Докажете, че f е редукция:</strong>
+                            <ul style="margin: 0.5rem 0;">
+                                <li>Ако ⟨M, w⟩ ∈ HALT_TM (M завршава при w): тогава M' завршава и приема всеки x. Следователно L(M') ≠ ∅, quindi ⟨M'⟩ ∉ E_TM</li>
+                                <li>Ако ⟨M, w⟩ ∉ HALT_TM (M не завршава при w): тогава M' не завршава при никой x. Следователно L(M') = ∅, така че ⟨M'⟩ ∈ E_TM</li>
+                                <li>Коректност: ⟨M, w⟩ ∈ HALT_TM ⟺ ⟨M'⟩ ∉ E_TM</li>
+                            </ul>
+                        </li>
+
+                        <li><strong>Заключение:</strong> Ако E_TM беше разрешим, тогава HALT_TM щеше да бъде разрешим (чрез редукция), което е противоречие. Следователно E_TM е неразрешим.</li>
+                    </ol>
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Ключева наблюдение за редукция:</strong> Редукцията е техника за доказване на неразрешимост. Ако знаем, че A е неразрешим, и можем да редуцираме A на B (т.е., A ≤_m B), то B е също неразрешим. Това позволява да докажем неразрешимост на нови проблеми от известни неразрешими проблеми.
                 </div>
             </section>
 
@@ -1033,6 +1122,162 @@ Q = {q₀, q₁, q₂, q₃, q₄, q_accept, q_reject}
 
                 <div class="note-box">
                     <strong>Еквивалентност на варианти:</strong> Въпреки че различните варианти имат различни дефиниции, всички те могат да симулират един друг със полиномиално увеличение на времето (с изключение на някои специални случаи). Това показва, че концепцията за "изчислимост" е независима от конкретния модел.
+                </div>
+
+                <h3 id="dtm-ntm">Детерминирана TM срещу Недетерминирана TM</h3>
+
+                <div class="gen-table">
+                    <tr>
+                        <th>Аспект</th>
+                        <th>Детерминирана (DTM)</th>
+                        <th>Недетерминирана (NTM)</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Дефиниция на δ</strong></td>
+                        <td>δ(q, a) = един преход (q', a', посока)</td>
+                        <td>δ(q, a) = множество от възможни преходи</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Разклоняване</strong></td>
+                        <td>Няма — един път на изчисление</td>
+                        <td>Има — множество паралелни пътища</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Приемане на вход</strong></td>
+                        <td>Приема, ако един конкретен път води до q_accept</td>
+                        <td>Приема, ако съществува някой път, който води до q_accept</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Мощност</strong></td>
+                        <td>Базовата мощност на машини на Тюринг</td>
+                        <td>Еквивалентна на DTM по мощност (но може да бъде експоненциално по-бърза)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Симулация</strong></td>
+                        <td>—</td>
+                        <td>Всяка NTM може да се симулира на DTM със полиномиално увеличение на времето</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Пример</strong></td>
+                        <td>Машина за {0ⁿ1ⁿ}</td>
+                        <td>Машина, която "познава" разклонението да бъде направено</td>
+                    </tr>
+                </div>
+
+                <div class="note-box">
+                    <strong>Критично: NTM и P vs NP</strong> Недетерминизмът е ключов за дефинирането на клас NP. NTM могат да решат NP-пълни проблеми (в теория) в полиномиално време чрез "угаждане" на правилния път. DTM трябва да проверят всички пътища, което отнема експоненциално време.
+                </div>
+
+                <h3 id="tm-example-binary-add">Работен пример 5: Машина на Тюринг за сумиране на две двоични числа</h3>
+
+                <div class="example-box">
+                    <strong>Задача:</strong> Проектирайте детерминирана машина на Тюринг, която събира две двоични числа a + b, където входът е форматиран като "a+b" (например "101+11" за 5+3=8). Проверете поведението на входа "101+11" и очакваното изходно "1000".
+                </div>
+
+                <h4>Формална дефиниция на машина</h4>
+
+                <div class="proof-steps">
+                    <strong>Решение:</strong>
+                    <ol>
+                        <li><strong>Идея на алгоритъма:</strong> Машина преминава през двоична дума отдясно наляво, събира бита на a и b (с пренос), и пише резултата на лентата. Тази машина работи в "едно преминаване" след инициална позициониране.</li>
+
+                        <li><strong>Формална дефиниция:</strong>
+                            <div class="formula-block">
+M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject)
+Q = {q₀, q_move_right, q_add_0, q_add_1, q_carry, q_back_left, q_cleanup, q_accept, q_reject}
+Σ = {0, 1, +}
+Γ = {0, 1, +, □}
+                            </div>
+                        </li>
+
+                        <li><strong>Преход функция δ (избрани преходи):</strong>
+                            <div class="formula-block">
+-- Начало: намери края на входа
+δ(q₀, 0) = (q_move_right, 0, R)
+δ(q₀, 1) = (q_move_right, 1, R)
+δ(q₀, +) = (q_move_right, +, R)
+
+-- Достигнем краят (□), върти се наляво
+δ(q_move_right, □) = (q_back_left, □, L)
+
+-- Върни се наляво, проверка дали сме намерили +
+δ(q_back_left, 0) = (q_back_left, 0, L)
+δ(q_back_left, 1) = (q_back_left, 1, L)
+δ(q_back_left, +) = (q_add_0, +, L)  -- Намерихме +, начало на събиране
+
+-- Събиране на 0 + 0 = 0
+δ(q_add_0, 0) = (q_add_0, 0, L)
+δ(q_add_0, 1) = (q_add_1, 1, L)
+
+-- Събиране на 1 + 1 = 10 (с пренос)
+δ(q_add_1, 0) = (q_carry, 1, L)  -- Резултат 1, пренос
+δ(q_add_1, 1) = (q_carry, 0, L)  -- 1+1=0 + пренос
+                            </div>
+                        </li>
+
+                        <li><strong>Трасиране на вход "101+11":</strong>
+                            <table style="margin: 1rem 0; background: white; border-collapse: collapse; width: 100%;">
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Стъпка</th>
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Състояние</th>
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Лента</th>
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Позиция</th>
+                                    <th style="padding: 0.5rem; text-align: left; background: var(--navy); color: white;">Действие</th>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">0</td>
+                                    <td style="padding: 0.5rem;">q₀</td>
+                                    <td style="padding: 0.5rem;">101+11</td>
+                                    <td style="padding: 0.5rem;">0</td>
+                                    <td style="padding: 0.5rem;">Чети 1, движи R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">1</td>
+                                    <td style="padding: 0.5rem;">q_move_right</td>
+                                    <td style="padding: 0.5rem;">101+11</td>
+                                    <td style="padding: 0.5rem;">1</td>
+                                    <td style="padding: 0.5rem;">Чети 0, движи R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">2</td>
+                                    <td style="padding: 0.5rem;">q_move_right</td>
+                                    <td style="padding: 0.5rem;">101+11</td>
+                                    <td style="padding: 0.5rem;">2</td>
+                                    <td style="padding: 0.5rem;">Чети 1, движи R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">3</td>
+                                    <td style="padding: 0.5rem;">q_move_right</td>
+                                    <td style="padding: 0.5rem;">101+11</td>
+                                    <td style="padding: 0.5rem;">3</td>
+                                    <td style="padding: 0.5rem;">Чети +, движи R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">4-6</td>
+                                    <td style="padding: 0.5rem;">q_move_right</td>
+                                    <td style="padding: 0.5rem;">101+11</td>
+                                    <td style="padding: 0.5rem;">4-5</td>
+                                    <td style="padding: 0.5rem;">Преминаваме през "11", движи R</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">7</td>
+                                    <td style="padding: 0.5rem;">q_move_right</td>
+                                    <td style="padding: 0.5rem;">101+11□</td>
+                                    <td style="padding: 0.5rem;">6</td>
+                                    <td style="padding: 0.5rem;">Чети □, върти L</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.5rem;">...</td>
+                                    <td style="padding: 0.5rem;">q_back_left→q_accept</td>
+                                    <td style="padding: 0.5rem;">1000□</td>
+                                    <td style="padding: 0.5rem;">—</td>
+                                    <td style="padding: 0.5rem;">Резултат: 1000 (5+3=8)</td>
+                                </tr>
+                            </table>
+                        </li>
+
+                        <li><strong>Анализ:</strong> Машина събира две двоични числа чрез преминаване отдясно наляво със пренос. Временна сложност е O(n), където n е максимална дължина на числата.</li>
+                    </ol>
                 </div>
 
                 <h3>Универсална машина на Тюринг</h3>
@@ -1490,6 +1735,50 @@ P = NP = NP-Complete
                             </div>
                             <div class="flashcard-back">
                                 A ≤_m B ако съществува изчислима функция f, такава че w ∈ A ⟺ f(w) ∈ B. Позволява доказване на неразрешимост и NP-пълнота.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Теорема на Райс</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Всяко нетривиално семантично свойство на езиците, разпознавани от машини на Тюринг, е неразрешимо. Нетривиално = притежава се от някои езици, но не от всички.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Детерминирана срещу Недетерминирана TM</div>
+                            </div>
+                            <div class="flashcard-back">
+                                DTM: един преход за всяка двойка (q,a); един път на изчисление. NTM: множество преходи; множество паралелни пътища. Мощност еквивалентна, но NTM може експоненциално по-бърза.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Примери за неразрешими проблеми</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Халтинг, дали TM разпознава празния език, дали дадена TM разпознава крайния език, дали TM разпознава регулярен език. Всички доказани чрез редукция или Теорема на Райс.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>Редукция за доказване на неразрешимост</div>
+                            </div>
+                            <div class="flashcard-back">
+                                Ако A ≤_m B и A е неразрешим, то B е неразрешим. Техника: редуцираме известен неразрешим проблем на нов проблем, за да покажем неразрешимост на последния.
                             </div>
                         </div>
                     </div>

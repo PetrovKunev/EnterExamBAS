@@ -524,18 +524,205 @@
                 <strong>Post-pruning:</strong> Построяване на полното дърво, после премахване на разделяния, които не подобряват точност на валидационен набор.
             </div>
 
-            <div class="note-box">
-                <strong>Пример: Weather/Play Tennis Dataset</strong><br/>
-                Дадени примери с атрибути {Outlook, Temperature, Humidity, Wind} и целов клас {Play=Yes/No}.<br/>
-                <strong>Стъпка 1:</strong> Изчислете Entropy(S) за цялия набор.<br/>
-                Ако имаме 9 "Yes" и 5 "No": Entropy = -(9/14)*log₂(9/14) - (5/14)*log₂(5/14) ≈ 0.94<br/>
-                <strong>Стъпка 2:</strong> За всеки атрибут, изчислете Information Gain.<br/>
-                Например за "Outlook" (values: sunny, overcast, rainy):<br/>
-                - Sunny: 2 Yes, 3 No → Entropy ≈ 0.97<br/>
-                - Overcast: 4 Yes, 0 No → Entropy = 0<br/>
-                - Rainy: 3 Yes, 2 No → Entropy ≈ 0.97<br/>
-                IG(Outlook) = 0.94 - (5/14)*0.97 - (4/14)*0 - (5/14)*0.97 ≈ 0.25<br/>
-                <strong>Стъпка 3:</strong> Изберете атрибут с максимално IG (обикновено "Outlook") като root split.
+            <div class="theorem-box worked-example">
+                <h4>Пълен работен пример: Decision Tree для Weather/Play Tennis</h4>
+
+                <p><strong>Тренировъчен набор (14 примера):</strong></p>
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>День</th>
+                            <th>Outlook</th>
+                            <th>Temp</th>
+                            <th>Humidity</th>
+                            <th>Wind</th>
+                            <th>Play</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Sunny</td>
+                            <td>Hot</td>
+                            <td>High</td>
+                            <td>Weak</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Sunny</td>
+                            <td>Hot</td>
+                            <td>High</td>
+                            <td>Strong</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Overcast</td>
+                            <td>Hot</td>
+                            <td>High</td>
+                            <td>Weak</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Rainy</td>
+                            <td>Mild</td>
+                            <td>High</td>
+                            <td>Weak</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Rainy</td>
+                            <td>Cool</td>
+                            <td>Normal</td>
+                            <td>Weak</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Rainy</td>
+                            <td>Cool</td>
+                            <td>Normal</td>
+                            <td>Strong</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Overcast</td>
+                            <td>Cool</td>
+                            <td>Normal</td>
+                            <td>Strong</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Sunny</td>
+                            <td>Mild</td>
+                            <td>High</td>
+                            <td>Weak</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Sunny</td>
+                            <td>Cool</td>
+                            <td>Normal</td>
+                            <td>Weak</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>Rainy</td>
+                            <td>Mild</td>
+                            <td>Normal</td>
+                            <td>Weak</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>Sunny</td>
+                            <td>Mild</td>
+                            <td>Normal</td>
+                            <td>Strong</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>Overcast</td>
+                            <td>Mild</td>
+                            <td>High</td>
+                            <td>Strong</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>13</td>
+                            <td>Overcast</td>
+                            <td>Hot</td>
+                            <td>Normal</td>
+                            <td>Weak</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td>Rainy</td>
+                            <td>Mild</td>
+                            <td>High</td>
+                            <td>Strong</td>
+                            <td>No</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Стъпка 1: Изчислете Entropy(S) за цялия набор</strong></p>
+                <p>Play: 9 "Yes" + 5 "No" = 14 примера</p>
+                <div class="formula-block">
+                    <code>Entropy(S) = -p(Yes)*log₂(p(Yes)) - p(No)*log₂(p(No))<br/>
+= -(9/14)*log₂(9/14) - (5/14)*log₂(5/14)<br/>
+= -(9/14)*(-0.633) - (5/14)*(-1.485)<br/>
+= 0.408 + 0.530 = 0.940</code>
+                </div>
+
+                <p><strong>Стъпка 2: Изчислете Information Gain за всеки атрибут</strong></p>
+
+                <p><strong>За атрибут "Outlook" (sunny, overcast, rainy):</strong></p>
+                <div class="formula-block">
+                    <code>Sunny subset (4 примера): 2 Yes, 2 No → Entropy = 1.0<br/>
+Overcast subset (4 примера): 4 Yes, 0 No → Entropy = 0<br/>
+Rainy subset (6 примера): 3 Yes, 3 No → Entropy = 1.0<br/>
+<br/>
+IG(Outlook) = Entropy(S) - Σ(|S_v|/|S|)*Entropy(S_v)<br/>
+= 0.940 - (4/14)*1.0 - (4/14)*0 - (6/14)*1.0<br/>
+= 0.940 - 0.286 - 0 - 0.428 = 0.226</code>
+                </div>
+
+                <p><strong>За атрибут "Humidity" (high, normal):</strong></p>
+                <div class="formula-block">
+                    <code>High subset (7 примера): 3 Yes, 4 No → Entropy ≈ 0.985<br/>
+Normal subset (7 примера): 6 Yes, 1 No → Entropy ≈ 0.591<br/>
+<br/>
+IG(Humidity) = 0.940 - (7/14)*0.985 - (7/14)*0.591<br/>
+= 0.940 - 0.353 - 0.212 = 0.375</code>
+                </div>
+
+                <p><strong>За атрибути "Temperature" и "Wind": Подобни изчисления показват IG(Temp) ≈ 0.029, IG(Wind) ≈ 0.048</strong></p>
+
+                <p><strong>Стъпка 3: Избор на root атрибут</strong></p>
+                <p>Максимален IG = 0.375 за "Humidity" → **Humidity e root node**</p>
+
+                <p><strong>Стъпка 4: Рекурсивно разделяне за всяка гранка</strong></p>
+                <p>За "Humidity = High" подмножество (3 Yes, 4 No): Entropy ≈ 0.985</p>
+                <div class="formula-block">
+                    <code>IG(Outlook | High Humidity) = 0.985 - (3/7)*0 - (4/7)*0.811 ≈ 0.533<br/>
+→ Outlook е най-добрия следващ атрибут</code>
+                </div>
+
+                <p>За "Humidity = Normal" подмножество (6 Yes, 1 No): Entropy ≈ 0.591</p>
+                <div class="formula-block">
+                    <code>Всички примери почти чисти (6 Yes), може да спрем тук или продължим</code>
+                </div>
+
+                <p><strong>Стъпка 5: Финално Decision Tree</strong></p>
+                <div class="formula-block">
+                    <code>                    Humidity?
+                   /              \
+                High            Normal
+               /                    \
+          Outlook?              Play=Yes
+          /  |   \
+      Sunny Rainy Overcast
+        |     |       |
+      Play=No ? Play=Yes
+             / \
+        Wind?   (Play=Yes)
+        /  \
+    Weak  Strong
+     |      |
+  Play=Yes Play=No</code>
+                </div>
+
+                <p><strong>Резултат:</strong> Построено е дърво с Humidity като root, което достига листови възли с висока чистота (большинство примери вярно класифицирани).</p>
             </div>
 
             <h4>Предимства и недостатъци</h4>
@@ -1251,6 +1438,36 @@
                 <div class="fc" onclick="this.classList.toggle('active')">
                     <div class="fc-q">12. Обяснете Support, Confidence и Lift при асоциативни правила.</div>
                     <div class="fc-a"><strong>Support(A→B):</strong> пропорция транзакции с A и B. <strong>Confidence(A→B):</strong> вероятност B при A. <strong>Lift:</strong> коефициент на асоциируемост. Lift > 1 означава положителна асоциация.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">13. Каква е разликата между SVM и Logistic Regression?</div>
+                    <div class="fc-a"><strong>Logistic Regression:</strong> Вероятностен модел, дава вероятности, линейни граници. <strong>SVM:</strong> Геометричен подход, находит максимален margin, kernel trick за non-linear граници. SVM е по-мощен за non-линейни задачи.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">14. Обяснете разликата между регуляризация L1 и L2.</div>
+                    <div class="fc-a"><strong>L1 (Lasso):</strong> Наказание Σ|w_i|, изтласква някои тегла до 0 (фича селекция). <strong>L2 (Ridge):</strong> Наказание Σw_i², намалява всички тегла равномерно. L1 за селекция, L2 за намаляне.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">15. Какво е PCA (Principal Component Analysis)?</div>
+                    <div class="fc-a">Technique за намаляне на размерност. Находит главните компоненти (правителства с максимална вариация). Преобразува данни в по-малко брой признаци, запазвайки максимална информация. Ползва се преди моделиране за скорост.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">16. Какво е ensemble learning и защо работи?</div>
+                    <div class="fc-a">Комбиниране на множество модели за по-добра прогноза. Работи, защото различни модели допускат различни грешки. Баgging намалява вариацията, Boosting намалява bias. Random Forest е популярен ансамбъл.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">17. Обяснете явлението "overfitting" и методи за избягване.</div>
+                    <div class="fc-a">Overfitting: модел запомня тренировъчни данни вместо да научи общи шаблони. Симптом: висока обучаемост, ниска валидация. Методи: pre-pruning, regularization (L1/L2), dropout, cross-validation, намаляне на сложност.</div>
+                </div>
+
+                <div class="fc" onclick="this.classList.toggle('active')">
+                    <div class="fc-q">18. Каква е разликата между регресия и класификация?</div>
+                    <div class="fc-a"><strong>Регресия:</strong> Предсказване на continuous стойност (цена, температура). Мерка: R², MSE. Примери: Linear Regression. <strong>Класификация:</strong> Предсказване на категория (спам/не спам). Мерка: Accuracy, Precision, Recall. Примери: SVM, Naive Bayes.</div>
                 </div>
             </div>
 

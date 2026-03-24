@@ -745,6 +745,37 @@ E → E + E | E * E | (E) | id
                 <strong>Свойство:</strong> Контекстно зависимите граматики генерират езици, които могат да бъдат разпознати с ограничена памет (линейна спрямо дължината на входа).
             </div>
 
+            <p><strong>Пример на контекстно зависима граматика:</strong> Езикът L = {aⁿbⁿcⁿ | n ≥ 1} е контекстно зависим (но НЕ безконтекстен).</p>
+            <div class="example-box">
+                <div class="example-title">Пример: Контекстно зависима граматика за L = {aⁿbⁿcⁿ}</div>
+                <p><strong>Граматика G:</strong></p>
+                <div class="formula-block">
+S → abc | aBSc
+Ba → aB
+Bb → bb
+                </div>
+
+                <p><strong>Обяснение на правилата:</strong></p>
+                <ul>
+                    <li><strong>S → abc:</strong> Базовия случай: abc (n=1)</li>
+                    <li><strong>S → aBSc:</strong> Рекурсия. Генерира "a" преди и "c" след вложеното S</li>
+                    <li><strong>Ba → aB:</strong> Контекстно-зависимо правило! B "пътува" наляво през 'a' символи</li>
+                    <li><strong>Bb → bb:</strong> B трансформира в 'b' когато следва 'b'</li>
+                </ul>
+
+                <p><strong>Деривация за "aabbcc" (n=2):</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li>S ⟹ aBSc (прилагаме S → aBSc)</li>
+                        <li>aBSc ⟹ aBabcc (прилагаме S → abc)</li>
+                        <li>aBabcc ⟹ aaBbcc (прилагаме Ba → aB, B пътува наляво)</li>
+                        <li>aaBbcc ⟹ aabbcc (прилагаме Bb → bb)</li>
+                    </ol>
+                </div>
+
+                <p><strong>Защо е контекстно-зависима?</strong> Правилото Ba → aB зависи от контекста (символа 'a' отляво). Не можем да генерираме L с безконтекстна граматика, защото CFG дърво на деривацията не позволява "пътуване" на символи.</p>
+            </div>
+
             <h4>Тип 2: Безконтекстни граматики (Context-Free Grammars, CFG)</h4>
             <div class="def-box">
                 <strong>Ограничение на продукциите:</strong> A → β, където A ∈ V и β ∈ (V ∪ Σ)* (лявата страна е един променлив символ)
@@ -1024,6 +1055,57 @@ F = {q₂}
 
             <p>PDA разпознава безконтекстни езици. Те имат памет (стекало) която позволява вложеност и контекст, които са необходими за синтаксис на езиците за програмиране.</p>
 
+            <h4>Работен пример: PDA за L = {aⁿbⁿ | n ≥ 0}</h4>
+            <div class="example-box">
+                <div class="example-title">Пример: Натискащ автомат, който разпознава сбалансирани низове</div>
+                <p><strong>Задача:</strong> Проектирайте PDA, който разпознава L = {aⁿbⁿ | n ≥ 0}.</p>
+
+                <p><strong>Дефиниция на PDA M = (Q, Σ, Γ, δ, q₀, Z₀, F):</strong></p>
+                <div class="formula-block">
+                    <code>Q = {q₀, q₁, q₂, q_accept}   (състояния)<br/>
+Σ = {a, b}                    (входна азбука)<br/>
+Γ = {Z₀, A}                   (стекова азбука: Z₀ е bottom marker, A е натисък)<br/>
+q₀ = q₀                       (начално състояние)<br/>
+Z₀ = Z₀                       (начален стекелемент)<br/>
+F = {q_accept}                (приемащо състояние)<br/>
+<br/>
+Преходи δ (описани като δ(q, input, stack_top) → (q', stack_action)):<br/>
+<br/>
+1. δ(q₀, a, Z₀) → (q₀, AZ₀)      Четем 'a', натискаме A на Z₀<br/>
+2. δ(q₀, a, A) → (q₀, AA)        Четем 'a', натискаме A на A<br/>
+3. δ(q₀, b, A) → (q₁, ε)         Четем 'b', изтегляме A (ε = изтегляне)<br/>
+4. δ(q₁, b, A) → (q₁, ε)         Четем 'b', изтегляме A<br/>
+5. δ(q₁, ε, Z₀) → (q_accept, Z₀) Вход краен, стекало само с Z₀, приемаме<br/>
+6. δ(q₀, ε, Z₀) → (q_accept, Z₀) ε-преход: приемаме празния низ</code>
+                </div>
+
+                <p><strong>Диаграма на състояния (опростена):</strong></p>
+                <div class="formula-block">
+                    <code>           a,Z₀→AZ₀        a,A→AA          b,A→ε          b,A→ε        ε,Z₀→Z₀
+q₀ ────────────────────────────────────────────────────────────────────────────── q₁ ───────────→ q_accept
+ ^          (читай a, натисни)        (натисни A)      (изтегли)       (изтегли)     (приеми)
+ └─────────────────────────────────────────────────────────────────────────────────┘
+           (q₀ → q₀, натискане на още A за всеки a)        (q₁ → q₁, изтегляне на A за всеки b)</code>
+                </div>
+
+                <p><strong>Трассировка на входен низ "aaabbb":</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li><strong>Начало:</strong> q = q₀, вход = "aaabbb", стекало = [Z₀]</li>
+                        <li><strong>Чети първи 'a':</strong> δ(q₀, a, Z₀) → (q₀, AZ₀). Нов стекало = [A, Z₀]</li>
+                        <li><strong>Чети втори 'a':</strong> δ(q₀, a, A) → (q₀, AA). Нов стекало = [A, A, Z₀]</li>
+                        <li><strong>Чети трети 'a':</strong> δ(q₀, a, A) → (q₀, AA). Нов стекало = [A, A, A, Z₀]</li>
+                        <li><strong>Чети първи 'b':</strong> δ(q₀, b, A) → (q₁, ε). Изтегляме A. Нов стекало = [A, A, Z₀]. Преминаваме към q₁</li>
+                        <li><strong>Чети втори 'b':</strong> δ(q₁, b, A) → (q₁, ε). Изтегляме A. Нов стекало = [A, Z₀]</li>
+                        <li><strong>Чети трети 'b':</strong> δ(q₁, b, A) → (q₁, ε). Изтегляме A. Нов стекало = [Z₀]</li>
+                        <li><strong>Вход краен, стекало само с Z₀:</strong> δ(q₁, ε, Z₀) → (q_accept, Z₀). <strong>ПРИЕМИ!</strong></li>
+                    </ol>
+                </div>
+
+                <p><strong>Резултат:</strong> Низът "aaabbb" е признат. PDA успешно разпознава L = {aⁿbⁿ | n ≥ 0}.</p>
+                <p><strong>Забележка:</strong> Това е еквивалентно на CFG: S → aSb | ε, която генерира същия език.</p>
+            </div>
+
             <h3>Нормални форми за CFG</h3>
 
             <h4>Чомски нормална форма (Chomsky Normal Form, CNF)</h4>
@@ -1075,9 +1157,53 @@ F = {q₂}
                 </ul>
             </div>
 
+            <h3>Работен пример: Деривация от безконтекстна граматика</h3>
+            <div class="example-box">
+                <div class="example-title">Пример 9: Пълна деривация с дърво на деривацията</div>
+                <p><strong>Дано граматика G (аритметични изрази):</strong></p>
+                <div class="formula-block">
+E → E + T | T
+T → T * F | F
+F → ( E ) | id
+                </div>
+
+                <p><strong>Задача:</strong> Дериват низа "id + id * id" от E и изчертайте дърво на деривацията.</p>
+
+                <p><strong>Лямо деривация (Leftmost):</strong></p>
+                <div class="proof-steps">
+                    <ol>
+                        <li>E ⟹ E + T (прилагаме E → E + T)</li>
+                        <li>E + T ⟹ T + T (прилагаме E → T, на най-левия E)</li>
+                        <li>T + T ⟹ F + T (прилагаме T → F)</li>
+                        <li>F + T ⟹ id + T (прилагаме F → id)</li>
+                        <li>id + T ⟹ id + T * F (прилагаме T → T * F)</li>
+                        <li>id + T * F ⟹ id + F * F (прилагаме T → F)</li>
+                        <li>id + F * F ⟹ id + id * F (прилагаме F → id)</li>
+                        <li>id + id * F ⟹ id + id * id (прилагаме F → id)</li>
+                    </ol>
+                </div>
+
+                <p><strong>Дърво на деривацията:</strong></p>
+                <div class="formula-block">
+                    <code>                         E
+                        /       |       \
+                       E        +        T
+                       |               / | \
+                       T              T  *  F
+                       |              |      |
+                       F              F      id
+                       |              |
+                      id             id</code>
+                </div>
+
+                <p><strong>Преговор на дърво:</strong> Корен = E (начален символ). Листа = id, +, *, id (терминали). Вътрешни възли = E, T, T, F, F (променливи). Всяко производно правило съответства на възел с деца.</p>
+
+                <p><strong>Важно за изпита:</strong> Дървото показва структурата на израза "id + (id * id)", което отразява приоритета на операторите (умножение преди събиране).</p>
+            </div>
+
             <h3>Работен пример: Преобразуване в Чомски нормална форма</h3>
             <div class="example-box">
-                <div class="example-title">Пример 9: Преобразуване в CNF</div>
+                <div class="example-title">Пример 10: Преобразуване в CNF</div>
                 <p><strong>Дано граматика G:</strong></p>
                 <div class="formula-block">
 S → AB | a
@@ -1182,6 +1308,42 @@ Cb → b
                 <div class="flashcard" onclick="this.classList.toggle('flipped')">
                     <div class="flashcard-question">Какво е контекстно зависима граматика (CSG)?</div>
                     <div class="flashcard-answer">Контекстно зависима граматика (Тип 1) имат правила α → β където |α| ≤ |β|. Тте генерират контекстно зависимо езици, които разпознават линейно ограничени автомати (LBA).</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Каква е разликата между детерминиран (DFA) и недетерминиран (NFA) крайна автомат?</div>
+                    <div class="flashcard-answer">DFA: всеко състояние има точно един преход за всеки символ. NFA: състояние може да има 0, 1 или повече преходи за един символ. NFA позволява и ε-преходи. DFA и NFA са еквивалентни по разпознаваща мощност, но NFA може да бъде по-компактен.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какво е Kleene star (Клинева звезда)?</div>
+                    <div class="flashcard-answer">L* = {ε} ∪ L ∪ L·L ∪ L·L·L ∪ ... Означава нулева или повече повторения на низове от L. Например {a}* = {ε, a, aa, aaa, ...}. Kleene star е операция, която винаги е затворена за регулярни езици.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Обяснете разликата между лямо (leftmost) и дясно (rightmost) деривация.</div>
+                    <div class="flashcard-answer">Лямо деривация: на всяка стъпка заменяме най-левия променлив символ. Дясно деривация: на всяка стъпка заменяме най-десния променлив символ. Двете могат да произвеждат различни дървета на деривацията за неоднозначни граматики.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Защо е полезна Чомски нормална форма (CNF)?</div>
+                    <div class="flashcard-answer">CNF улеснява анализа на CFG, защото всяко правило е A → BC или A → a. Дължина на деривацията е предсказуема. Използва се в CYK алгоритъма за проверка на принадлежност с O(n³) сложност. Всяка CFG може да се преобразува в еквивалентна CNF.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Каква е точна дефиниция на пораждаща граматика G = (V, Σ, R, S)?</div>
+                    <div class="flashcard-answer">V: множество нетерминални символи (променливи). Σ: множество терминални символи. R: множество продукционни правила (α → β). S: начален символ. Граматиката генерира езика L(G) = {w ∈ Σ* | S ⟹* w}.</div>
+                    <div class="flashcard-hint">Кликнете, за да отворите</div>
+                </div>
+
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-question">Какво е дърво на деривацията (parse tree)?</div>
+                    <div class="flashcard-answer">Дърво, чиито корен е началния символ S, листа са терминални символи, вътрешни възли са променливи. Всеки възел A с деца B₁, B₂, ..., Bₙ съответства на продукционно правило A → B₁B₂...Bₙ. Дърво показва структуралната деривация на дума.</div>
                     <div class="flashcard-hint">Кликнете, за да отворите</div>
                 </div>
             </div>

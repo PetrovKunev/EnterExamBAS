@@ -748,35 +748,79 @@
 
             <p style="margin-top: 20px;"><strong>Забележка:</strong> Последните четири модела се наричат "NoSQL" и се свързват с Тема 9 (Big Data).</p>
 
-            <p><strong>Таблица сравнение: Класични модели на данните</strong></p>
+            <p><strong>Таблица сравнение: Всички основни модели на данните</strong></p>
             <div class="gen-table">
                 <tr>
                     <th>Модел</th>
                     <th>Структура</th>
-                    <th>Достъп</th>
-                    <th>Силни страни</th>
-                    <th>Слабости</th>
+                    <th>Гъвкавост</th>
+                    <th>Език за заявки</th>
+                    <th>Примерни системи</th>
+                    <th>Случаи на употреба</th>
                 </tr>
                 <tr>
                     <td><strong>Йерархичен</strong></td>
-                    <td>Дърво</td>
-                    <td>Навигационен (top-down)</td>
-                    <td>Интуитивен за йерархични данни</td>
-                    <td>Един родител; сложни много-към-много; трудна навигация</td>
+                    <td>Дърво с родител-дете връзки</td>
+                    <td>Ниска (един родител)</td>
+                    <td>Навигационен (IMS)</td>
+                    <td>IMS (IBM), Windows Registry</td>
+                    <td>XML документи, файловите системи (хронологични)</td>
                 </tr>
                 <tr>
                     <td><strong>Мрежов</strong></td>
-                    <td>Граф (directed)</td>
-                    <td>Навигационен</td>
-                    <td>Много-към-много връзки</td>
-                    <td>Сложна манипулация; зависимост от физическо представяне</td>
+                    <td>Граф с много-към-много връзки</td>
+                    <td>Средна (но сложна навигация)</td>
+                    <td>Навигационен (CODASYL)</td>
+                    <td>DBTG, системи от 1970s</td>
+                    <td>Исторически архиви, сложни справочни таблици</td>
                 </tr>
                 <tr>
                     <td><strong>Релационен</strong></td>
-                    <td>Таблици / Релации</td>
+                    <td>Таблици със редове и колони</td>
+                    <td>Висока (нормализация)</td>
                     <td>Декларативен (SQL)</td>
-                    <td>Универсален; лесна нормализация; висока независимост</td>
-                    <td>Не всички данни се представят лесно като таблици</td>
+                    <td>PostgreSQL, MySQL, Oracle, SQL Server</td>
+                    <td>Бизнес приложения, транзакции, администрирани данни</td>
+                </tr>
+                <tr>
+                    <td><strong>Обектно-ориентиран</strong></td>
+                    <td>Обекти със методи и наследяване</td>
+                    <td>Висока (но сложна)</td>
+                    <td>OQL (Object Query Language)</td>
+                    <td>ObjectStore, Versant, GemStone</td>
+                    <td>Сложни обекти, CAD, мултимедия</td>
+                </tr>
+                <tr>
+                    <td><strong>NoSQL - Документен</strong></td>
+                    <td>JSON/XML документи</td>
+                    <td>Много висока (гъвкава схема)</td>
+                    <td>MongoDB Query Language, MQL</td>
+                    <td>MongoDB, CouchDB, Firebase</td>
+                    <td>Променливи структури, быстра разработка, вебпрограмиране</td>
+                </tr>
+                <tr>
+                    <td><strong>NoSQL - Ключ-стойност</strong></td>
+                    <td>Хеш таблици (ключ → стойност)</td>
+                    <td>Висока (никакъв схеми)</td>
+                    <td>GET/SET команди</td>
+                    <td>Redis, Memcached, Dynamo</td>
+                    <td>Cache, сесии, реално време аналитика</td>
+                </tr>
+                <tr>
+                    <td><strong>NoSQL - Колонен</strong></td>
+                    <td>Широки редове (column families)</td>
+                    <td>Висока (разреден dados)</td>
+                    <td>Вариант на SQL</td>
+                    <td>HBase, Cassandra, Apache Parquet</td>
+                    <td>Big Data, аналитика, временни редове</td>
+                </tr>
+                <tr>
+                    <td><strong>Графов</strong></td>
+                    <td>Възли и ребра със свойства</td>
+                    <td>Висока (гъвкави връзки)</td>
+                    <td>Cypher (Neo4j), Gremlin</td>
+                    <td>Neo4j, ArangoDB, Amazon Neptune</td>
+                    <td>Социални мрежи, препоръчатели, knowledge graphs</td>
                 </tr>
             </div>
 
@@ -874,6 +918,24 @@ Enrolled(sid, cid, grade)
                 <p style="margin-top: 10px;">Пример: StudentID → StudentName (по един ID има един студент)</p>
             </div>
 
+            <p><strong>Примери на функционални зависимости:</strong></p>
+            <div class="formula-block">
+StudentID → StudentName<br/>
+StudentID → Email<br/>
+ProductID → ProductName, Price<br/>
+(StudentID, CourseID) → Grade  (съставена FD)<br/>
+SSN → (Name, Address, DOB)  (много-цели FD)
+            </div>
+
+            <p><strong>Правила на FD:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Рефлексивност:</strong> Ако Y ⊆ X, тогава X → Y</li>
+                <li><strong>Увеличение:</strong> Ако X → Y, тогава XZ → YZ (добавяне на атрибути)</li>
+                <li><strong>Транзитивност:</strong> Ако X → Y и Y → Z, тогава X → Z</li>
+                <li><strong>Разложимост:</strong> Ако X → YZ, тогава X → Y и X → Z</li>
+                <li><strong>Обединение:</strong> Ако X → Y и X → Z, тогава X → YZ</li>
+            </ul>
+
             <h3>Нормални форми</h3>
 
             <div class="def-box">
@@ -895,6 +957,108 @@ Enrolled(sid, cid, grade)
                 <strong>BCNF (Boyce-Codd Normal Form):</strong> 3NF + Всеки детерминант (атрибут слева от →) е кандидат-ключ.
                 <p style="margin-top: 10px;">BCNF е най-строга; обикновено 3NF е достатъчна.</p>
             </div>
+
+            <h3>Подробен пример на нормализация: Таблица Student_Courses</h3>
+
+            <p><strong>Начално состояние (UNF - Unnormalized Form):</strong></p>
+            <div class="formula-block">
+StudentCourses(StudentID, StudentName, Major, CourseID, CourseName, Grade, Instructor, InstructorOffice)
+            </div>
+
+            <p><strong>Данни пример:</strong></p>
+            <table class="gen-table">
+                <tr>
+                    <th>StudentID</th>
+                    <th>StudentName</th>
+                    <th>Major</th>
+                    <th>CourseID</th>
+                    <th>CourseName</th>
+                    <th>Grade</th>
+                    <th>Instructor</th>
+                    <th>InstructorOffice</th>
+                </tr>
+                <tr>
+                    <td>101</td>
+                    <td>Alice</td>
+                    <td>CS</td>
+                    <td>CS101</td>
+                    <td>Intro to CS</td>
+                    <td>A</td>
+                    <td>Dr. Smith</td>
+                    <td>Room 301</td>
+                </tr>
+                <tr>
+                    <td>101</td>
+                    <td>Alice</td>
+                    <td>CS</td>
+                    <td>CS102</td>
+                    <td>Data Structures</td>
+                    <td>B</td>
+                    <td>Dr. Jones</td>
+                    <td>Room 302</td>
+                </tr>
+                <tr>
+                    <td>102</td>
+                    <td>Bob</td>
+                    <td>Math</td>
+                    <td>CS101</td>
+                    <td>Intro to CS</td>
+                    <td>B+</td>
+                    <td>Dr. Smith</td>
+                    <td>Room 301</td>
+                </tr>
+            </table>
+
+            <p><strong>Функционални зависимости (FD):</strong></p>
+            <div class="formula-block">
+StudentID → StudentName, Major
+CourseID → CourseName, Instructor, InstructorOffice
+Instructor → InstructorOffice
+(StudentID, CourseID) → Grade  (съставена функционална зависимост)
+            </div>
+
+            <p><strong>ПРОБЛЕМИ В UNF:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Редундантност:</strong> "Alice" и "CS" се повтарят за всеки курс на Alice</li>
+                <li><strong>Anomaly INSERT:</strong> Не можем да добавим нов преподавател без да добавим студент-курс запис</li>
+                <li><strong>Anomaly DELETE:</strong> Ако изтрием последното записване на Alice, губим информация за нея</li>
+                <li><strong>Anomaly UPDATE:</strong> Ако промемнимо Dr. Smith офис от 301 на 303, трябва да актуализираме всички негови курсове</li>
+            </ul>
+
+            <p><strong>СТЪПКА 1: Преход към 1NF (Атомарни стойности)</strong></p>
+            <p>Таблицата вече е в 1NF (всички стойности са атомарни, има един ред за всяка комбинация StudentID-CourseID).</p>
+
+            <p><strong>СТЪПКА 2: Преход към 2NF (Никакви частични зависимости)</strong></p>
+            <p>Проблем: StudentName, Major зависят САМО от StudentID (не от цялия съставен ключ). Instructor, InstructorOffice зависят САМО от CourseID.</p>
+
+            <div class="formula-block">
+<strong>Разложение:</strong><br/>
+StudentCourses(StudentID, CourseID, Grade)  — факт таблица<br/>
+Students(StudentID, StudentName, Major)<br/>
+Courses(CourseID, CourseName, Instructor, InstructorOffice)
+            </div>
+
+            <p><strong>Проверка на 2NF:</strong> Всеки неключов атрибут пълно зависи от първичния ключ.</p>
+
+            <p><strong>СТЪПКА 3: Преход към 3NF (Никакви транзитивни зависимости)</strong></p>
+            <p>Проблем: В таблица Courses, InstructorOffice зависи от Instructor, който зависи от CourseID (транзитивна зависимост!).</p>
+
+            <div class="formula-block">
+<strong>Разложение:</strong><br/>
+StudentCourses(StudentID, CourseID, Grade)<br/>
+Students(StudentID, StudentName, Major)<br/>
+Courses(CourseID, CourseName, Instructor)<br/>
+Instructors(Instructor, InstructorOffice)
+            </div>
+
+            <p><strong>Финална проверка:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Всяка таблица е 1NF (атомарни стойности)</li>
+                <li>✓ Всеки неключов атрибут пълно зависи от първичния ключ (2NF)</li>
+                <li>✓ Няма транзитивни зависимости (3NF)</li>
+                <li>✓ Редундантност е елиминирана</li>
+                <li>✓ Все аномалии са решени</li>
+            </ul>
 
             <p><strong>Работен пример:</strong> Нормализация от UNF до 3NF</p>
             <div class="theorem-box worked-example">

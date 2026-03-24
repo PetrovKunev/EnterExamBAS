@@ -661,11 +661,145 @@
                     <li><strong>Кражба на банкови данни:</strong> Botnets събират финансови данни от заразени компютри.</li>
                 </ul>
 
-                <h3>2.9 Други вредителски програми</h3>
+                <h3>2.9 Fileless malware (Безфайлов malware)</h3>
+                <div class="definition">
+                    <strong>Fileless malware</strong> е вредителска програма, която се изпълнява изцяло в памет без да записва файлове на диска. Скрива се в системни процеси, регистър или оперативната памет, което я прави трудна за открояване от традиционните антивирусни софтуери.
+                </div>
+
+                <p><strong>Техники на fileless malware:</strong></p>
                 <ul>
-                    <li><strong>Logic bombs:</strong> Софтуер, който се активизира при определено условие или време, причинявайки щета.</li>
-                    <li><strong>Fileless malware:</strong> Вредителски програми, които не записват файлове на диска, скриве се в оперативната памет или системни компоненти.</li>
-                    <li><strong>Cryptominers:</strong> Експлоатират изчислителна мощ на системата за добиване на криптовалути.</li>
+                    <li><strong>PowerShell инжекция:</strong> Използва PowerShell (вградена в Windows) за изпълнение на вредителски скриптове без записване на файл. Пример: загрузване на malware директно от интернет.</li>
+                    <li><strong>WMI (Windows Management Instrumentation):</strong> Използва WMI за управление на системата и изпълнение на код. WMI не оставя следи в file system.</li>
+                    <li><strong>Registry-based:</strong> Съхранява вредителски код в Windows регистър. Когато системата стартира, регистърът се зарежда в памет.</li>
+                    <li><strong>Living-off-the-land (LOLBins):</strong> Експлоатира легитимни системни утилити (cmd.exe, schtasks, certutil) за осъществяване на атаката. Тези утилити са вече разрешени на системата.</li>
+                    <li><strong>Memory injection (Injection в памет):</strong> Инжектира код в процес на друга програма, напр. notepad.exe или explorer.exe.</li>
+                </ul>
+
+                <p><strong>Предимства на fileless malware:</strong></p>
+                <ul>
+                    <li>Трудна за открояване (няма file signatures)</li>
+                    <li>Избягва дисковия анализ</li>
+                    <li>Използва доверени системни процеси</li>
+                    <li>Лесна за разпространение (само един скрипт трябва да се начертае)</li>
+                </ul>
+
+                <p><strong>Защита срещу fileless malware:</strong></p>
+                <ul>
+                    <li>Мониторинг на PowerShell и WMI дейности</li>
+                    <li>Отключване на PowerShell v2 (използва се за обхода)</li>
+                    <li>Аудит на регистър промени</li>
+                    <li>Поведенчески анализ на процеси</li>
+                    <li>AMSI (Antimalware Scan Interface) – Windows защита</li>
+                </ul>
+
+                <h3>2.10 Cryptojackers (Крипто-коне)</h3>
+                <div class="definition">
+                    <strong>Cryptojacker</strong> е софтуер, който неоторизирано използва изчислителната мощ на системата за добиване на криптовалути (cryptocurrency mining). Жертвата не знае, че ресурсите й се използват.
+                </div>
+
+                <p><strong>Типове cryptojackers:</strong></p>
+                <ul>
+                    <li><strong>Инсталирани cryptojackers:</strong> Trojan която се инсталира на системата, функционира в фонов режим, изнасяроскяпа ресурси.</li>
+                    <li><strong>Browser-based (JavaScript):</strong> Вредителски JavaScript код върху компрометирани вебсайтове, който добива крипто в браузър на посетителя без неговото знание.</li>
+                    <li><strong>Coinhive пример:</strong> По-известният JavaScript miner (Coinhive), който се разпространява чрез компрометирани сайтове. Някои сайтове го използват за монетизиране на съдържание без реклами.</li>
+                </ul>
+
+                <p><strong>Технология на криптоминирането:</strong></p>
+                <ul>
+                    <li>Работи с CPU, GPU или ASIC устройства</li>
+                    <li>Най-често се добива Monero (приватна крипто) или Bitcoin</li>
+                    <li>Изчисляват hash-ове за верификация на блокове</li>
+                    <li>Наградата отива на攻击者, не на жертвата</li>
+                </ul>
+
+                <p><strong>Симптоми на cryptojacking:</strong></p>
+                <ul>
+                    <li>Висока CPU употреба без видимо приложение</li>
+                    <li>Намалена производителност на компютър</li>
+                    <li>Горещина на процесора (шумен вентилатор)</li>
+                    <li>Висока потребление на електричество</li>
+                    <li>За браузър-базирани: намалена скорост на браузъра, бавни вебсайтове</li>
+                </ul>
+
+                <p><strong>Защита срещу cryptojackers:</strong></p>
+                <ul>
+                    <li>Ad blockers и скрипт блокери (NoScript, uBlock Origin)</li>
+                    <li>Мониторинг на процесни ресурси (CPU)</li>
+                    <li>Регулярни антивирусни сканирания</li>
+                    <li>Обновяване на браузър и плъгини</li>
+                </ul>
+
+                <h3>2.11 Wipers (Стирачи)</h3>
+                <div class="definition">
+                    <strong>Wiper</strong> е вредителска програма, която цели да унищожи данни или направи системата неупотребяема чрез изтриване на файлове, форматиране на диск или разрушаване на boot сектор. За разлика от ransomware, wipers не очакват плащане – просто унищожават.
+                </div>
+
+                <p><strong>Разлика между Wiper и Ransomware:</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Характеристика</th>
+                            <th>Ransomware</th>
+                            <th>Wiper</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Цел</td>
+                            <td>Крайка парите</td>
+                            <td>Унищожаване на данни</td>
+                        </tr>
+                        <tr>
+                            <td>Криптиране</td>
+                            <td>Криптира файлови, очаква ключ с плащане</td>
+                            <td>Просто изтрива файловите</td>
+                        </tr>
+                        <tr>
+                            <td>Възстановяване</td>
+                            <td>Възможна с дешифриране ключ (ако платите)</td>
+                            <td>Почти невъзможна (данни са унищожени)</td>
+                        </tr>
+                        <tr>
+                            <td>Умисъл</td>
+                            <td>Финансови печалби</td>
+                            <td>Разрушаване, саботаж (вероятно ценили причини)</td>
+                        </tr>
+                        <tr>
+                            <td>Примери</td>
+                            <td>WannaCry, Petya, Ryuk</td>
+                            <td>NotPetya, Shamoon, Destover</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Известни wipers:</strong></p>
+                <ul>
+                    <li><strong>NotPetya (2017):</strong> Първоначално приличащо на Petya ransomware, но всъщност е wiper. Разпространен чрез компрометиране на MCeUpdate (украински софтуер за облекобордни дейности). Унищожи петабайти данни, причини $ 10 милиарда щети глобално.属于국 украинска инфраструктура, банки, корпорации по света.</li>
+                    <li><strong>Shamoon (2012 и 2016):</strong> Целяха саудитския нефтена компания Saudi Aramco и банки. Изтриват boot сектор и системни файлове, направлявайки системата неработеща. Вероятна свързаност с иранските кибер операции.</li>
+                    <li><strong>Destover (2014):</strong> Используется срещу Sony Corporation. Унищожи корпоративни системи и изтри данни. Преди това бяла известна като "The Interview" hack.</li>
+                </ul>
+
+                <p><strong>Техники на wipers:</strong></p>
+                <ul>
+                    <li><strong>Файлово изтриване:</strong> Перемещение на всички файловете в главния диск.</li>
+                    <li><strong>Boot sector унищожение:</strong> Унищожаване на Master Boot Record (MBR), което прави системата неучредена.</li>
+                    <li><strong>BIOS корупция:</strong> Промяна на firmware BIOS за нарушаване на硬件.</li>
+                    <li><strong>Disk overwriting:</strong> Презаписване на целия диск със случайни данни.</li>
+                    <li><strong>Self-replicating:</strong> Некови wipers се разпространяват както червеи (NotPetya).</li>
+                </ul>
+
+                <p><strong>Защита срещу wipers:</strong></p>
+                <ul>
+                    <li>Регулярни резервни копия (offline backup)</li>
+                    <li>Изолиране на критична инфраструктура</li>
+                    <li>Мониторинг на масови операции за изтриване</li>
+                    <li>Имунизация чрез резервни точки</li>
+                    <li>Разпределени системи (географски раздалечени)</li>
+                </ul>
+
+                <h3>2.12 Logic bombs и други вредителски програми</h3>
+                <ul>
+                    <li><strong>Logic bombs:</strong> Софтуер, който се активизира при определено условие или време, причинявайки щета. Например служител пуска logic bomb, което изтрива файловете точно в час след неговото уволнение.</li>
                 </ul>
 
                 <h3>Таблица за сравнение на типовете malware</h3>
@@ -728,6 +862,27 @@
                             <td>Различни вектори</td>
                             <td>DDoS, крадене</td>
                             <td>Поведение + мрежа</td>
+                        </tr>
+                        <tr>
+                            <td>Fileless</td>
+                            <td>Памет + PowerShell</td>
+                            <td>Социално инж. + exp.</td>
+                            <td>Скриво извършване</td>
+                            <td>Поведенчески</td>
+                        </tr>
+                        <tr>
+                            <td>Cryptojacker</td>
+                            <td>CPU/GPU добив</td>
+                            <td>Browser + download</td>
+                            <td>Консумция ресурси</td>
+                            <td>Мониторинг CPU</td>
+                        </tr>
+                        <tr>
+                            <td>Wiper</td>
+                            <td>Изтриване на диск</td>
+                            <td>Таргетирани exp.</td>
+                            <td>Пълна загуба на данни</td>
+                            <td>Евристично + поведение</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1165,7 +1320,25 @@
                             <div class="flashcard" onclick="toggleFlashcard(this)">
                                 <div class="flashcard-label">Въпрос</div>
                                 <div class="flashcard-front"><strong>Какво е Fileless malware?</strong></div>
-                                <div class="flashcard-back">Вредителска програма, която не записва файлове на диска, а си пребивава в памет или системни компоненти, затруднявайки откриването.</div>
+                                <div class="flashcard-back">Вредителска програма, която не записва файлове на диска, а си пребивава в памет или системни компоненти, затруднявайки откритието. Техники: PowerShell инжекция, WMI, регистър, LOLBins.</div>
+                            </div>
+
+                            <div class="flashcard" onclick="toggleFlashcard(this)">
+                                <div class="flashcard-label">Въпрос</div>
+                                <div class="flashcard-front"><strong>Какво е Cryptojacker? Симптоми?</strong></div>
+                                <div class="flashcard-back">Софтуер, който неоторизирано добива криптовалути, използвайки системните ресурси на жертвата. Симптоми: висока CPU употреба, намалена производителност, горещина на процесора, висока потребност на електричество. Браузър-базирани също забавят скоростта.</div>
+                            </div>
+
+                            <div class="flashcard" onclick="toggleFlashcard(this)">
+                                <div class="flashcard-label">Въпрос</div>
+                                <div class="flashcard-front"><strong>Разлика между Wiper и Ransomware?</strong></div>
+                                <div class="flashcard-back">Wiper: унищожава данни (просто изтрива), няма възстановяване, целя разрушаване (саботаж). Ransomware: криптира файлове, очаква плащане за ключ, може да се възстанови. Примери на wipers: NotPetya, Shamoon, Destover.</div>
+                            </div>
+
+                            <div class="flashcard" onclick="toggleFlashcard(this)">
+                                <div class="flashcard-label">Въпрос</div>
+                                <div class="flashcard-front"><strong>Техники на wipers и защита?</strong></div>
+                                <div class="flashcard-back">Техники: файлово изтриване, boot sector унищожение, BIOS корупция, disk overwriting, self-replication. Защита: регулярни offline резервни копия, изолиране на критична инфраструктура, мониторинг на масови операции за изтриване, разпределени системи.</div>
                             </div>
                         </div>
                     </div>
@@ -1180,6 +1353,9 @@
                             <li><strong>Spyware:</strong> Шпионира на потребителя</li>
                             <li><strong>Rootkit:</strong> Скритота в ядро за администраторски достъп</li>
                             <li><strong>Botnet:</strong> Мрежа от контролирани компютри</li>
+                            <li><strong>Fileless malware:</strong> Изпълнение в памет без диск файлове (PowerShell, WMI)</li>
+                            <li><strong>Cryptojacker:</strong> Добива криптовалути, използвайки системните ресурси</li>
+                            <li><strong>Wiper:</strong> Унищожава данни (разлика от ransomware – не очаква плащане)</li>
                             <li><strong>Antivirus:</strong> Сигнатури + евристичен + поведенчески анализ</li>
                             <li><strong>Kill Chain:</strong> 7 фази: Recon → Weaponization → Delivery → Exploitation → Installation → C2 → Actions</li>
                             <li><strong>Фишинг:</strong> Социално инженерство через email</li>

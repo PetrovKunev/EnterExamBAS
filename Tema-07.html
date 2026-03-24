@@ -581,8 +581,11 @@
                 <li><a href="#section4">Раздел 4: Функционална</a></li>
                 <li><a href="#section5">Раздел 5: Логическа</a></li>
                 <li><a href="#section6">Раздел 6: Мулти-парадигмени</a></li>
-                <li><a href="#section7">Раздел 7: Ключови концепции</a></li>
-                <li><a href="#section8">Раздел 8: Еволюция</a></li>
+                <li><a href="#section6-5">6.5: Конкурентна и паралелна</a></li>
+                <li><a href="#section6-6">6.6: Събитийно-управлявана</a></li>
+                <li><a href="#section7">Раздел 7: Формална синтаксис и семантика</a></li>
+                <li><a href="#section8">Раздел 8: Ключови концепции</a></li>
+                <li><a href="#section9">Раздел 9: Еволюция</a></li>
                 <li><a href="#flashcards">Флашкарти</a></li>
                 <li><a href="#quickref">Бърза справка</a></li>
             </ul>
@@ -1116,9 +1119,305 @@ sister(X, Y) :- parent(Z, X), parent(Z, Y), female(X), X \= Y.</code></pre>
 
             </section>
 
-            <!-- Section 7: Key Concepts -->
+            <!-- Section 6.5: Concurrent/Parallel Paradigm -->
+            <section id="section6-5">
+                <h2>6.5 Конкурентна и паралелна парадигма</h2>
+
+                <h3>Дефиниция и различие</h3>
+
+                <div class="def-box">
+                    <strong>Конкурентност (Concurrency):</strong> Множество задачи напредват в интерпретирала, преплитане на изпълнението на един процесор. Илюзия на паралелизъм чрез контекстно превключване.
+                </div>
+
+                <div class="def-box">
+                    <strong>Паралелност (Parallelism):</strong> Множество задачи се изпълняват физически едновременно на различни ядра на процесора.
+                </div>
+
+                <p><strong>Модели на конкурентност:</strong></p>
+
+                <ul>
+                    <li><strong>Нишки (Threads):</strong> Лека нишка със споделена памет. Проблеми: race conditions, deadlock. Java, Python (GIL限制), C++11.</li>
+                    <li><strong>Предаване на съобщения (Message Passing):</strong> Нишкам или процеси комуникират чрез съобщения, без прямо споделяне на памет. По-безопасно. Go channels, Erlang processes.</li>
+                    <li><strong>Актьор модел (Actor Model):</strong> Независими агенти комуникират със съобщения. Akka (Java/Scala), Erlang, Go.</li>
+                    <li><strong>Async/Await:</strong> Синтаксис за асинхронно програмиране. C# async/await, JavaScript promises, Python asyncio.</li>
+                </ul>
+
+                <h3>Примери на конкурентни езици</h3>
+
+                <p><strong>Go goroutines:</strong> Лека конкурентност, управлена от runtime. Каналите осигуряват безопасна комуникация.</p>
+                <pre><code>go func() {
+    for i := 0; i < 10; i++ {
+        fmt.Println(i)
+    }
+}()  // Създава нова goroutine</code></pre>
+
+                <p><strong>Erlang процеси:</strong> Дизайнирани за конкурентност. Горещо преоразаване на код. Телекомуникационни системи.</p>
+                <pre><code>spawn(fun() ->
+    receive
+        Message -> io:format("Received: ~w~n", [Message])
+    end
+end)</code></pre>
+
+                <h3>Проблеми на конкурентността</h3>
+
+                <ul>
+                    <li><strong>Race condition:</strong> Два процеса пишат в същата памет едновременно.</li>
+                    <li><strong>Deadlock:</strong> Два процеса чакат един друг да отпуст ресурс.</li>
+                    <li><strong>Livelock:</strong> Процесите активно работят, но не правят напредък.</li>
+                    <li><strong>Starvation:</strong> Нишка не получава ресурсите, защото други ги монополизират.</li>
+                </ul>
+
+            </section>
+
+            <!-- Section 6.6: Event-Driven Paradigm -->
+            <section id="section6-6">
+                <h2>6.6 Събитийно-управлявана парадигма (Event-Driven)</h2>
+
+                <div class="def-box">
+                    <strong>Event-Driven Programming:</strong> Програмата е управлявана от външни събитиях (mouse clicks, network requests, timers). Основният поток чака eventi и изпълнява съответния обработчик.
+                </div>
+
+                <h3>Основни концепции</h3>
+
+                <ul>
+                    <li><strong>Event Loop:</strong> Безкрайна отеч, която чака события и ги обработва.</li>
+                    <li><strong>Callbacks:</strong> Функции, които се извиква, когато събитие се случи.</li>
+                    <li><strong>Non-blocking I/O:</strong> Заявката за I/O не чака отговор; се изпълнява callback-ът, когато данните са готови.</li>
+                    <li><strong>Асинхронност:</strong> Операциите не се завършват синхронно; резултатът идва позднее чрез callback или promise.</li>
+                </ul>
+
+                <h3>Node.js Event Loop Model</h3>
+
+                <p><strong>Node.js архитектура:</strong> Един процес, един поток (main thread), всички I/O е асинхронно. Съопаген от C++ libuv библиотека.</p>
+
+                <pre><code>// JavaScript/Node.js пример
+const fs = require('fs');
+
+fs.readFile('file.txt', (err, data) => {
+    if (err) throw err;
+    console.log(data);
+});
+
+console.log('Reading...');  // Отпечатва първо!
+// После файлът се чете асинхронно</code></pre>
+
+                <h3>GUI приложения</h3>
+
+                <p>Всички модерни GUI платформи (Qt, GTK, Win32 API) използват event loop. Клике на бутон генерира съобщение в очередта, което се обработва от главния поток.</p>
+
+                <p><strong>Предимства:</strong></p>
+                <ul>
+                    <li>Отзивчивост: UI остава отзивчив, защото главния поток е в event loop.</li>
+                    <li>Простота: Няма конкуренция и race conditions в един поток.</li>
+                    <li>Скалабилност: Един процес може да обслужи хиляди свързания с асинхронен I/O.</li>
+                </ul>
+
+                <p><strong>Предизвикателства:</strong></p>
+                <ul>
+                    <li>CPU-bound задачи блокират event loop (например дълги изчисления).</li>
+                    <li>Callback Hell: Вложени callbacks водят до неразчетлив код.</li>
+                    <li>Debugging е по-сложна.</li>
+                </ul>
+
+            </section>
+
+            <!-- Section 7: BNF and Semantics -->
             <section id="section7">
-                <h2>Раздел 7: Ключови концепции в езиците</h2>
+                <h2>Раздел 7: Формална синтаксис и семантика</h2>
+
+                <h3>7.1 BNF Нотация (Backus-Naur Form)</h3>
+
+                <p><strong>Въведение:</strong> BNF е формален метод за описание на синтаксиса на езика. Той определя правилата, по които са конструирани валидни програми.</p>
+
+                <div class="def-box">
+                    <strong>BNF:</strong> Контекстно-свободна граматика с специална нотация. Позволява рекурсивно определение на синтаксиса.
+                </div>
+
+                <h3>BNF Синтаксис</h3>
+
+                <ul>
+                    <li><strong>&lt;символ&gt;</strong> е нетерминал (променлива)</li>
+                    <li><strong>|</strong> означава "или" (избор)</li>
+                    <li><strong>::=</strong> означава "се дефинира като"</li>
+                    <li><strong>{ }</strong> означава нула или повече повторения (EBNF разширение)</li>
+                    <li><strong>[ ]</strong> означава опционално (EBNF разширение)</li>
+                </ul>
+
+                <h3>Пример: BNF за прости аритметични изрази</h3>
+
+                <div class="formula-block">
+&lt;expression&gt; ::= &lt;term&gt; | &lt;expression&gt; '+' &lt;term&gt; | &lt;expression&gt; '-' &lt;term&gt;
+&lt;term&gt; ::= &lt;factor&gt; | &lt;term&gt; '*' &lt;factor&gt; | &lt;term&gt; '/' &lt;factor&gt;
+&lt;factor&gt; ::= &lt;number&gt; | '(' &lt;expression&gt; ')'
+&lt;number&gt; ::= ['-'] &lt;digit&gt; {&lt;digit&gt;}
+&lt;digit&gt; ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+                </div>
+
+                <p><strong>Обяснение:</strong></p>
+                <ul>
+                    <li>Израз е терм, или израз плюс терм, или израз минус терм (левоасоциативност).</li>
+                    <li>Терм е фактор, или терм пъти фактор, или терм разделено на фактор.</li>
+                    <li>Фактор е число или израз в скоби (рекурсивна дефиниция).</li>
+                    <li>Число може да е отрицателен и има една или повече цифри.</li>
+                </ul>
+
+                <h3>Валидни и невалидни изрази според BNF</h3>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Израз</th>
+                            <th>Валиден?</th>
+                            <th>Обяснение</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>3 + 4 * 2</td>
+                            <td>✓ Да</td>
+                            <td>Израз + терм с фактори 3, фактор 4, фактор 2</td>
+                        </tr>
+                        <tr>
+                            <td>(5 + 2) * 3</td>
+                            <td>✓ Да</td>
+                            <td>Израз в скоби, умножен по число</td>
+                        </tr>
+                        <tr>
+                            <td>3 + + 4</td>
+                            <td>✗ Не</td>
+                            <td>След першия +, трябва терм, а не друг +</td>
+                        </tr>
+                        <tr>
+                            <td>* 5</td>
+                            <td>✗ Не</td>
+                            <td>Израз не може да започне с оператор</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>7.2 Семантика на езиците</h3>
+
+                <p><strong>Дефиниция:</strong> Семантиката определя ЗНАЧЕНИЕТО на синтактично валидната програма. BNF дефинира синтаксис, но не значение.</p>
+
+                <div class="theorem-box">
+                    <strong>Пример за синтаксична vs семантична грешка:</strong>
+                    <ul>
+                        <li><strong>Синтаксична:</strong> <code>3 + + 4</code> е невалидна според BNF (синтаксна грешка)</li>
+                        <li><strong>Семантична:</strong> <code>x = "hello" + 5</code> е синтактично валидна, но семантически грешна (не можеш събирата string и число в повечето езици)</li>
+                    </ul>
+                </div>
+
+                <h3>Три типа формална семантика</h3>
+
+                <h4>1. Оперативна (Operational) Семантика</h4>
+
+                <div class="def-box">
+                    <strong>Оперативна семантика:</strong> Определя как програмата се изпълнява. Описва промяната на състоянието (памет, регистри) при всяка инструкция.
+                </div>
+
+                <p><strong>Пример: Оперативна семантика на <code>x := 5; y := x + 3</code></strong></p>
+
+                <div class="proof-steps">
+                    <ol>
+                        <li>Начално състояние: σ₀ = {} (празна памет)</li>
+                        <li>След <code>x := 5</code>: σ₁ = {x → 5}</li>
+                        <li>След <code>y := x + 3</code>: σ₂ = {x → 5, y → 8}</li>
+                    </ol>
+                </div>
+
+                <p><strong>Операционен подход:</strong> "Програмата е последица от преходи в състоянието на абстрактната машина."</p>
+
+                <h4>2. Денотативна (Denotational) Семантика</h4>
+
+                <div class="def-box">
+                    <strong>Денотативна семантика:</strong> Карти програмата към математически обект (функция, множество, число). Пропуска деталите на изпълнение.
+                </div>
+
+                <p><strong>Пример: Денотативна семантика за аритметичен израз</strong></p>
+
+                <div class="formula-block">
+⟦3 + 4 * 2⟧ = ⟦3⟧ + ⟦4⟧ * ⟦2⟧ = 3 + 4 * 2 = 11
+
+⟦a + b⟧ᵛ = ⟦a⟧ᵛ + ⟦b⟧ᵛ  (за среда v с текущите стойности)
+                </div>
+
+                <p><strong>Денотационален подход:</strong> "Програмата е функция от входни данни към изходни данни."</p>
+
+                <h4>3. Аксиоматична (Axiomatic) Семантика</h4>
+
+                <div class="def-box">
+                    <strong>Аксиоматична семантика:</strong> Дефинира предусловия и постусловия (Hoare triple). Доказва коректност на програм.
+                </div>
+
+                <p><strong>Hoare Triple:</strong> {P} S {Q}</p>
+
+                <ul>
+                    <li><strong>P:</strong> Предусловие (което трябва да е истинско преди S)</li>
+                    <li><strong>S:</strong> Твърдение (операция)</li>
+                    <li><strong>Q:</strong> Постусловие (което е истинско после S)</li>
+                </ul>
+
+                <p><strong>Пример:</strong></p>
+
+                <div class="formula-block">
+{x = 5} x := x + 3 {x = 8}
+
+Тази Hoare triple е ВЯРНА, защото ако x е 5 преди присвояването, тогава x е 8 после.
+                </div>
+
+                <p><strong>Правила за аксиоматична семантика:</strong></p>
+
+                <ul>
+                    <li><strong>Присвояване:</strong> {P[e/x]} x := e {P}</li>
+                    <li><strong>Последователност:</strong> {P} S1 {R}, {R} S2 {Q} ⟹ {P} S1; S2 {Q}</li>
+                    <li><strong>Условие:</strong> {P ∧ c} S1 {Q}, {P ∧ ¬c} S2 {Q} ⟹ {P} if c then S1 else S2 {Q}</li>
+                    <li><strong>While цикъл:</strong> (инвариант)</li>
+                </ul>
+
+                <p><strong>Аксиоматичен подход:</strong> "Програмата е система от правилата, които преобразуват утвърждения."</p>
+
+                <h3>Сравнение на трите вида семантика</h3>
+
+                <table class="gen-table">
+                    <thead>
+                        <tr>
+                            <th>Вид</th>
+                            <th>Фокус</th>
+                            <th>Примери</th>
+                            <th>Предимства</th>
+                            <th>Недостатъци</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Оперативна</strong></td>
+                            <td>Как се изпълнява</td>
+                            <td>Interpreter, VM</td>
+                            <td>Интуитивна, лесна за имплементация</td>
+                            <td>Деталната, трудна за анализ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Денотативна</strong></td>
+                            <td>Математическо значение</td>
+                            <td>Functional languages, type systems</td>
+                            <td>Абстрактна, подходящ за анализ</td>
+                            <td>Далеч от реалното изпълнение</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Аксиоматична</strong></td>
+                            <td>Коректност и доказателство</td>
+                            <td>Formal verification, theorem proving</td>
+                            <td>Научна, позволява доказателства</td>
+                            <td>Сложна, не всички програми могат да се докажат</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </section>
+
+            <!-- Section 8: Key Concepts -->
+            <section id="section8">
+                <h2>Раздел 8: Ключови концепции в езиците</h2>
 
                 <h3>7.1 Обхват и свързване (Scope and Binding)</h3>
 
@@ -1212,9 +1511,9 @@ print(x)  # Отпечатва: "глобален"</code></pre>
 
             </section>
 
-            <!-- Section 8: Historical Evolution -->
-            <section id="section8">
-                <h2>Раздел 8: Историческа еволюция на езиците</h2>
+            <!-- Section 9: Historical Evolution -->
+            <section id="section9">
+                <h2>Раздел 9: Историческа еволюция на езиците</h2>
 
                 <p>Историята на програмните езици отразява развитието на компютрите и индустрията:</p>
 
@@ -1494,6 +1793,42 @@ print(x)  # Отпечатва: "глобален"</code></pre>
                     <div class="flashcard" onclick="this.classList.toggle('flipped')">
                         <div class="fc-q"><strong>Въпрос 12:</strong> Какво е type inference? Кои езици го поддържат?</div>
                         <div class="fc-a"><strong>Отговор:</strong> Type inference е способностята на компилаторът да се дедуцирам типовете на променливите без явно деклариран. Примери: ML (от 1973), Haskell, Rust, Scala, C++ (auto ключова дума). На разлика от явно дефинирани типове (int x = 5), можете да напишете (x = 5) и компилаторът го разбира.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 13:</strong> Какво е BNF нотация? Дайте един пример за BNF правило.</div>
+                        <div class="fc-a"><strong>Отговор:</strong> BNF (Backus-Naur Form) е формален метод за описание на синтаксиса на езика. Ирол дефинира контекстно-свободни граматики. Пример за аритметичен израз:
+                        <br>&lt;expression&gt; ::= &lt;term&gt; | &lt;expression&gt; '+' &lt;term&gt;
+                        <br>&lt;term&gt; ::= &lt;factor&gt; | &lt;term&gt; '*' &lt;factor&gt;
+                        <br>&lt;factor&gt; ::= &lt;number&gt; | '(' &lt;expression&gt; ')'
+                        <br>Нетерминалите са в &lt; &gt;, | означава избор.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 14:</strong> Три вида формална семантика: оперативна, денотативна, аксиоматична. Кое какво дефинира?</div>
+                        <div class="fc-a"><strong>Отговор:</strong>
+                        <br><strong>Оперативна:</strong> Как се изпълнява програмата. Промяна на състоянието на памет.
+                        <br><strong>Денотативна:</strong> Математическото значение. Карти програмата на функция от вход към изход.
+                        <br><strong>Аксиоматична:</strong> Предусловия и постусловия (Hoare triple). Доказателство на коректност.
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 15:</strong> Разлика между конкурентност и паралелност. Примери на конкурентни модели.</div>
+                        <div class="fc-a"><strong>Отговор:</strong>
+                        <br><strong>Конкурентност:</strong> Множество задачи напредват интерпретирала. Един процесор, контекстно превключване.
+                        <br><strong>Паралелност:</strong> Множество задачи се изпълняват физически един путем на различни ядра.
+                        <br><strong>Модели:</strong> Нишки (threads), предаване на съобщения (message passing), актьор модел (Erlang, Akka), async/await (C#, JavaScript).
+                        <span class="fc-hint">[Кликнете, за да скриете]</span></div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="fc-q"><strong>Въпрос 16:</strong> Събитийно-управлявана парадигма. Event loop. Node.js пример.</div>
+                        <div class="fc-a"><strong>Отговор:</strong> Event-driven programing се управлява от външни събитиях (click, network request). Event loop чака събитията и ги обработва. Callback функциите се извикват, когато събитие се случи.
+                        <br><strong>Node.js:</strong> Един процес, един поток (main thread), всички I/O асинхронно. fs.readFile() не блокира, callback се извиква, когато данните са готови.
+                        <br><strong>Предимства:</strong> Отзивчивост, скалабилност (хиляди връзки).
                         <span class="fc-hint">[Кликнете, за да скриете]</span></div>
                     </div>
                 </div>

@@ -444,6 +444,11 @@
         <a href="#phases">4. Фази на SDLC</a>
         <a href="#quality">5. Управление на качеството</a>
         <a href="#modern">6. Съвременни практики</a>
+        <div style="margin-left: 15px; font-size: 14px;">
+            <a href="#modern">• RUP</a><br>
+            <a href="#modern">• RAD</a><br>
+            <a href="#modern">• DevOps &amp; CI/CD</a>
+        </div>
         <a href="#example">7. Работен пример</a>
         <a href="#flashcards">8. Флашкарти</a>
         <a href="#quick-ref">9. Бърза справка</a>
@@ -1014,19 +1019,81 @@
         <section id="modern">
             <h2>6. Съвременни практики в разработката</h2>
 
-            <h3>6.1 DevOps</h3>
+            <h3>6.1 RUP (Rational Unified Process)</h3>
             <div class="definition">
-                <strong>DevOps</strong> е культура и набор от практики, която объединява разработката (Development) и операциите (Operations) за по-бързо доставяне на софтуер.
+                <strong>RUP</strong> е итеративен и инкрементален процес, разработен от Rational Software. Фокусира се на управление на риска и ползва сценарии (use cases) както водещо архитектурно средство.
+            </div>
+            <p><strong>Четирите фази на RUP:</strong></p>
+            <div class="phase-row">
+                <strong>1. Inception (Начало):</strong> Дефиниране на обхвата на проекта, установяване на жизнеспособност, събиране на начални изисквания чрез use cases
+            </div>
+            <div class="phase-row">
+                <strong>2. Elaboration (Разработка):</strong> Развитие на архитектура, управление на рискове, изясняване на всички изисквания, планиране на конструкцията
+            </div>
+            <div class="phase-row">
+                <strong>3. Construction (Конструкция):</strong> Главна разработка, интеграция, тестване. Поддържа дневника на риска и проверява метриките за качество
+            </div>
+            <div class="phase-row">
+                <strong>4. Transition (Преход):</strong> Издаване на продукт, дейности на поддръжка, обучение на потребители, преместване на разработка в продукция
+            </div>
+
+            <p><strong>Девет дисциплини на RUP:</strong> Business Modeling, Requirements, Analysis & Design, Implementation, Test, Deployment, Configuration & Change Management, Project Management, Environment (Tools & Infrastructure).</p>
+
+            <p><strong>Предимства:</strong> Адаптивен, итеративен, фокусиран на архитектура. <strong>Недостатъци:</strong> Сложен, много документация, най-подходящ за голямо предприятие.</p>
+
+            <h3>6.2 RAD (Rapid Application Development)</h3>
+            <div class="definition">
+                <strong>RAD</strong> е методология, разработена от James Martin, която подчертава бързото прототипиране и повторяемо развитие. Цел: максимално бързо доставяне на работещо софтуерно решение.
+            </div>
+            <p><strong>Четирите фази на RAD:</strong></p>
+            <div class="phase-row">
+                <strong>1. Business Modeling:</strong> Събиране на информация за бизнеса, идентификация на информационни потоци и процеси
+            </div>
+            <div class="phase-row">
+                <strong>2. Data Modeling:</strong> Преобразуване на бизнес процесите в набор от data objects (дигитални представяния на реалност)
+            </div>
+            <div class="phase-row">
+                <strong>3. Process Modeling:</strong> Описание на динамиката на данните, как данните се преместват и преобразуват в системата
+            </div>
+            <div class="phase-row">
+                <strong>4. Application Generation:</strong> Прототипирано приложение, тестване, интеграция и одит. Ако е необходимо, връщане към предишни фази
+            </div>
+
+            <p><strong>Сравнение с Waterfall:</strong> RAD е по-бързо, базира се на прототипи и интензивна сътрудничество. Waterfall е линеен, дълъг цикъл, стриктни фази. RAD е подходящ за малки до средни проекти с добре дефинирани бизнес требования.</p>
+
+            <h3>6.3 DevOps</h3>
+            <div class="definition">
+                <strong>DevOps</strong> е cultura и набор от практики, която объединява разработката (Development) и операциите (Operations) за по-бързо доставяне на софтуер, подобряване на надеждност и намаляване на времето до производство.
             </div>
             <p><strong>Четирите стълба на DevOps:</strong></p>
             <ul>
-                <li><strong>Culture</strong> — сътрудничество, отговорност, учене</li>
-                <li><strong>Automation</strong> — автоматизиране на тестване, внедряване, инфраструктура</li>
-                <li><strong>Measurement</strong> — метрики, мониторинг, логове</li>
-                <li><strong>Sharing</strong> — споделяне на знание и отговорност</li>
+                <li><strong>Culture</strong> — сътрудничество, отговорност, непрекъснато учене и експериментиране</li>
+                <li><strong>Automation</strong> — автоматизиране на тестване, внедряване, инфраструктура (Infrastructure as Code)</li>
+                <li><strong>Measurement</strong> — метрики, мониторинг, логове, телеметрия за проактивна идентификация на проблеми</li>
+                <li><strong>Sharing</strong> — споделяне на знание, отговорност и видимост между équipes</li>
             </ul>
 
-            <h3>6.2 Microservices Architecture</h3>
+            <p><strong>CI/CD Pipeline (Continuous Integration / Continuous Deployment):</strong></p>
+            <ul>
+                <li><strong>Continuous Integration (CI):</strong> Разработчиците често сливат (commit) код в репозиториум. Автоматичното тестване и компилиране проверяват каквто код. Ранно откриване на конфликти и грешки</li>
+                <li><strong>Continuous Delivery (CD):</strong> Код е готов за издаване в production в която угодно време. Автоматично разгръщане в staging среда за финално тестване</li>
+                <li><strong>Continuous Deployment:</strong> Автоматично издаване в production след успешни тестове. Обикновено на всеки commit</li>
+            </ul>
+
+            <p><strong>DevOps Lifecycle:</strong></p>
+            <ul>
+                <li><strong>Plan:</strong> Дефиниране на требемите, планиране на спринтове, управление на продуктния backlog</li>
+                <li><strong>Code:</strong> Написване на код, управление на версии (Git), code reviews</li>
+                <li><strong>Build:</strong> Компилиране, тестване на единици, статичен анализ на кода</li>
+                <li><strong>Test:</strong> Интеграционно тестване, функционално тестване, производство тестване (load, security)</li>
+                <li><strong>Deploy:</strong> Издаване в staging, canary deployment, blue-green deployment</li>
+                <li><strong>Operate:</strong> Монитор, администрация, управление на конфигурация, резервни копия</li>
+                <li><strong>Feedback:</strong> Събиране на метрики, обратна връзка от потребители, постоянно подобрение</li>
+            </ul>
+
+            <p><strong>Инструменти на DevOps:</strong> Jenkins, GitLab CI/CD, GitHub Actions (CI/CD); Docker, Kubernetes (контейнеризация); Terraform, Ansible (Infrastructure as Code); Prometheus, Grafana (мониторинг); ELK Stack (логване)</p>
+
+            <h3>6.4 Microservices Architecture</h3>
             <div class="model-card">
                 <p>Архитектура, където приложението се разлага на малки, независими услуги, всяка отговорна за един бизнес процес.</p>
                 <div class="advantages">
@@ -1046,13 +1113,13 @@
                 </div>
             </div>
 
-            <h3>6.3 Containerization (Docker, Kubernetes)</h3>
+            <h3>6.5 Containerization (Docker, Kubernetes)</h3>
             <div class="model-card">
                 <p><strong>Docker</strong> — инструмент за пакетиране на приложението с всички зависимости в контейнер, който може да се изпълнява навсякъде.</p>
                 <p><strong>Kubernetes</strong> — оркестрирането на контейнери, управление на скалиране, мониторинг и поправки.</p>
             </div>
 
-            <h3>6.4 Cloud-Native Development</h3>
+            <h3>6.6 Cloud-Native Development</h3>
             <div class="model-card">
                 <p>Разработка, предназначена за облачна среда (AWS, Azure, Google Cloud). Приложенията са:</p>
                 <ul>
@@ -1195,6 +1262,26 @@
                     <div class="flashcard-question">Какво е microservices архитектура?</div>
                     <div class="flashcard-answer">Архитектура където приложението се разлага на малки, независими услуги, всяка отговорна за един бизнес процес.</div>
                 </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Четирите фази на RUP (Rational Unified Process)?</div>
+                    <div class="flashcard-answer">Inception (начало), Elaboration (разработка), Construction (конструкция), Transition (преход). Итеративен и инкрементален, фокусиран на архитектура.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Четирите фази на RAD (Rapid Application Development)?</div>
+                    <div class="flashcard-answer">Business Modeling, Data Modeling, Process Modeling, Application Generation. Разработен от James Martin, целта е максимално бързо доставяне.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Разлика между RUP и RAD?</div>
+                    <div class="flashcard-answer">RUP е итеративен, архитектурно-управляван, подходящ за голяма предприятия; RAD е фокусиран на бързо прототипиране, подходящ за малки-средни проекти.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Какво е CI/CD Pipeline?</div>
+                    <div class="flashcard-answer">Continuous Integration — автоматично събиране и тестване на код. Continuous Delivery/Deployment — автоматично внедряване. Ранно откри на грешки, по-бързо издаване.</div>
+                </div>
+                <div class="flashcard">
+                    <div class="flashcard-question">Седем стъпки на DevOps Lifecycle?</div>
+                    <div class="flashcard-answer">Plan, Code, Build, Test, Deploy, Operate, Feedback. Цикличен процес с постоянно събиране на метрики и подобрение.</div>
+                </div>
             </div>
         </section>
 
@@ -1213,7 +1300,10 @@
                     <li><strong>Spiral</strong> — модел фокусиран на управление на риска в четири квадранта</li>
                     <li><strong>V-Model</strong> — верификация от лявата страна, валидация от дясната</li>
                     <li><strong>XP</strong> — Extreme Programming, инженерни практики (TDD, pair programming)</li>
-                    <li><strong>DevOps</strong> — культура и практики, което объединява Development и Operations</li>
+                    <li><strong>RUP</strong> — Rational Unified Process, итеративен, архитектурно-управляван процес</li>
+                    <li><strong>RAD</strong> — Rapid Application Development, фокусиран на бързо прототипиране</li>
+                    <li><strong>DevOps</strong> — cultura и практики, което объединява Development и Operations</li>
+                    <li><strong>CI/CD</strong> — Continuous Integration и Continuous Deployment за автоматизиране на процеса</li>
                     <li><strong>Technical Debt</strong> — трудности в бъдещето поради бързи решения днес</li>
                 </ul>
             </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тема 17: Защита на информационни системи — Firewall, IDS/IPS</title>
+    <title>Тема 17: Защита на информационни системи — Комплексна защита</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
         * {
@@ -399,8 +399,13 @@
                 <ul class="sidebar-nav">
                     <li><a href="#overview">Обзор</a></li>
                     <li><a href="#section1">Основи</a></li>
+                    <li><a href="#section1-5">VLAN</a></li>
                     <li><a href="#section2">Firewalls</a></li>
+                    <li><a href="#section2-5">Antivirus</a></li>
+                    <li><a href="#section2-6">EDR/XDR</a></li>
                     <li><a href="#section3">IDS</a></li>
+                    <li><a href="#section3-5">Access Control</a></li>
+                    <li><a href="#section3-6">Аутентификация</a></li>
                     <li><a href="#section4">IPS</a></li>
                     <li><a href="#section5">Съвременни подходи</a></li>
                     <li><a href="#section6">Криптография</a></li>
@@ -416,7 +421,7 @@
 
         <!-- Main Content -->
         <main class="content">
-            <h1 id="overview">Тема 17: Защита на информационни системи — Firewall, IDS/IPS</h1>
+            <h1 id="overview">Тема 17: Защита на информационни системи — Комплексна защита</h1>
 
             <!-- Overview Section -->
             <section class="overview-box">
@@ -717,6 +722,542 @@
                 </table>
             </section>
 
+            <!-- Section 1.5: Сегментация на мрежата и VLAN -->
+            <section id="section1-5">
+                <h2>Раздел 1.5: Сегментация на мрежата и VLAN</h2>
+
+                <h3>1.5.1 Сегментация на мрежата</h3>
+                <div class="definition-box">
+                    <strong>Сегментация на мрежата:</strong> Разделяне на мрежата на по-малки логически или физически подмрежи за подобрена сигурност, управление и производителност.
+                </div>
+                <p>Основна идея: Ако един слой е пробиен, атакуващият не може незабавно да достигне чувствителни системи на други слоеве.</p>
+
+                <h3>1.5.2 VLAN (Virtual Local Area Network)</h3>
+                <div class="definition-box">
+                    <strong>VLAN:</strong> Логическо разделяне на физическата мрежа. Устройства в различни VLAN-и не могат да комунікуват директно без маршрутизиране.
+                </div>
+
+                <h3>1.5.3 Типове VLAN-и</h3>
+                <ul>
+                    <li><strong>Data VLAN:</strong> За потребителския трафик (работни станции, сървъри).</li>
+                    <li><strong>Voice VLAN:</strong> За VoIP трафик (IP телефонни разговори).</li>
+                    <li><strong>Management VLAN:</strong> За администриране на мрежни устройства (коммутатори, маршрутизатори).</li>
+                    <li><strong>Native VLAN:</strong> Подразбиран VLAN за неетикетирани пакети.</li>
+                </ul>
+
+                <h3>1.5.4 802.1Q таггинг</h3>
+                <p><strong>802.1Q</strong> е стандарт, който добавя 4-байтов VLAN тег към Ethernet кадъра. Тегът съдържа:</p>
+                <ul>
+                    <li><strong>VLAN ID (VID):</strong> 12-битово число (0-4094), идентифициращо VLAN-а.</li>
+                    <li><strong>Priority (PCP):</strong> 3-битово поле за приоритизация на трафика (QoS).</li>
+                    <li><strong>Canonical Format Indicator (CFI):</strong> За съвместимост.</li>
+                </ul>
+                <p><strong>Пример:</strong> Кадър с VLAN ID 10 съдържа тег, който коммутаторът чете и маршрутира към VLAN 10 портове само.</p>
+
+                <h3>1.5.5 Inter-VLAN маршрутизиране</h3>
+                <p>Устройства в различни VLAN-и не могат да комунікуват директно. Трябва маршрутизатор или мултислойн коммутатор (Layer 3 switch) за маршрутизиране между VLAN-ите.</p>
+                <div class="example-box">
+                    <strong>Пример архитектура:</strong>
+                    <ul>
+                        <li>VLAN 10: Служители (192.168.10.0/24)</li>
+                        <li>VLAN 20: Администратори (192.168.20.0/24)</li>
+                        <li>VLAN 30: Гости (192.168.30.0/24)</li>
+                        <li>VLAN 40: Камери за видеонаблюдение (192.168.40.0/24)</li>
+                    </ul>
+                    Маршрутизатор между VLAN-ите осигурява контролирано маршрутизиране. Пример правило: "VLAN 10 може да достигне VLAN 30 на порт 80 (HTTP) само".
+                </div>
+
+                <h3>1.5.6 Предимства за сигурност</h3>
+                <ul>
+                    <li><strong>Ограничаване на разпространението на заплахи:</strong> Вредоносен софтуер в един VLAN не може да разпространи на други.</li>
+                    <li><strong>Микро-сегментация:</strong> За по-фин контрол на трафика между системи.</li>
+                    <li><strong>Изоляция на администриране:</strong> Management VLAN е отделна, намалява экспозиция.</li>
+                    <li><strong>Трудност за страничното движение:</strong> Атакуващий след компроментиране на един хост не може лесно да се движи по мрежата.</li>
+                </ul>
+
+                <div class="mermaid">
+                    graph TB
+                        subgraph vlan10["VLAN 10: Служители"]
+                            A["Работна станция 1"]
+                            B["Работна станция 2"]
+                        end
+                        
+                        subgraph vlan20["VLAN 20: Администратори"]
+                            C["Admin PC"]
+                        end
+                        
+                        subgraph vlan30["VLAN 30: Гости"]
+                            D["Гост - Лаптоп"]
+                        end
+                        
+                        SW["🔀 Layer 3 Switch<br/>Маршрутизира между VLAN-и"]
+                        FW["🔥 Firewall<br/>Контролира Inter-VLAN трафик"]
+
+                        A ---|802.1Q Tag: VLAN 10| SW
+                        B ---|802.1Q Tag: VLAN 10| SW
+                        C ---|802.1Q Tag: VLAN 20| SW
+                        D ---|802.1Q Tag: VLAN 30| SW
+                        SW --- FW
+
+                        style vlan10 fill:#99ff99
+                        style vlan20 fill:#99ccff
+                        style vlan30 fill:#ffff99
+                        style SW fill:#ffcc99
+                        style FW fill:#ff9999
+                </div>
+            </section>
+
+            <!-- Section 2.5: Антивирусен софтуер (разширена) -->
+            <section id="section2-5">
+                <h2>Раздел 2.5: Антивирусен софтуер (Разширена информация)</h2>
+
+                <h3>2.5.1 Дефиниция</h3>
+                <div class="definition-box">
+                    <strong>Антивирусен софтуер:</strong> Програма, която откривает, намира и премахва вредоносен софтуер (вируси, червеи, тройци, etc.) от компютър.
+                </div>
+
+                <h3>2.5.2 Методи на откривање</h3>
+
+                <h4>2.5.2.1 Signature-Based Detection (На базата на сигнатури)</h4>
+                <p>Антивирусът поддържа база данни на "подписи" (hash стойности) на известни вредоносни файлове. Сравнява файлове на компютъра с подписите в базата.</p>
+                <p><strong>Предимства:</strong> Бързо, надеждно за известни заплахи.</p>
+                <p><strong>Недостатъци:</strong> Не откривает нови вредоносни софтуери (zero-day). Требуется редовно актуализиране на базата.</p>
+
+                <h4>2.5.2.2 Heuristic Analysis (Евристичен анализ)</h4>
+                <p>Анализира поведението и структурата на файла без да има сигнатура. Ищет подозрителни характеристики:</p>
+                <ul>
+                    <li>Скритие на кода (encryption, packing).</li>
+                    <li>Обръщение към системни функции за промяна на системните файлове.</li>
+                    <li>Опит за собственоръчна репликация.</li>
+                </ul>
+                <p><strong>Предимства:</strong> Може да открие нови вредоносни софтуери.</p>
+                <p><strong>Недостатъци:</strong> По-бавно, възможни false positives.</p>
+
+                <h4>2.5.2.3 Behavioral Analysis (Анализ на поведението)</h4>
+                <p>Наблюдава поведението на програма в реално време. Если програма опитва неочаквани действия (всичко написание във системната директория, кража на пароли), антивирусът блокира.</p>
+                <p><strong>Пример:</strong> Програма вероятно е вредоносна, если отварящи повече от 100 файла за писане в системната директория в кратки интервали.</p>
+
+                <h4>2.5.2.4 Sandboxing (Пясъчник)</h4>
+                <p>Подозрителни файлове са пуска в контролирана среда (sandbox) отделена от истинския OS. Антивирусът наблюдава поведението без риск. Ако е вредоносна, е заключена в sandbox-а.</p>
+                <p><strong>Предимства:</strong> Безопасно, может да открие нови заплахи.</p>
+                <p><strong>Недостатъци:</strong> По-бавно, изисква повече ресурси.</p>
+
+                <h4>2.5.2.5 Cloud-Based Detection (Облачна детекция)</h4>
+                <p>Антивирусът изпраща файли на облачни сървъри на компанията за анализ от по-мощни системи. Резултатите се връщат.</p>
+                <p><strong>Предимства:</strong> Може да использует машинно учене на мащабни данни. Не натоварва локално машина.</p>
+                <p><strong>Недостатъци:</strong> Зависимост от интернет. Приватност: файлове са пращани в облак.</p>
+
+                <h3>2.5.3 Съвременни антивирусни решения</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Решение</th>
+                            <th>Метод</th>
+                            <th>Пример</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Традиционен Antivirus</strong></td>
+                            <td>Signature-based</td>
+                            <td>Norton, McAfee, Avast</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Heuristic-based</strong></td>
+                            <td>Поведение + структура</td>
+                            <td>Kaspersky, G DATA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Behavioral Protection</strong></td>
+                            <td>Реално време наблюдение</td>
+                            <td>Windows Defender, Malwarebytes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AI/ML-Based</strong></td>
+                            <td>Машинно учене + облак</td>
+                            <td>Bitdefender, Trend Micro</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 2.6: EDR/XDR -->
+            <section id="section2-6">
+                <h2>Раздел 2.6: EDR и XDR (Endpoint Detection and Response / Extended Detection and Response)</h2>
+
+                <h3>2.6.1 Дефиниция на EDR</h3>
+                <div class="definition-box">
+                    <strong>EDR (Endpoint Detection and Response):</strong> Софтуер, който се инсталира на всеки endpoint (компютър, сървър) и непрекъснато мониторира активност. При откривање на заплаха, позволява автоматичен или ръчен отговор (изолация, блокиране, отстранение).
+                </div>
+
+                <h3>2.6.2 Дефиниция на XDR</h3>
+                <div class="definition-box">
+                    <strong>XDR (Extended Detection and Response):</strong> Разширена версия на EDR, която интегрира данни от множество източници: endpoints, network, cloud, email, за холистичен поглед на заплахите.
+                </div>
+
+                <h3>2.6.3 Ключови възможности на EDR</h3>
+                <ul>
+                    <li><strong>Behavior Monitoring:</strong> Наблюдава процеси, файлови действия, мрежни връзки в реално време.</li>
+                    <li><strong>Threat Intelligence:</strong> Сравнява поведението с известни заплахи от облачни бази данни.</li>
+                    <li><strong>Threat Hunting:</strong> Аналитик вручну сравнява логове за признаки на нарушение.</li>
+                    <li><strong>Automated Response:</strong> При откривање, автоматични действия: изолация на машина, блокиране на процес, удаление на файл.</li>
+                    <li><strong>Forensics Data Collection:</strong> Събира детайни логове за後postmortem анализ след инцидент.</li>
+                </ul>
+
+                <h3>2.6.4 EDR vs Традиционен Antivirus</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Аспект</th>
+                            <th>Традиционен AV</th>
+                            <th>EDR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Мониторирање</strong></td>
+                            <td>Файлова сканиране (статично)</td>
+                            <td>Процеси и поведение (динамично)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Отговор</strong></td>
+                            <td>Блокиране на файл</td>
+                            <td>Изолация на машина, kill процес, forensics</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Информационен поток</strong></td>
+                            <td>Един endpoint</td>
+                            <td>Корелирање на всички endpoints</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Threat Intelligence</strong></td>
+                            <td>署名базирана</td>
+                            <td>Behavior +云 интелигенция</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Цена</strong></td>
+                            <td>Низька</td>
+                            <td>По-висока (цялостна защита)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2.6.5 XDR Архитектура</h3>
+                <p>XDR събира данни от множество слоеве:</p>
+                <ul>
+                    <li><strong>Endpoint Layer:</strong> EDR агенти на всеки компютър, сървър.</li>
+                    <li><strong>Network Layer:</strong> Данни от firewalls, IDS/IPS, мрежни коммутатори.</li>
+                    <li><strong>Email Layer:</strong> Мониторирање на имейл вложении, фишинг, malware в имейли.</li>
+                    <li><strong>Cloud Layer:</strong> Мониторирање на облачни сървърства (AWS, Azure, Google Cloud).</li>
+                </ul>
+                <p>XDR платформа (например: Microsoft Defender XDR, Palo Alto Cortex XDR) интегрира всички тези данни и издава единна, корелирана картина на заплахите.</p>
+
+                <div class="mermaid">
+                    graph TB
+                        E1["💻 Endpoint 1<br/>EDR Agent"]
+                        E2["💻 Endpoint 2<br/>EDR Agent"]
+                        E3["💻 Endpoint 3<br/>EDR Agent"]
+                        
+                        NET["🔥 Network<br/>IDS/IPS/Firewall"]
+                        EMAIL["📧 Email<br/>Gateway"]
+                        CLOUD["☁️ Cloud<br/>AWS/Azure"]
+                        
+                        XDR["🎯 XDR Platform<br/>Correlation & Analysis"]
+                        
+                        E1 --> XDR
+                        E2 --> XDR
+                        E3 --> XDR
+                        NET --> XDR
+                        EMAIL --> XDR
+                        CLOUD --> XDR
+                        
+                        XDR -->|Alert & Response| SOC["👥 SOC Analyst<br/>Actions: Isolate, Kill, Remediate"]
+                        
+                        style E1 fill:#99ff99
+                        style E2 fill:#99ff99
+                        style E3 fill:#99ff99
+                        style NET fill:#ffcc99
+                        style EMAIL fill:#ffcc99
+                        style CLOUD fill:#ffcc99
+                        style XDR fill:#99ccff
+                        style SOC fill:#cc99ff
+                </div>
+
+                <h3>2.6.6 Примери XDR решения</h3>
+                <ul>
+                    <li><strong>Microsoft Defender XDR:</strong> Интегрира Defender for Endpoint, Defender for Office 365, Defender for Identity, Defender for Cloud.</li>
+                    <li><strong>Palo Alto Cortex XDR:</strong> Integrira Traps (EDR), Firewall, CloudGuard, для целостного покрытия.</li>
+                    <li><strong>CrowdStrike Falcon:</strong> Cloud-native XDR платформа, известна за быстрого развертыванияю.</li>
+                </ul>
+            </section>
+
+            <!-- Section 3.5: Контрол на достъпа (Access Control Models) -->
+            <section id="section3-5">
+                <h2>Раздел 3.5: Модели на контрол на достъпа (Access Control Models)</h2>
+
+                <h3>3.5.1 Въведение</h3>
+                <p>След което потребител е аутентифициран (знаем че е той, който казва), трябва да определим какво има право да направи — това е <strong>авторизация</strong> или <strong>контрол на достъпа</strong>.</p>
+
+                <h3>3.5.2 DAC (Discretionary Access Control)</h3>
+                <div class="definition-box">
+                    <strong>DAC:</strong> Собственикът на ресурса (файл, папка) решава кой други потребители имат достъп и какъв вид достъп (чтение, писане, изпълнение).
+                </div>
+                <p><strong>Пример:</strong> В Unix/Linux, файл собственик може да направи файла четлив (читаемый) за други потребители чрез `chmod 644 файл`.</p>
+                <p><strong>Предимства:</strong> Гъвкав, потребителят полага управление.</p>
+                <p><strong>Недостатъци:</strong> Потребител може грешнох да даде преимущества; няма централизирана контрол.</p>
+
+                <h3>3.5.3 MAC (Mandatory Access Control)</h3>
+                <div class="definition-box">
+                    <strong>MAC:</strong> Администратор на система централно определя достъпът. Потребител не може да промяна разрешенията на ресурса — администратор контролира.
+                </div>
+                <p><strong>Пример:</strong> MAC използва <strong>нива на класификация</strong>:</p>
+                <ul>
+                    <li>Ниво 1: Отворено (Public)</li>
+                    <li>Ниво 2: Вътрешно (Internal)</li>
+                    <li>Ниво 3: Конфиденциално (Confidential)</li>
+                    <li>Ниво 4: Clasificirano (Secret)</li>
+                </ul>
+                <p>Файл е етикетиран "Ниво 3", потребител е етикетиран "Ниво 2". Потребител не може да прочете файл защото нивата не съвпадат. Администратор е единственият, който определи етикетите.</p>
+                <p><strong>Предимства:</strong> Сигурен, централизирано управление, подходящ за държавна/военна класификация.</p>
+                <p><strong>Недостатъци:</strong> Твърде строг, намалява гъвкавост; сложен за администриране.</p>
+
+                <h3>3.5.4 RBAC (Role-Based Access Control)</h3>
+                <div class="definition-box">
+                    <strong>RBAC:</strong> Потребители се назначават на роли (мед. сестра, лекар, администратор). Роля има определен набор от разрешения (permissions). Потребител наследява разрешенията на своята роля.
+                </div>
+                <p><strong>Пример в болница:</strong></p>
+                <ul>
+                    <li>Роля "Лекар": Право да прочете всички медицински записи, право да напишnх рецепти.</li>
+                    <li>Роля "Медицинска сестра": Право да прочете медицински записи, право да вмърши записи (но не рецепти).</li>
+                    <li>Роля "Администратор": Право да управлява потребители, ролите, системни конфигурации.</li>
+                </ul>
+                <p><strong>Предимства:</strong> Простотата, лесна управление на множество потребители. Скалируемо.</p>
+                <p><strong>Недостатъци:</strong> Може да не е достатъчно фин за сложни правила. Роля креуп (Role explosion) може да се случи ако има много подварианти.</p>
+
+                <h3>3.5.5 ABAC (Attribute-Based Access Control)</h3>
+                <div class="definition-box">
+                    <strong>ABAC:</strong> Достъпът се решава базиран на атрибути (свойства) на потребител, ресурс, среда и действие. Най-гъвкаво.
+                </div>
+                <p><strong>Пример:</strong> Политика: "Позволи достъп до файл, ако потребител е от отдел=Маркетинг AND часът на денят е 9-17:00 AND IP адрес е от офис мрежата".</p>
+                <p>Атрибути могат да бъдат:</p>
+                <ul>
+                    <li><strong>User attributes:</strong> деpartment, роля, позиция, заболеваност.</li>
+                    <li><strong>Resource attributes:</strong> класификация, собственик, тип.</li>
+                    <li><strong>Environment attributes:</strong> време, място (IP), използвана устройство.</li>
+                    <li><strong>Action attributes:</strong> чтение, писане, изтриване.</li>
+                </ul>
+                <p><strong>Предимства:</strong> Най-гъвкав, позволава фин контрол, подходящ за динамични среди.</p>
+                <p><strong>Недостатъци:</strong> Сложен за конфигурирање, може да е бавен (многу проверки).</p>
+
+                <h3>3.5.6 Сравнителна таблица</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Модел</th>
+                            <th>Управление</th>
+                            <th>Гъвкавост</th>
+                            <th>Сложност</th>
+                            <th>Употреба</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>DAC</strong></td>
+                            <td>Собственик</td>
+                            <td>Висока</td>
+                            <td>Ниска</td>
+                            <td>Unix/Linux файлови системи, NTFS</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MAC</strong></td>
+                            <td>Администратор</td>
+                            <td>Ниска</td>
+                            <td>Висока</td>
+                            <td>Военни системи, държавни класификации</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RBAC</strong></td>
+                            <td>Администратор (ролите)</td>
+                            <td>Средна</td>
+                            <td>Средна</td>
+                            <td>Корпоративни системи (Active Directory, болници)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ABAC</strong></td>
+                            <td>Администратор (политики)</td>
+                            <td>Висока</td>
+                            <td>Висока</td>
+                            <td>Облачни среди (AWS IAM, Google Cloud), современни приложения</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mermaid">
+                    graph TD
+                        DAC["DAC<br/>Собственик решава"]
+                        MAC["MAC<br/>Администратор наложува нива"]
+                        RBAC["RBAC<br/>Роли имат разрешения"]
+                        ABAC["ABAC<br/>Политики базирани на атрибути"]
+                        
+                        Flex["Гъвкавост"]
+                        Control["Централизиран контрол"]
+                        
+                        DAC -->|Нисък| Control
+                        MAC -->|Висок| Control
+                        RBAC -->|Среден| Control
+                        ABAC -->|Висок| Control
+                        
+                        DAC -->|Висока| Flex
+                        MAC -->|Ниска| Flex
+                        RBAC -->|Средна| Flex
+                        ABAC -->|Висока| Flex
+                        
+                        style DAC fill:#ffcccc
+                        style MAC fill:#ccccff
+                        style RBAC fill:#ccffcc
+                        style ABAC fill:#ffffcc
+                </div>
+            </section>
+
+            <!-- Section 3.6: Аутентификация и Авторизация -->
+            <section id="section3-6">
+                <h2>Раздел 3.6: Аутентификация и Авторизация</h2>
+
+                <h3>3.6.1 Разлика между аутентификация и авторизация</h3>
+                <p><strong>Аутентификация (Authentication):</strong> Проверка на че потребител е този, който казва (доказване на идентичност). "Ти си наистина Иван?"</p>
+                <p><strong>Авторизация (Authorization):</strong> Определяне на това какво има право потребител да направи след като е аутентифициран. "Иван има право да прочете този файл?"</p>
+                <p><strong>Аналогия:</strong> Паспортът е аутентификация (доказва че си ти). Визата е авторизация (дават той право да влезеш в държава).</p>
+
+                <h3>3.6.2 Фактори на аутентификация (MFA - Multi-Factor Authentication)</h3>
+                <p>За по-строга защита, системата изисква <strong>многофакторна аутентификация</strong> — повече от един начин на доказване на идентичност.</p>
+
+                <h4>3.6.2.1 Фактори на знание (Knowledge)</h4>
+                <p>Нещо което <strong>знаеш</strong>: пароли, PIN код, sekretни въпроси.</p>
+                <ul>
+                    <li>Проблем: Можеш да я забравиш, можеш да я издадеш на други.</li>
+                </ul>
+
+                <h4>3.6.2.2 Фактори на притежание (Possession)</h4>
+                <p>Нещо което <strong>имаш</strong>: мобилен телефон, USB ключ, хардуерна token за генериране на еднократни кодове.</p>
+                <ul>
+                    <li><strong>Пример:</strong> Google Authenticator, Microsoft Authenticator генерират еднократни 6-цифрени кодове (TOTP - Time-based One-Time Password).</li>
+                </ul>
+
+                <h4>3.6.2.3 Фактори на присъствие (Inherence)</h4>
+                <p>Нещо което <strong>си</strong> (биометрия): пръстови отпечатък, лицево признаване, iris scan.</p>
+                <ul>
+                    <li>Предимство: Трудно за подделяне.</li>
+                    <li>Недостатък: Приватност, точност на биометриката.</li>
+                </ul>
+
+                <h3>3.6.3 Примери MFA сценарии</h3>
+                <div class="example-box">
+                    <strong>Сценарий 1: Двуфакторна аутентификация (2FA) за интернет банкинг</strong>
+                    <ol>
+                        <li>Потребител въвежда потребителско име и пароля (Знание).</li>
+                        <li>Системата изпраща SMS код на мобилния телефон (Притежание).</li>
+                        <li>Потребител въвежда SMS кода.</li>
+                        <li>Достъп е разрешен.</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <strong>Сценарий 2: Трифакторна аутентификация (3FA) за правителствени системи</strong>
+                    <ol>
+                        <li>Потребител въвежда пароля (Знание).</li>
+                        <li>Потребител вмъква смарт карта в четец (Притежание).</li>
+                        <li>Потребител сканира пръстова отпечатък (Присъствие).</li>
+                        <li>Всички три фактора са валидни = Достъп.</li>
+                    </ol>
+                </div>
+
+                <h3>3.6.4 SSO (Single Sign-On)</h3>
+                <div class="definition-box">
+                    <strong>SSO:</strong> Потребител се логва веднъж и получава достъп до множество приложения без необходимост от повторна аутентификация на всяко приложение.
+                </div>
+                <p><strong>Пример:</strong> Google SSO — логваш се с Google сметка, след което можеш да изпълниш достъп до YouTube, Gmail, Google Drive, etc., без да се логваш отново.</p>
+                <p><strong>Предимства:</strong> По-удобно за потребител, намалява брой на паролите, по-добра потребителска експерийнця.</p>
+                <p><strong>Недостатъци:</strong> Единна точка на отказ (ако SSO сървъра e пробиен, всички приложения са компрометирани).</p>
+
+                <h3>3.6.5 OAuth 2.0 и SAML</h3>
+
+                <h4>3.6.5.1 OAuth 2.0</h4>
+                <p><strong>OAuth 2.0:</strong> Стандарт за делегирана авторизация. Позволява потребител да даде разрешение на трета приложение да достигне своите ресурси без да дава пароля.</p>
+                <p><strong>Пример:</strong> "Моят Spotify приложение иска достъп до моята Facebook контакт-лист" → потребител логва в Facebook, одобрява, Spotify получава token за достъп.</p>
+                <p><strong>Ключови компоненти:</strong></p>
+                <ul>
+                    <li><strong>Resource Owner:</strong> Потребител (притежател на ресурса).</li>
+                    <li><strong>Client:</strong> Трета приложение (Spotify).</li>
+                    <li><strong>Authorization Server:</strong> Издателният сервър (Facebook).</li>
+                    <li><strong>Resource Server:</strong> Сървърът който съхранява ресурсите (Facebook API).</li>
+                </ul>
+
+                <h4>3.6.5.2 SAML (Security Assertion Markup Language)</h4>
+                <p><strong>SAML:</strong> XML-базиран стандарт за обмен на аутентификационна информация между организации. Често използван за корпоративни SSO и федериран идентитет.</p>
+                <p><strong>Пример:</strong> Компания A имя SAML федерация с компания B. Служител от компания A може да се логва в система на компания B използвайки своята корпоративна сметка от компания A.</p>
+                <p><strong>SAML поток:</strong></p>
+                <ol>
+                    <li>Потребител опитва достъп до система (Service Provider).</li>
+                    <li>Service Provider перенасочва към Identity Provider (IdP).</li>
+                    <li>Потребител се логва в IdP.</li>
+                    <li>IdP издава SAML assertion (твърдение с аутентификационна информация).</li>
+                    <li>Service Provider прехвърля assertion, логва потребител.</li>
+                </ol>
+
+                <h3>3.6.6 Таблица сравнение</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Аспект</th>
+                            <th>OAuth 2.0</th>
+                            <th>SAML</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Формат</strong></td>
+                            <td>JSON, URL параметри</td>
+                            <td>XML</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Предназначение</strong></td>
+                            <td>Авторизация (делегирана прави)</td>
+                            <td>Аутентификация (идентификация)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Употреба</strong></td>
+                            <td>Потребителски приложения (мобилни, уеб)</td>
+                            <td>Корпоративни системи (SSO, федерирана идентичност)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Пример</strong></td>
+                            <td>"Spotify достъпна Facebook контакти"</td>
+                            <td>"Служител логва в система с корпоративния IdP"</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mermaid">
+                    graph LR
+                        User["👤 Потребител"]
+                        App["🖥️ Приложение<br/>(Service Provider)"]
+                        IdP["🔑 Identity Provider<br/>(OAuth/SAML Server)"]
+                        
+                        User -->|1. Логин| App
+                        App -->|2. Перенасочване| IdP
+                        User -->|3. Аутентификация| IdP
+                        IdP -->|4. Token/Assertion| App
+                        App -->|5. Разрешение| User
+                        
+                        style User fill:#99ff99
+                        style App fill:#ffcc99
+                        style IdP fill:#99ccff
+                </div>
+            </section>
+
+            <!-- Updated Section: Antivirus and Modern endpoint protection should be inserted before section5 -->
+
+
             <!-- Section 5: Съвременни подходи -->
             <section id="section5">
                 <h2>Раздел 5: Съвременни подходи</h2>
@@ -967,6 +1508,101 @@
                         <div class="flashcard-front"><strong>PKI и SSL/TLS?</strong></div>
                         <div class="flashcard-back">PKI управлява публични ключове и цифрови сертификати. SSL/TLS използва PKI за криптиране на уеб трафик (HTTPS).</div>
                     </div>
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>VLAN дефиниция?</strong></div>
+                        <div class="flashcard-back">Virtual Local Area Network — логическо разделяне на физическата мрежа. Устройства в различни VLAN-и не могат да комунікуват директно без маршрутизиране.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>802.1Q таггинг?</strong></div>
+                        <div class="flashcard-back">Стандарт за добавяне на 4-байтов VLAN тег към Ethernet кадъра. Тегът съдържа VLAN ID (12-бит) за идентификация на VLAN-а.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>DAC дефиниция?</strong></div>
+                        <div class="flashcard-back">Discretionary Access Control — собственикът на ресурса решава кой други потребители имат достъп и какъв вид. Гъвкав, потребител управлява разрешенията.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>MAC дефиниция?</strong></div>
+                        <div class="flashcard-back">Mandatory Access Control — администратор централно определя достъпът чрез нива на класификация. Потребител не може да промяна разрешенията. За военни/държавни системи.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>RBAC дефиниция?</strong></div>
+                        <div class="flashcard-back">Role-Based Access Control — потребители се назначават на роли. Роля имя определен набор от разрешения. Потребител наследява разрешенията на своята роля.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>ABAC дефиниция?</strong></div>
+                        <div class="flashcard-back">Attribute-Based Access Control — достъпът базиран на атрибути (отдел, време, IP адрес). Най-гъвкаво, подходящо за облачни среди.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>MFA — знание (Knowledge)?</strong></div>
+                        <div class="flashcard-back">Нещо което знаеш: пароли, PIN, секретни въпроси. Проблем: може да забравиш, може да издадеш.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>MFA — притежание (Possession)?</strong></div>
+                        <div class="flashcard-back">Нещо което имаш: мобилен телефон, USB ключ, хардуерна token. Google Authenticator генерира еднократни кодове (TOTP).</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>MFA — присъствие (Inherence)?</strong></div>
+                        <div class="flashcard-back">Нещо което си (биометрия): пръстови отпечатък, лицево признаване, iris scan. Трудно за подделяне.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>SSO дефиниция?</strong></div>
+                        <div class="flashcard-back">Single Sign-On — потребител се логва веднъж и получава достъп до множество приложения без повторна аутентификация. Пример: Google SSO.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>OAuth 2.0?</strong></div>
+                        <div class="flashcard-back">Стандарт за делегирана авторизация. Потребител даде разрешение на трета приложение да достигне своите ресурси без пароли. Пример: Spotify достъпа Facebook контакти.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>SAML дефиниция?</strong></div>
+                        <div class="flashcard-back">Security Assertion Markup Language — XML-базиран стандарт за обмен на аутентификационна информация. За корпоративни SSO и федериран идентитет.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Signature-based AV?</strong></div>
+                        <div class="flashcard-back">Сравнява файлове със база данни на известни вредоносни софтуери (hash). Бързо, надеждно за известни заплахи. Не откривает zero-day.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Heuristic AV?</strong></div>
+                        <div class="flashcard-back">Анализира структура и поведение на файл без сигнатура. Ищет подозрителни характеристики. Откривает нови вредоносни софтуери.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Behavioral AV?</strong></div>
+                        <div class="flashcard-back">Наблюдава поведението на програма в реално време. Блокира неочаквани действия (писане във системна директория, кража на пароли).</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Sandboxing?</strong></div>
+                        <div class="flashcard-back">Подозрителни файлове пускани в контролирана среда отделена от истинския OS. Безопасно, откривает нови заплахи.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>EDR дефиниция?</strong></div>
+                        <div class="flashcard-back">Endpoint Detection and Response — софтуер на всеки endpoint който мониторира активност в реално време. Откривает и реагира на заплахи (изолация, kill процес).</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>XDR дефиниция?</strong></div>
+                        <div class="flashcard-back">Extended Detection and Response — разширена EDR. Интегрира данни от endpoints, network, cloud, email. Холистичен поглед на заплахите.</div>
+                    </div>
+
+                    <div class="flashcard front" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-front"><strong>Аутентификация vs Авторизация?</strong></div>
+                        <div class="flashcard-back">Аутентификация: доказване на идентичност (ти си Иван?). Авторизация: определяне права (Иван има право да прочете файл?). Паспорт=аутентификация, виза=авторизация.</div>
+                    </div>
+
                 </div>
             </section>
 
@@ -1064,6 +1700,45 @@
 
                         <dt>Zero Trust</dt>
                         <dd>"Никога не вярвай, винаги верифицирай" архитектура.</dd>
+                        <dt>ABAC (Attribute-Based Access Control)</dt>
+                        <dd>Контрол на достъпа базиран на атрибути (отдел, време, IP). Най-гъвкаво решение.</dd>
+
+                        <dt>Authentication</dt>
+                        <dd>Проверка на идентичността на потребител или система.</dd>
+
+                        <dt>Authorization</dt>
+                        <dd>Определяне на правата на достъп след аутентификация.</dd>
+
+                        <dt>DAC (Discretionary Access Control)</dt>
+                        <dd>Собственикът на ресурса решава достъпът. Гъвкав, потребител управлява.</dd>
+
+                        <dt>EDR (Endpoint Detection and Response)</dt>
+                        <dd>Софтуер на всеки хост за мониторирање и реагиране на заплахи.</dd>
+
+                        <dt>MAC (Mandatory Access Control)</dt>
+                        <dd>Администратор централно определя достъпът чрез нива на класификация.</dd>
+
+                        <dt>MFA (Multi-Factor Authentication)</dt>
+                        <dd>Аутентификация с множество фактори (знание, притежание, присъствие).</dd>
+
+                        <dt>OAuth 2.0</dt>
+                        <dd>Стандарт за делегирана авторизация без предаване на пароли.</dd>
+
+                        <dt>RBAC (Role-Based Access Control)</dt>
+                        <dd>Потребители се назначават на роли които имат определени разрешения.</dd>
+
+                        <dt>SAML (Security Assertion Markup Language)</dt>
+                        <dd>XML-базиран стандарт за обмен на аутентификационна информация.</dd>
+
+                        <dt>SSO (Single Sign-On)</dt>
+                        <dd>Единна аутентификация за множество приложения.</dd>
+
+                        <dt>VLAN (Virtual Local Area Network)</dt>
+                        <dd>Логическо разделяне на физическата мрежа за подобрена сигурност.</dd>
+
+                        <dt>XDR (Extended Detection and Response)</dt>
+                        <dd>Разширена EDR която интегрира данни от множество источники.</dd>
+
                     </dl>
                 </div>
             </section>

@@ -442,6 +442,7 @@
                 <li><a href="#section4">Най-кратък път</a></li>
                 <li><a href="#section5">Дървета</a></li>
                 <li><a href="#section6">Специални задачи</a></li>
+                <li><a href="#section7">Двуделни графи</a></li>
                 <li><a href="#flashcards">Flashcards</a></li>
                 <li><a href="#quick-ref">Бърза справка</a></li>
             </ul>
@@ -668,10 +669,10 @@ DFS-All(Graph G):
                     <strong>Приложения:</strong> Топологично сортиране, откритие на цикли, силно свързани компоненти, мост-ребра.
                 </div>
 
-                <h3>Работена примера: BFS и DFS на конкретен граф</h3>
+                <h3>Детайлна примера: BFS със състояние на опашката</h3>
 
                 <div class="worked-example">
-                    <h4>Граф с 6 върха:</h4>
+                    <h4>Граф за анализ (6 върха):</h4>
                     <div class="mermaid-container">
                         <div class="mermaid">
 graph LR
@@ -691,29 +692,141 @@ graph LR
                         </div>
                     </div>
 
-                    <h4>BFS от A:</h4>
-                    <ol>
-                        <li>Начало: visited = {A}, queue = [A]</li>
-                        <li>Обход A: посещаване на B, C. queue = [B, C]</li>
-                        <li>Обход B: посещаване на D. queue = [C, D]</li>
-                        <li>Обход C: посещаване на E. queue = [D, E]</li>
-                        <li>Обход D: посещаване на F. queue = [E, F]</li>
-                        <li>Обход E: F вече посещен. queue = [F]</li>
-                        <li>Обход F: никакви нови съседи. queue = []</li>
-                    </ol>
-                    <p><strong>Ред на посещение:</strong> A, B, C, D, E, F</p>
+                    <h4>BFS от A - Стъпка по стъпка:</h4>
+                    <table class="gen-table">
+                        <thead>
+                            <tr>
+                                <th>Стъп</th>
+                                <th>Текущ връх</th>
+                                <th>Посетено</th>
+                                <th>Опашка</th>
+                                <th>Съседи</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0 (начало)</td>
+                                <td>-</td>
+                                <td>{A}</td>
+                                <td>[A]</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>A</td>
+                                <td>{A, B, C}</td>
+                                <td>[B, C]</td>
+                                <td>B, C от A</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>B</td>
+                                <td>{A, B, C, D}</td>
+                                <td>[C, D]</td>
+                                <td>D от B (A вече посещен)</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>C</td>
+                                <td>{A, B, C, D, E}</td>
+                                <td>[D, E]</td>
+                                <td>E от C (A вече посещен)</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>D</td>
+                                <td>{A, B, C, D, E, F}</td>
+                                <td>[E, F]</td>
+                                <td>F от D (B вече посещен)</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>E</td>
+                                <td>{A, B, C, D, E, F}</td>
+                                <td>[F]</td>
+                                <td>F вече посещен (C също)</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>F</td>
+                                <td>{A, B, C, D, E, F}</td>
+                                <td>[]</td>
+                                <td>D, E вече посещени</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Ред на посещение:</strong> A, B, C, D, E, F (ширина-първо)</p>
+                    <p><strong>Ключово свойство:</strong> BFS посещава върховете в нарастващ ред на разстояние от начала.</p>
+                </div>
 
-                    <h4>DFS от A:</h4>
-                    <ol>
-                        <li>Начало: посещаване на A</li>
-                        <li>От A: отиваме на B (първи съсед)</li>
-                        <li>От B: отиваме на D (първи неопосещен)</li>
-                        <li>От D: отиваме на F</li>
-                        <li>От F: съсед E неопосещен, отиваме на E</li>
-                        <li>От E: всички съседи посещени</li>
-                        <li>Връщане и посещаване на C (съсед на A)</li>
-                    </ol>
-                    <p><strong>Ред на посещение:</strong> A, B, D, F, E, C</p>
+                <h3>Детайлна примера: DFS със състояние на стека</h3>
+
+                <div class="worked-example">
+                    <h4>DFS от A - Стъпка по стъпка (използвайки същия граф):</h4>
+                    <table class="gen-table">
+                        <thead>
+                            <tr>
+                                <th>Стъп</th>
+                                <th>Текущ връх</th>
+                                <th>Посетено</th>
+                                <th>Стек</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0 (начало)</td>
+                                <td>-</td>
+                                <td>{ }</td>
+                                <td>[A]</td>
+                                <td>Инициализираме стека с A</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>A</td>
+                                <td>{A}</td>
+                                <td>[B, C]</td>
+                                <td>Посещаваме A, добавяме съседи B, C</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>C</td>
+                                <td>{A, C}</td>
+                                <td>[B, E]</td>
+                                <td>Посещаваме C, добавяме съсед E (A посещен)</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>E</td>
+                                <td>{A, C, E}</td>
+                                <td>[B, F]</td>
+                                <td>Посещаваме E, добавяме съсед F (C посещен)</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>F</td>
+                                <td>{A, C, E, F}</td>
+                                <td>[B, D]</td>
+                                <td>Посещаваме F, добавяме съсед D (E посещен)</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>D</td>
+                                <td>{A, C, E, F, D}</td>
+                                <td>[B]</td>
+                                <td>Посещаваме D, всички съседи посещени (B, F)</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>B</td>
+                                <td>{A, C, E, F, D, B}</td>
+                                <td>[]</td>
+                                <td>Посещаваме B, стекът празен</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Ред на посещение:</strong> A, C, E, F, D, B (дълбочина-първо)</p>
+                    <p><strong>Ключево свойство:</strong> DFS отива възможно най-дълбоко преди да се върне назад.</p>
                 </div>
 
                 <h3>Топологично сортиране</h3>
@@ -821,7 +934,7 @@ Prim(Graph G, Vertex start):
                     <br><strong>Подход:</strong> Разширяме MST от един връх, винаги добавяйки най-леко ребро до нов връх.
                 </div>
 
-                <h3>Работена примера: Kruskal на претеглен граф</h3>
+                <h3>Детайлна примера: Kruskal's Алгоритъм - Минимално покриващо дърво</h3>
 
                 <div class="worked-example">
                     <h4>Граф с 6 върха и 9 ребра:</h4>
@@ -847,18 +960,112 @@ graph LR
                         </div>
                     </div>
 
-                    <h4>Стъпки на Kruskal:</h4>
-                    <ol>
-                        <li><strong>Сортиране:</strong> (A,B,1), (B,C,2), (C,D,3), (A,C,4), (B,D,5), (C,E,6), (D,E,7), (D,F,8), (E,F,9)</li>
-                        <li><strong>Стъп 1:</strong> Добавяме (A,B,1). MST={(A,B,1)}, тегло=1</li>
-                        <li><strong>Стъп 2:</strong> Добавяме (B,C,2). MST={(A,B,1), (B,C,2)}, тегло=3</li>
-                        <li><strong>Стъп 3:</strong> Добавяме (C,D,3). MST={(A,B,1), (B,C,2), (C,D,3)}, тегло=6</li>
-                        <li><strong>Стъп 4:</strong> Пропускаме (A,C,4) - циклус с A-B-C</li>
-                        <li><strong>Стъп 5:</strong> Пропускаме (B,D,5) - циклус</li>
-                        <li><strong>Стъп 6:</strong> Добавяме (C,E,6). MST={(A,B), (B,C), (C,D), (C,E)}, тегло=12</li>
-                        <li><strong>Стъп 7:</strong> Добавяме (D,F,8). MST завършено (5 ребра за 6 върха)</li>
-                    </ol>
-                    <p><strong>Тегло на MST:</strong> 1+2+3+6+8 = 20</p>
+                    <h4>Изпълнение на Kruskal - Стъпка по стъпка (Union-Find):</h4>
+                    <table class="gen-table">
+                        <thead>
+                            <tr>
+                                <th>Стъп</th>
+                                <th>Ребро</th>
+                                <th>Тегло</th>
+                                <th>Връзка</th>
+                                <th>Union-Find</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>{A}, {B}, {C}, {D}, {E}, {F}</td>
+                                <td>Инициализация: всеки връх сам</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>(A,B)</td>
+                                <td>1</td>
+                                <td>Поне един край е нов</td>
+                                <td>{A,B}, {C}, {D}, {E}, {F}</td>
+                                <td>✓ Добавяме. MST=1 ребро, тегло=1</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>(B,C)</td>
+                                <td>2</td>
+                                <td>Поне един край е нов</td>
+                                <td>{A,B,C}, {D}, {E}, {F}</td>
+                                <td>✓ Добавяме. MST=2 ребра, тегло=3</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>(C,D)</td>
+                                <td>3</td>
+                                <td>Поне един край е нов</td>
+                                <td>{A,B,C,D}, {E}, {F}</td>
+                                <td>✓ Добавяме. MST=3 ребра, тегло=6</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>(A,C)</td>
+                                <td>4</td>
+                                <td>Оба края във {A,B,C,D}</td>
+                                <td>{A,B,C,D}, {E}, {F}</td>
+                                <td>✗ Пропускаме - цикъл A-B-C-A</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>(B,D)</td>
+                                <td>5</td>
+                                <td>Оба края във {A,B,C,D}</td>
+                                <td>{A,B,C,D}, {E}, {F}</td>
+                                <td>✗ Пропускаме - цикъл B-D-C-B</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>(C,E)</td>
+                                <td>6</td>
+                                <td>Поне един край е нов (E)</td>
+                                <td>{A,B,C,D,E}, {F}</td>
+                                <td>✓ Добавяме. MST=4 ребра, тегло=12</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>(D,E)</td>
+                                <td>7</td>
+                                <td>Оба края във {A,B,C,D,E}</td>
+                                <td>{A,B,C,D,E}, {F}</td>
+                                <td>✗ Пропускаме - цикъл D-E-C-D</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>(D,F)</td>
+                                <td>8</td>
+                                <td>Поне един край е нов (F)</td>
+                                <td>{A,B,C,D,E,F}</td>
+                                <td>✓ Добавяме. MST завършено! Тегло=20</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>(E,F)</td>
+                                <td>9</td>
+                                <td>Оба края във {A,B,C,D,E,F}</td>
+                                <td>-</td>
+                                <td>Не е необходимо - вече имаме 5 ребра</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Резултат:</h4>
+                    <ul>
+                        <li><strong>MST ребра:</strong> (A,B,1), (B,C,2), (C,D,3), (C,E,6), (D,F,8)</li>
+                        <li><strong>Общо тегло:</strong> 1 + 2 + 3 + 6 + 8 = 20</li>
+                        <li><strong>Брой ребра:</strong> 5 (което е n-1 за 6 върха) ✓</li>
+                    </ul>
+
+                    <div class="note-box">
+                        <strong>Защо Kruskal работи:</strong> Гордийската стратегия - винаги избираме най-малкото ребро, което не образува цикъл. Това гарантира оптимално решение по принципа на матроидите.
+                    </div>
                 </div>
 
                 <div class="note-box">
@@ -951,7 +1158,7 @@ Floyd-Warshall(Matrix dist):
                     <strong>Сложност:</strong> O(V³) - проста, но тежка за голяма V.
                 </div>
 
-                <h3>Работена примера: Dijkstra</h3>
+                <h3>Детайлна примера: Dijkstra's Алгоритъм</h3>
 
                 <div class="worked-example">
                     <h4>Претеглен граф с 5 върха, начало A:</h4>
@@ -974,17 +1181,18 @@ graph LR
                         </div>
                     </div>
 
-                    <h4>Таблица на обновяванията:</h4>
+                    <h4>Таблица на обновяванията на разстояния:</h4>
                     <table class="gen-table">
                         <thead>
                             <tr>
                                 <th>Стъп</th>
-                                <th>Текущ (d)</th>
+                                <th>Обработен</th>
                                 <th>dist[A]</th>
                                 <th>dist[B]</th>
                                 <th>dist[C]</th>
                                 <th>dist[D]</th>
                                 <th>dist[E]</th>
+                                <th>Описание</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -996,56 +1204,73 @@ graph LR
                                 <td>∞</td>
                                 <td>∞</td>
                                 <td>∞</td>
+                                <td>Инициализация: само A има разстояние 0</td>
                             </tr>
                             <tr>
                                 <td>1</td>
-                                <td>A(0)</td>
+                                <td>A (d=0)</td>
                                 <td>0</td>
                                 <td>2</td>
                                 <td>4</td>
                                 <td>∞</td>
                                 <td>∞</td>
+                                <td>Релаксирани ребра от A: A→B (2), A→C (4)</td>
                             </tr>
                             <tr>
                                 <td>2</td>
-                                <td>B(2)</td>
+                                <td>B (d=2)</td>
                                 <td>0</td>
                                 <td>2</td>
                                 <td>3</td>
                                 <td>9</td>
                                 <td>∞</td>
+                                <td>Релаксирани ребра от B: B→C (2+1=3, по-добре), B→D (2+7=9)</td>
                             </tr>
                             <tr>
                                 <td>3</td>
-                                <td>C(3)</td>
+                                <td>C (d=3)</td>
                                 <td>0</td>
                                 <td>2</td>
                                 <td>3</td>
                                 <td>6</td>
                                 <td>8</td>
+                                <td>Релаксирани ребра от C: C→D (3+3=6, по-добре), C→E (3+5=8)</td>
                             </tr>
                             <tr>
                                 <td>4</td>
-                                <td>D(6)</td>
+                                <td>D (d=6)</td>
                                 <td>0</td>
                                 <td>2</td>
                                 <td>3</td>
                                 <td>6</td>
                                 <td>7</td>
+                                <td>Релаксирани ребра от D: D→E (6+1=7, по-добре от 8)</td>
                             </tr>
                             <tr>
                                 <td>5</td>
-                                <td>E(7)</td>
+                                <td>E (d=7)</td>
                                 <td>0</td>
                                 <td>2</td>
                                 <td>3</td>
                                 <td>6</td>
                                 <td>7</td>
+                                <td>Няма релаксации - алгоритъмът завършва</td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <p><strong>Резултат:</strong> dist[A]=0, dist[B]=2, dist[C]=3, dist[D]=6, dist[E]=7</p>
+                    <h4>Анализ на путищата:</h4>
+                    <ul>
+                        <li><strong>До A:</strong> A | Разстояние: 0</li>
+                        <li><strong>До B:</strong> A → B | Разстояние: 2</li>
+                        <li><strong>До C:</strong> A → B → C | Разстояние: 3 (по-добре от преката A → C = 4)</li>
+                        <li><strong>До D:</strong> A → B → C → D | Разстояние: 6</li>
+                        <li><strong>До E:</strong> A → B → C → D → E | Разстояние: 7</li>
+                    </ul>
+
+                    <div class="note-box">
+                        <strong>Ключово наблюдение:</strong> В каждом стъпе избираме върха с минимално разстояние от остатъка. Това гарантира оптималност поради свойството на релаксацията.
+                    </div>
                 </div>
 
                 <h3>Сравнение на алгоритмите</h3>
@@ -1273,64 +1498,368 @@ Ford-Fulkerson(Graph G, Vertex s, Vertex t):
                 </div>
             </section>
 
+            <!-- РАЗДЕЛ 7: ДВУДЕЛНИ ГРАФИ -->
+            <section id="section7">
+                <h2>Раздел 7: Двуделни графи (Bipartite Graphs)</h2>
+
+                <h3>Определение и основни свойства</h3>
+
+                <div class="def-box">
+                    <strong>Двуделен граф (Bipartite Graph):</strong> Ненасочен граф G = (V, E), където множеството върхове V може да бъде разделено на две непразни, непресичащи се подмножества U и W (U ∪ W = V, U ∩ W = ∅), такива че всяко ребро (u, v) ∈ E има един край в U и един край в W.
+                </div>
+
+                <h3>Обозначение</h3>
+                <p>Двуделен граф често се обозначава като G = (U, W, E), където U и W са двете раздела.</p>
+
+                <h3>Примери на двуделни графи</h3>
+                <ul>
+                    <li><strong>Пълен двуделен граф К_{m,n}:</strong> Всеки връх от U е свързан с всеки връх от W. Име: всички m+n върхове могат да бъдат разделени, така че |U|=m, |W|=n, |E|=m·n.</li>
+                    <li><strong>Граф на съвпаденията:</strong> Както в задачата за брак между студенти и университети.</li>
+                    <li><strong>Графи на проектирането:</strong> Множество хора, множество задачи, ребро означава възможност за изпълнение.</li>
+                    <li><strong>Социална мрежа:</strong> Двуделен граф между "намиращи" и "нашите".</li>
+                </ul>
+
+                <h3>Ключови теореми</h3>
+
+                <div class="theorem-box">
+                    <strong>Теорема 1: Характеризация на двуделни графи</strong><br>
+                    Неориентиран граф G е двуделен тогава и само тогава, когато той не съдържа нечетни цикли (т.е. цикли с нечетна дължина).
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Теорема 2 (König):</strong><br>
+                    В двуделен граф размерът на максимално съвпадение равняется на размерът на минимално върхово покритие.
+                </div>
+
+                <div class="theorem-box">
+                    <strong>Теорема 3 (Hall's Theorem):</strong><br>
+                    Нека G = (U, W, E) е двуделен граф. Съществува съвпадение, което покрива всички върхове на U тогава и само тогава, когато за всяко подмножество S ⊆ U, |N(S)| ≥ |S|, където N(S) е множеството от съседи на върховете в S във W.
+                </div>
+
+                <h3>Проверка за двуделност</h3>
+
+                <h4>Алгоритъм: BFS Раскрасяване</h4>
+                <div class="algorithm-pseudo">
+IsBipartite(Graph G):
+    color ← empty dictionary
+
+    for each unvisited vertex u in G:
+        queue ← [u]
+        color[u] ← 0
+
+        while queue is not empty:
+            v ← queue.dequeue()
+
+            for each neighbor w of v:
+                if w is not colored:
+                    color[w] ← 1 - color[v]
+                    queue.enqueue(w)
+
+                else if color[w] == color[v]:
+                    return false  // Нечетен цикъл открит
+
+    return true  // Двуделен е!
+                </div>
+
+                <div class="def-box">
+                    <strong>Сложност:</strong> O(V + E) - същата като BFS, тъй че ще проверяваме всяка двойка съседи.
+                </div>
+
+                <h3>Приложения на двуделни графи</h3>
+
+                <h4>1. Съвпадение в двуделни графи (Bipartite Matching)</h4>
+                <div class="def-box">
+                    <strong>Проблем:</strong> Дан е двуделен граф G = (U, W, E). Намерете максимално съвпадение M ⊆ E такова, че никой два ребра от M да нямат общ край.
+                </div>
+
+                <p><strong>Решение:</strong> Може да се реши като проблем на максимален поток (max-flow) със следната техника:</p>
+                <ol>
+                    <li>Добавяме източник s свързан с всички върхове от U с капацитет 1.</li>
+                    <li>Всяко ребро от U към W има капацитет 1.</li>
+                    <li>Добавяме сифон t свързан с всички върхове от W с капацитет 1.</li>
+                    <li>Максимален поток от s към t = размер на максимално съвпадение.</li>
+                </ol>
+
+                <h4>2. Покритие на върхове (Vertex Cover)</h4>
+                <div class="def-box">
+                    <strong>Проблем:</strong> Намерете минимално подмножество на върхове такова, че всяко ребро има поне един край в подмножеството.
+                </div>
+
+                <p><strong>König's Theorem:</strong> В двуделен граф размер на минимално върхово покритие = размер на максимално съвпадение.</p>
+
+                <h3>Работен пример: Двуделост проверка</h3>
+
+                <div class="worked-example">
+                    <h4>Граф 1: Двуделен ли е?</h4>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+graph LR
+    U1["U1"]
+    U2["U2"]
+    U3["U3"]
+    W1["W1"]
+    W2["W2"]
+    W3["W3"]
+
+    U1 --- W1
+    U1 --- W2
+    U2 --- W2
+    U2 --- W3
+    U3 --- W1
+    U3 --- W3
+                        </div>
+                    </div>
+
+                    <h4>BFS Раскрасяване:</h4>
+                    <ol>
+                        <li>Начало с U1: color[U1] = 0</li>
+                        <li>Съседи на U1: W1, W2 → color[W1] = 1, color[W2] = 1</li>
+                        <li>От W1: съсед U3 → color[U3] = 0</li>
+                        <li>От W2: съсед U2 → color[U2] = 0</li>
+                        <li>От U3: съседи W1 (вече 1), W3 → color[W3] = 1</li>
+                        <li>От U2: съседи W2 (вече 1), W3 (вече 1) ✓</li>
+                    </ol>
+                    <p><strong>Резултат:</strong> ДА, графът е двуделен! U = {U1, U2, U3}, W = {W1, W2, W3}</p>
+                </div>
+
+                <div class="worked-example">
+                    <h4>Граф 2: Двуделен ли е (с нечетен цикъл)?</h4>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+graph LR
+    A["A"]
+    B["B"]
+    C["C"]
+
+    A --- B
+    B --- C
+    C --- A
+                        </div>
+                    </div>
+
+                    <h4>BFS Раскрасяване:</h4>
+                    <ol>
+                        <li>Начало с A: color[A] = 0</li>
+                        <li>Съседи на A: B, C → color[B] = 1, color[C] = 1</li>
+                        <li>От B: съседи A (вече 0) ✓, C (вече 1) ✓</li>
+                        <li>От C: съсед A (вече 0) ✓, B (вече 1) ... СТОП!</li>
+                        <li>Цикъл A-B-C-A има дължина 3 (нечетна)!</li>
+                    </ol>
+                    <p><strong>Резултат:</strong> НЕ, графът НЕ е двуделен - съдържа нечетен цикъл (триъгълник).</p>
+                </div>
+
+                <h3>Съвпадение в двуделни графи - Примера</h3>
+
+                <div class="worked-example">
+                    <h4>Двуделен граф за съвпадение:</h4>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+graph LR
+    A["Гръцко меню (A)"]
+    B["Гръцко меню (B)"]
+    C["Гръцко меню (C)"]
+    X["Студент (X)"]
+    Y["Студент (Y)"]
+    Z["Студент (Z)"]
+
+    A --- X
+    A --- Y
+    B --- Y
+    B --- Z
+    C --- X
+    C --- Z
+                        </div>
+                    </div>
+
+                    <h4>Максимално съвпадение:</h4>
+                    <ul>
+                        <li><strong>Съвпадение 1:</strong> (A,X), (B,Y), (C,Z) - размер 3</li>
+                        <li><strong>Съвпадение 2:</strong> (A,Y), (B,Z), (C,X) - размер 3</li>
+                    </ul>
+                    <p><strong>Максимален размер:</strong> 3 (перфектно съвпадение - всички върхове покрити)</p>
+                    <p><strong>Минимално върхово покритие (König):</strong> {A, B, C} или {X, Y, Z} - размер 3</p>
+                </div>
+            </section>
+
             <!-- FLASHCARDS -->
             <section id="flashcards">
-                <h2>Flashcards</h2>
-                <p>Кликнете на всяка карта, за да видите отговора.</p>
+                <h2>Flashcards - Интерактивни карти за повторение</h2>
+                <p>Кликнете на всяка карта, за да видите отговора. Идеално за подготовка преди изпита.</p>
 
                 <div class="flashcard-grid">
+                    <!-- ОСНОВНИ ПОНЯТИЯ -->
                     <div class="flashcard">
                         <div class="flashcard-front"><strong>Какво е граф G = (V, E)?</strong></div>
-                        <div class="flashcard-back">Наредена двойка където V е множество върхове, E ⊆ V × V е множество ребра.</div>
+                        <div class="flashcard-back">Наредена двойка където V е множество върхове, E ⊆ V × V е множество ребра. Може да е насочен или ненасочен.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Разлика между насочен и ненасочен граф?</strong></div>
+                        <div class="flashcard-back">Насочен (directed): ребра имат посока, (u,v) ≠ (v,u). Ненасочен (undirected): няма посока, (u,v) = (v,u).</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Какво е степен на връх?</strong></div>
+                        <div class="flashcard-back">За ненасочен граф: брой ребра инцидентни на върха. За насочен: in-degree (входящи) и out-degree (изходящи).</div>
                     </div>
 
                     <div class="flashcard">
                         <div class="flashcard-front"><strong>Лема на ръкуванието</strong></div>
-                        <div class="flashcard-back">Сума от степени = 2|E| в ненасочен граф. За насочен: сума in-deg = сума out-deg = |E|.</div>
+                        <div class="flashcard-back">За ненасочен граф: Σ deg(v) = 2|E|. За насочен: Σ indeg(v) = Σ outdeg(v) = |E|.</div>
+                    </div>
+
+                    <!-- BFS/DFS -->
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Разлика между BFS и DFS?</strong></div>
+                        <div class="flashcard-back">BFS (Breadth-First): използва опашка, обхожда по нива. DFS (Depth-First): използва стек, отива възможно най-дълбоко.</div>
                     </div>
 
                     <div class="flashcard">
                         <div class="flashcard-front"><strong>Сложност на BFS/DFS?</strong></div>
-                        <div class="flashcard-back">O(V + E) при представяне със списък на съседствата.</div>
+                        <div class="flashcard-back">O(V + E) при представяне със списък на съседствата. O(V²) ако се използва матрица на съседствата.</div>
                     </div>
 
                     <div class="flashcard">
-                        <div class="flashcard-front"><strong>Кога е възможна Euler верига?</strong></div>
-                        <div class="flashcard-back">Граф свързан И всички върхове имат четна степен.</div>
+                        <div class="flashcard-front"><strong>Какво е топологично сортиране?</strong></div>
+                        <div class="flashcard-back">Линейно подредяне на върхове в DAG такова, че за всяко ребро (u,v), u идва преди v. Възможно само в DAG.</div>
                     </div>
 
+                    <!-- МИНИМАЛНО ПОКРИВАЩО ДЪРВО -->
                     <div class="flashcard">
-                        <div class="flashcard-front"><strong>Сложност Dijkstra?</strong></div>
-                        <div class="flashcard-back">O((V+E) log V) с приоритетна опашка, работи за неотрицателни тегла.</div>
+                        <div class="flashcard-front"><strong>Какво е MST (Минимално покриващо дърво)?</strong></div>
+                        <div class="flashcard-back">Подмножество от ребра, свързващо всички върхове с минимално сумарно тегло, без цикли. За n върхове има точно n-1 ребра.</div>
                     </div>
 
                     <div class="flashcard">
                         <div class="flashcard-front"><strong>Сложност Kruskal MST?</strong></div>
-                        <div class="flashcard-back">O(E log E) за сортиране + O(E α(V)) за Union-Find = O(E log E).</div>
+                        <div class="flashcard-back">O(E log E) за сортиране + O(E α(V)) за Union-Find = O(E log E). Гордийски подход: мерч по растящо тегло.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Сложност Prim MST?</strong></div>
+                        <div class="flashcard-back">O((V+E) log V) с двоична приоритетна опашка, или O(V²) с масив. Разширяваме MST от един връх.</div>
+                    </div>
+
+                    <!-- НАЙ-КРАТЪК ПЪТ -->
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Когда се използва Dijkstra?</strong></div>
+                        <div class="flashcard-back">За намиране на най-кратък път от един източник. Предпоставка: всички тегла неотрицателни (≥0).</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Сложност Dijkstra?</strong></div>
+                        <div class="flashcard-back">O((V+E) log V) с приоритетна опашка. O(V²) с масив за намиране на мин. разстояние.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Bellman-Ford срещу Dijkstra?</strong></div>
+                        <div class="flashcard-back">Dijkstra: по-бърз O((V+E)log V), но работи само за неотрицателни тегла. Bellman-Ford: O(V·E), работи с отрицателни, открива отрицателни цикли.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Floyd-Warshall сложност и приложение?</strong></div>
+                        <div class="flashcard-back">O(V³). За всички двойки най-кратки пътища. Работи с отрицателни тегла, но открива отрицателни цикли.</div>
+                    </div>
+
+                    <!-- ДЪРВЕТАТА -->
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Какво е дърво във графовата теория?</strong></div>
+                        <div class="flashcard-back">Свързан ненасочен граф без цикли. Еквивалентно: |E| = |V| - 1 и свързан, или между всеки две върхове има точно един път.</div>
                     </div>
 
                     <div class="flashcard">
                         <div class="flashcard-front"><strong>Дърво: колко ребра за n върхове?</strong></div>
-                        <div class="flashcard-back">Точно n - 1 ребра. Свързано и без цикли.</div>
+                        <div class="flashcard-back">Точно n - 1 ребра. Това е ключово свойство на дърветата.</div>
                     </div>
 
                     <div class="flashcard">
-                        <div class="flashcard-front"><strong>Hamilton верига е...</strong></div>
-                        <div class="flashcard-back">NP-пълен проблем. Посещава всеки връх точно веднъж.</div>
+                        <div class="flashcard-front"><strong>Какво е листо в дърво?</strong></div>
+                        <div class="flashcard-back">Връх със степен 1 (в ненасочен случай). Крайна точка на дърво без деца.</div>
+                    </div>
+
+                    <!-- СПЕЦИАЛНИ ЗАДАЧИ -->
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Euler верига vs Hamilton верига?</strong></div>
+                        <div class="flashcard-back">Euler: преминава ВСЯКО РЕБРО точно веднъж. Hamilton: посещава ВСЕКИ ВРЪХ точно веднъж.</div>
                     </div>
 
                     <div class="flashcard">
-                        <div class="flashcard-front"><strong>Floyd-Warshall сложност?</strong></div>
-                        <div class="flashcard-back">O(V³). За всички двойки най-кратки пътища. Работи с отрицателни тегла.</div>
+                        <div class="flashcard-front"><strong>Кога е възможна Euler верига?</strong></div>
+                        <div class="flashcard-back">Граф свързан И всички върхове имат четна степен. За Euler пътя: точно 2 върхове с нечетна степен.</div>
                     </div>
 
                     <div class="flashcard">
-                        <div class="flashcard-front"><strong>DAG определение</strong></div>
-                        <div class="flashcard-back">Directed Acyclic Graph - насочен граф без цикли. Позволява топологично сортиране.</div>
+                        <div class="flashcard-front"><strong>Hamilton верига - какво да знам?</strong></div>
+                        <div class="flashcard-back">NP-пълен проблем! Няма известен полиномиален алгоритъм. Посещава всеки връх точно веднъж.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Оцветяване на граф - какво е?</strong></div>
+                        <div class="flashcard-back">Назначаване на цветове на върхове така, че никой съседни върхове да няма същия цвят. Ищем минимално число цветове (хроматично число χ(G)).</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>DAG определение и приложение</strong></div>
+                        <div class="flashcard-back">Directed Acyclic Graph - насочен граф без цикли. Позволява топологично сортиране. Модел за зависимости (проекти, компилаторни порядък).</div>
+                    </div>
+
+                    <!-- ДВУДЕЛНИ ГРАФИ -->
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Какво е двуделен граф?</strong></div>
+                        <div class="flashcard-back">Граф G = (U, W, E) където V се дели на два раздела U и W, и всяко ребро имеет един край в U и един в W. Няма ребра вътре в U или W.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Характеризация на двуделни графи</strong></div>
+                        <div class="flashcard-back">Граф е двуделен ако и само ако НЕ съдържа нечетни цикли (цикли с нечетна дължина).</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Как проверяю двуделност?</strong></div>
+                        <div class="flashcard-back">BFS раскрасяване с два цвята. Ако всеки съсед има различен цвят от текущия → двуделен. Иначе → нечетен цикъл.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>König's Theorem за двуделни графи</strong></div>
+                        <div class="flashcard-back">Размер на максимално съвпадение = размер на минимално върхово покритие. Специално свойство на двуделни графи!</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Hall's Marriage Theorem (упрощена версия)</strong></div>
+                        <div class="flashcard-back">За двуделен граф G = (U, W) съществува съвпадение покриващо U iff за всяко подмножество S ⊆ U, |N(S)| ≥ |S|.</div>
+                    </div>
+
+                    <!-- ПРЕДСТАВЯНИЯ -->
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Матрица на съседствата: плюсове и минуси</strong></div>
+                        <div class="flashcard-back">Плюс: O(1) за проверка ребро (u,v). Минус: O(V²) памет, неефикасна за разредени графи. Добро за плътни графи.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Списък на съседствата: плюсове и минуси</strong></div>
+                        <div class="flashcard-back">Плюс: O(V+E) памет, O(deg(v)) за намиране съседи. Минус: O(deg(u)) за проверка ребро (u,v). Добро за разредени графи.</div>
+                    </div>
+
+                    <!-- АЛГОРИТМИЧНИ ТЕХНИКИ -->
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Union-Find (Disjoint Set Union)</strong></div>
+                        <div class="flashcard-back">Структура за поддържане на разделения на множество. find(x): намери представител. union(x,y): обединай множества. С path compression: O(α(n)) амортизирано.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Приоритетна опашка (Priority Queue) приложение</strong></div>
+                        <div class="flashcard-back">Използва се в Dijkstra (най-малко разстояние), Prim (най-малко ребро), Huffman кодиране. O(log n) вмъкване и извличане на минимум.</div>
+                    </div>
+
+                    <div class="flashcard">
+                        <div class="flashcard-front"><strong>Гордийска стратегия - какво е?</strong></div>
+                        <div class="flashcard-back">Избираме най-добрия локален избор на всяка стъпка. Пример: Kruskal (минимално ребро без цикъл), Dijkstra (минимално разстояние).</div>
                     </div>
                 </div>
 
-                <p style="margin-top: 2rem; font-style: italic; color: #666;">За интерактивност, flashcard-ите са кликабилни карти.</p>
+                <div class="note-box" style="margin-top: 2rem;">
+                    <strong>Съвет за подготовка:</strong> Проверете всяка карта редовно. През изпита, важни са не само дефиниции, но и сложности, условия на приложение, и практични примери. Комбинирайте flashcards с решаване на задачи!
+                </div>
             </section>
 
             <!-- БЪРЗА СПРАВКА -->

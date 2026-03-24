@@ -609,9 +609,11 @@
 
                 <h3>2.1 Формулировка</h3>
                 <div class="def-box">
-                    <strong>Brewer's Conjecture (2000):</strong> Разпределена система не може едновременно да гарантира трите свойства: Consistency, Availability и Partition tolerance.
+                    <strong>CAP теорема (Brewer's Conjecture, 2000):</strong> <strong>Eric Brewer</strong> (UC Berkeley) представя на PODC 2000 конкретната, че разпределена система не може едновременно да гарантира трите свойства: Consistency (C), Availability (A) и Partition tolerance (P). През мрежово разделяне, системата трябва да избере между две от трите.
                     <br><br>
-                    <strong>Gilbert & Lynch Proof (2002):</strong> Формално доказателство на теоремата показва, че при мрежово разделяне (partition), системата трябва да избере между консистентност (C) и наличност (A).
+                    <strong>Gilbert & Lynch Formal Proof (2002):</strong> През 2002, <strong>Seth Gilbert</strong> и <strong>Nancy Lynch</strong> (MIT) публикуват формално математическо доказателство на CAP теоремата. Това доказателство показва, че при настъпването на мрежово разделяне (partition), система не може едновременно да поддържа консистентност (C) И наличност (A). Трябва да избере один един от двата.
+                    <br><br>
+                    <strong>Уточнение:</strong> P (Partition tolerance) е почти винаги необходимо в разпределена система, така че в практиката системите се разделят на CP (жертвуват наличност) или AP (жертвуват консистентност).
                 </div>
 
                 <h3>2.2 Три свойства</h3>
@@ -1254,8 +1256,8 @@ reduce(Plovdiv, [(8,1), (9,1)]) →<br>
                     </div>
 
                     <div class="fc" onclick="this.classList.toggle('flipped')">
-                        <div class="fc-q">Кто доказа CAP теоремата формално?</div>
-                        <div class="fc-a">Gilbert и Lynch през 2002 година</div>
+                        <div class="fc-q">Кой предложи CAP конкретно и кой го доказа формално? Години?</div>
+                        <div class="fc-a">Eric Brewer (UC Berkeley) предложи конкретизацията (CAP Conjecture) на PODC 2000. Seth Gilbert и Nancy Lynch (MIT) публикуват формално доказателство през 2002.</div>
                     </div>
 
                     <div class="fc" onclick="this.classList.toggle('flipped')">

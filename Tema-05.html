@@ -724,6 +724,97 @@
                     <li><strong>Приоритетна опашка (Priority Queue):</strong> Елементи се вземат по приоритет, а не по ред</li>
                 </ul>
 
+                <h3>2.4.1 Двойна опашка (Deque - Double-Ended Queue)</h3>
+
+                <p><strong>Определение:</strong> Структура, която позволява вставяне и изтриване от ДВАТА края (начало и край).</p>
+
+                <div class="formula-block">
+<strong>Операции на Deque:</strong>
+• addFirst(x): добавяне в начало → O(1)
+• addLast(x): добавяне в край → O(1)
+• removeFirst(): изтриване от начало → O(1)
+• removeLast(): изтриване от край → O(1)
+• getFirst(), getLast(): преглед → O(1)
+• Space: O(n)
+                </div>
+
+                <h4>Реализация:</h4>
+                <ul style="margin-left: 1.5rem;">
+                    <li><strong>Циркулярен масив (Circular Array):</strong> Две указатели (front, rear) обикалят масива. Ефикасна O(1) всички операции.</li>
+                    <li><strong>Двусвързан список (Doubly LinkedList):</strong> Всяка възел има указатели към следваща и предходна. O(1) за вставяне/изтриване, но с повече памет.</li>
+                </ul>
+
+                <h4>Приложения на Deque:</h4>
+                <ul style="margin-left: 1.5rem;">
+                    <li>Палиндром проверка: добавяй от едната страна, премахни от другата</li>
+                    <li>Скользящ прозорец: MAX/MIN в подмасив с размер k</li>
+                    <li>Undo/Redo функция в текстови редактори</li>
+                    <li>Browser history (back/forward)</li>
+                </ul>
+
+                <h3>2.4.2 Приоритетна опашка (Priority Queue)</h3>
+
+                <p><strong>Определение:</strong> Структура, в която елементите се вземат според тяхния приоритет (не по FIFO ред). Елементът с най-висок приоритет се обслужва първи.</p>
+
+                <div class="formula-block">
+<strong>ADT операции на Priority Queue:</strong>
+• insert(x, priority): вставяне на елемент с приоритет → зависи от реализация
+• deleteMax() / deleteMin(): изтриване на елемент с максимален/минимален приоритет → зависи
+• peek(): преглед на елемент с максимален приоритет → O(1) за някои реализации
+                </div>
+
+                <h4>Реализации и сложности:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Реализация</th>
+                            <th>Insert</th>
+                            <th>DeleteMax</th>
+                            <th>Peek</th>
+                            <th>Забележка</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Неcортирана масив</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                            <td>Лоша за deleteMax</td>
+                        </tr>
+                        <tr>
+                            <td>Сортиран масив</td>
+                            <td>O(n)</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                            <td>Лоша за insert</td>
+                        </tr>
+                        <tr>
+                            <td>Max-Heap (двоично)</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(1)</td>
+                            <td>Оптимално за большинство случаи</td>
+                        </tr>
+                        <tr>
+                            <td>Min-Heap</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                            <td>O(1)</td>
+                            <td>Обратна приоритет</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Приложения на Priority Queue:</h4>
+                <ul style="margin-left: 1.5rem;">
+                    <li>Dijkstra алгоритъм (най-кратка пътя)</li>
+                    <li>Prim алгоритъм (минимално spanning tree)</li>
+                    <li>Huffman кодиране</li>
+                    <li>OS процес scheduling (приоритет на процеси)</li>
+                    <li>Медиан в потоци данни</li>
+                </ul>
+
                 <h3>2.5 Работени примери</h3>
 
                 <div class="worked-example">
@@ -991,30 +1082,46 @@
 • Heapify: преобразуване на произволен масив в heap → O(n)
                 </div>
 
-                <h3>3.8 Работен пример: Построяване на max-heap</h3>
+                <h3>3.8 Работен пример: Построяване на max-heap чрез Heapify</h3>
+
+                <p><strong>Задача:</strong> Преобразувайте масива [4, 10, 3, 5, 1] в max-heap с помощта на heapify (bubble-down) алгоритъм.</p>
+
+                <p><strong>Алгоритъм Heapify:</strong></p>
+                <div class="formula-block">
+1. Начало: вътрешни възли от index n/2 - 1 до 0 (отдолу нагоре)
+2. За всяка възел: сравнете с детата си
+3. Ако въоглед е по-малко от което-то дете, разменете с по-голямото дете
+4. Рекурсивно heapify позицията на разменения елемент
+                </div>
 
                 <div class="worked-example">
-                    <h4>Пример: Построете max-heap от [4, 10, 3, 5, 1]</h4>
+                    <h4>Пример: Heapify [4, 10, 3, 5, 1]</h4>
 
-                    <div class="step">
-                        <strong>Начално състояние:</strong> [4, 10, 3, 5, 1]
-                        <div class="diagram-container">
-                            <pre>        4
+                    <p><strong>Индекси в масива:</strong> [0:4, 1:10, 2:3, 3:5, 4:1]</p>
+                    <p><strong>Дърво представяне:</strong></p>
+                    <pre>        4 (index 0)
        / \
-      10  3
+      10  3 (index 1,2)
      / \
-    5   1</pre>
-                        </div>
+    5   1 (index 3,4)</pre>
+
+                    <p><strong>Первите non-leaf индекс: n/2 - 1 = 5/2 - 1 = 1</strong></p>
+                    <p>Heapify от индекс 1 до 0 (отдолу нагоре)</p>
+
+                    <div class="step">
+                        <strong>Стъпка 1: Heapify индекс 1 (елемент 10)</strong>
+                        <p>Деца: индекс 3 (5) и индекс 4 (1)</p>
+                        <p>10 ≥ max(5, 1) ✓ → Вече е heap, без промяна</p>
+                        <p>Масив: [4, 10, 3, 5, 1]</p>
                     </div>
 
                     <div class="step">
-                        <strong>Heapify (от дъно нагоре):</strong> Започете с първия non-leaf възел.
-                        Индекс 1 (10): вече 10 > 4, така че не нужна rotire.
-                    </div>
-
-                    <div class="step">
-                        <strong>Индекс 0 (4):</strong> Сравнете с деца (10 и 3). 10 е най-голямо.
-                        Разменете 4 и 10.
+                        <strong>Стъпка 2: Heapify индекс 0 (елемент 4)</strong>
+                        <p>Деца: индекс 1 (10) и индекс 2 (3)</p>
+                        <p>4 < max(10, 3) = 10</p>
+                        <p>Разменете 4 ↔ 10</p>
+                        <p>Масив: [10, 4, 3, 5, 1]</p>
+                        <p>Дърво сега:</p>
                         <pre>       10
        / \
       4   3
@@ -1023,7 +1130,12 @@
                     </div>
 
                     <div class="step">
-                        <strong>Проверете 4 отново:</strong> Деца на 4 са 5 и 1. 5 > 4, разменете.
+                        <strong>Стъпка 3: Рекурсивно heapify позиция на 4 (индекс 1)</strong>
+                        <p>Деца на индекс 1: индекс 3 (5) и индекс 4 (1)</p>
+                        <p>4 < max(5, 1) = 5</p>
+                        <p>Разменете 4 ↔ 5</p>
+                        <p>Масив: [10, 5, 3, 4, 1]</p>
+                        <p>Дърво сега:</p>
                         <pre>       10
        / \
       5   3
@@ -1032,9 +1144,34 @@
                     </div>
 
                     <div class="step">
-                        <strong>Финален max-heap:</strong> [10, 5, 3, 4, 1]
-                        Всяка възел е ≥ своите деца.
+                        <strong>Стъпка 4: Рекурсивно heapify позиция на 4 (индекс 3)</strong>
+                        <p>Деца на индекс 3: няма деца (това е лист)</p>
+                        <p>Готово!</p>
                     </div>
+
+                    <div class="step">
+                        <strong>ФИНАЛЕН MAX-HEAP: [10, 5, 3, 4, 1]</strong>
+                        <p>Проверка на heap свойство: всяка възел ≥ своите деца ✓</p>
+                        <p>• 10 ≥ min(5, 3) = 3 ✓</p>
+                        <p>• 5 ≥ min(4, 1) = 1 ✓</p>
+                        <p>• 3 няма деца ✓</p>
+                        <p><strong>Времева сложност: O(n)</strong> (не O(n log n))</p>
+                    </div>
+                </div>
+
+                <h4>Важни свойства на Heaps:</h4>
+                <div class="formula-block">
+<strong>Структура:</strong> Почти напълно двоично дърво в масив (без пропуски)
+Индекси в масив:
+• Parent на index i: (i-1)/2
+• Left child на index i: 2i+1
+• Right child на index i: 2i+2
+
+<strong>Операции:</strong>
+• Insert + bubble-up: O(log n)
+• Delete root + bubble-down: O(log n)
+• Heapify (build heap): O(n)
+• Heap Sort: O(n log n)
                 </div>
 
                 <div class="diagram-container">
