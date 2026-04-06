@@ -1,0 +1,374 @@
+/* ══════════════════════════════════════════════
+   MOBILE & TABLET RESPONSIVE OVERRIDES
+   Loaded after embedded <style> in each HTML file
+   ══════════════════════════════════════════════ */
+
+/* ── TABLET (≤1024px) ── */
+@media (max-width: 1024px) {
+
+  /* Sidebar variants */
+  #sidebar,
+  .sidebar,
+  aside:not(.exam-info) {
+    width: 200px !important;
+  }
+
+  /* Main content variants */
+  #main,
+  .main,
+  .content {
+    margin-left: 200px !important;
+    padding: 32px 32px 60px !important;
+  }
+
+  /* Navbar (Tema-14) */
+  .navbar {
+    left: 200px !important;
+  }
+
+  /* Hero */
+  #hero {
+    margin-left: 200px !important;
+    padding: 32px !important;
+  }
+
+  /* Flashcard section with sidebar offset */
+  .flashcard-section {
+    margin-left: 200px !important;
+    padding: 32px !important;
+  }
+
+  /* Reduce base font */
+  html {
+    font-size: 16px !important;
+  }
+
+  body {
+    font-size: 16px !important;
+  }
+
+  /* Heading adjustments */
+  #hero h1 {
+    font-size: 32px !important;
+  }
+
+  h1.section-title {
+    font-size: 26px !important;
+  }
+}
+
+/* ── MOBILE (≤768px) ── */
+@media (max-width: 768px) {
+
+  /* Base font */
+  html {
+    font-size: 15px !important;
+  }
+
+  body {
+    font-size: 15px !important;
+  }
+
+  /* ── SIDEBAR: all variants collapse ── */
+  #sidebar,
+  .sidebar,
+  aside:not(.exam-info) {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    border-right: none !important;
+    border-bottom: 2px solid var(--border, #e2e8f0) !important;
+    padding: 1rem 1.25rem !important;
+  }
+
+  /* Hide TOC links on mobile to save space, keep header */
+  #toc,
+  .sidebar ul,
+  aside:not(.exam-info) nav ul {
+    display: none !important;
+  }
+
+  /* ── CONTAINER: column layout ── */
+  .container {
+    flex-direction: column !important;
+  }
+
+  /* ── MAIN CONTENT: all variants ── */
+  #main,
+  .main,
+  .content,
+  .container > main {
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+    padding: 1.25rem !important;
+    max-width: 100% !important;
+  }
+
+  /* Navbar (Tema-14) */
+  .navbar {
+    position: static !important;
+    left: auto !important;
+    height: auto !important;
+    padding: 0.75rem 1.25rem !important;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    margin-left: 0 !important;
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  #hero h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+
+  #hero .subtitle {
+    font-size: 0.95rem !important;
+  }
+
+  /* ── FLASHCARD SECTION ── */
+  .flashcard-section {
+    margin-left: 0 !important;
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  /* ── HEADINGS ── */
+  h1, h1.section-title {
+    font-size: 1.4rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  h2, h2.sub-title {
+    font-size: 1.2rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  h3, h3.sub-sub {
+    font-size: 1.05rem !important;
+  }
+
+  /* ── GRIDS → single column ── */
+  .equiv-grid,
+  .flashcard-grid,
+  .historian-grid,
+  .flashcard-container,
+  .quick-ref {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── TABLES: horizontal scroll ── */
+  .gen-table,
+  .truth-table,
+  table {
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    white-space: nowrap !important;
+  }
+
+  .gen-table thead,
+  .gen-table tbody,
+  .gen-table tr,
+  .gen-table th,
+  .gen-table td,
+  .truth-table thead,
+  .truth-table tbody,
+  .truth-table tr,
+  .truth-table th,
+  .truth-table td {
+    white-space: normal !important;
+  }
+
+  /* Reduce table font and padding */
+  .gen-table th,
+  .gen-table td,
+  .truth-table th,
+  .truth-table td {
+    padding: 6px 8px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* ── PORTAL BUTTON: all variants ── */
+  .portal-btn,
+  .portal-link,
+  a.portal-btn,
+  a.portal-link {
+    position: static !important;
+    display: inline-block !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Inline-styled portal links (Tema-02,03,04,05,06) */
+  a[href="index.html"][style*="position:fixed"] {
+    position: static !important;
+    display: block !important;
+    margin: 0.5rem 1rem !important;
+    width: fit-content !important;
+  }
+
+  /* ── CONTENT BOXES: reduce padding ── */
+  .def-box,
+  .theorem-box,
+  .example-box,
+  .note-box,
+  .overview-box {
+    padding: 1rem !important;
+  }
+
+  /* ── FORMULA BLOCKS ── */
+  .formula-block {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* ── DIAGRAM WRAPS ── */
+  .diagram-wrap,
+  .diagram {
+    padding: 1rem !important;
+    overflow-x: auto !important;
+  }
+
+  /* ── FLASHCARDS ── */
+  .fc {
+    padding: 1rem !important;
+    min-height: auto !important;
+  }
+
+  /* ── HISTORIAN CARDS ── */
+  .historian-card {
+    padding: 1rem !important;
+  }
+
+  /* ── LISTS ── */
+  ul, ol {
+    margin-left: 1.25rem !important;
+  }
+
+  /* ── INDEX PAGE SPECIFIC ── */
+  header {
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  header h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+
+  header p {
+    font-size: 1rem !important;
+  }
+
+  main {
+    padding: 1.25rem 1rem !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .topics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .topics-section h2 {
+    font-size: 1.3rem !important;
+  }
+
+  .topic-card {
+    padding: 1rem !important;
+  }
+
+  .exam-info {
+    position: static !important;
+    top: auto !important;
+    grid-template-columns: 1fr !important;
+    padding: 1.25rem !important;
+  }
+
+  .exam-info h3 {
+    grid-column: auto !important;
+  }
+
+  footer {
+    padding: 1.5rem 1.25rem !important;
+    margin-top: 2rem !important;
+  }
+}
+
+/* ── SMALL PHONE (≤480px) ── */
+@media (max-width: 480px) {
+
+  html {
+    font-size: 14px !important;
+  }
+
+  body {
+    font-size: 14px !important;
+  }
+
+  #main,
+  .main,
+  .container > main {
+    padding: 1rem !important;
+  }
+
+  #hero {
+    padding: 1rem !important;
+  }
+
+  #hero h1 {
+    font-size: 1.3rem !important;
+  }
+
+  .flashcard-section {
+    padding: 1rem !important;
+  }
+
+  h1, h1.section-title {
+    font-size: 1.25rem !important;
+  }
+
+  h2, h2.sub-title {
+    font-size: 1.1rem !important;
+  }
+
+  .def-box,
+  .theorem-box,
+  .example-box,
+  .note-box,
+  .overview-box {
+    padding: 0.75rem !important;
+  }
+
+  .formula-block {
+    font-size: 0.8rem !important;
+    padding: 0.6rem 0.75rem !important;
+  }
+
+  .topic-card {
+    padding: 0.75rem !important;
+    gap: 0.5rem !important;
+  }
+
+  .topic-title {
+    font-size: 0.95rem !important;
+  }
+
+  header h1 {
+    font-size: 1.3rem !important;
+  }
+
+  #sidebar,
+  .sidebar,
+  aside:not(.exam-info) {
+    padding: 0.75rem 1rem !important;
+  }
+
+  #sidebar-header {
+    padding: 0.75rem 1rem !important;
+  }
+
+  #sidebar-header h2 {
+    font-size: 0.9rem !important;
+  }
+}
